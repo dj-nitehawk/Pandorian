@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9CB9994B-4B1E-4EF2-8491-C242564350E2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Pandorian.Engine</RootNamespace>
+    <AssemblyName>Pandorian.Engine</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG,TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</NoWarn>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>Full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</NoWarn>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent />
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\PandoraData.vb" />
+    <Compile Include="Data\PandoraPartner.vb" />
+    <Compile Include="Data\PandoraSession.vb" />
+    <Compile Include="Data\PandoraSong.vb" />
+    <Compile Include="Data\PandoraSongFeedback.vb" />
+    <Compile Include="Data\PandoraStation.vb" />
+    <Compile Include="Data\PandoraStationCategory.vb" />
+    <Compile Include="Data\PandoraUser.vb" />
+    <Compile Include="API.vb" />
+    <Compile Include="Encryption\BlowfishCipher.vb" />
+    <Compile Include="PandoraException.vb" />
+    <Compile Include="PandoraIO.vb" />
+    <Compile Include="Properties\AssemblyInfo.vb" />
+    <Compile Include="Requests\AddFeedbackRequest.vb" />
+    <Compile Include="Requests\GetPlaylistRequest.vb" />
+    <Compile Include="Requests\GetStationListRequest.vb" />
+    <Compile Include="Requests\PandoraRequest.vb" />
+    <Compile Include="Requests\PartnerLoginRequest.vb" />
+    <Compile Include="Requests\SleepSongRequest.vb" />
+    <Compile Include="Requests\UserLoginRequest.vb" />
+    <Compile Include="Responses\GetPlaylistResponse.vb" />
+    <Compile Include="Responses\GetStationListResponse.vb" />
+    <Compile Include="Responses\PandoraResponse.vb" />
+    <Compile Include="SkipHistory.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\AssemblyInfoTemplate.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Blowfish\Blowfish.csproj">
+      <Project>{33ba7144-6eb6-49d5-b711-6475ee248a8d}</Project>
+      <Name>Blowfish</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>

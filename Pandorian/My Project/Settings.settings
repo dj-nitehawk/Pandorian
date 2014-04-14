@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="proxyAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://server:port</Value>
+    </Setting>
+    <Setting Name="proyxUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)">proxy_username</Value>
+    </Setting>
+    <Setting Name="proxyPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">proxy_password</Value>
+    </Setting>
+    <Setting Name="pandoraUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pandora_username</Value>
+    </Setting>
+    <Setting Name="pandoraPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pandora_password</Value>
+    </Setting>
+    <Setting Name="lastStationID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="audioQuality" Type="System.String" Scope="User">
+      <Value Profile="(Default)">highQuality</Value>
+    </Setting>
+    <Setting Name="stationSkipHistory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{}</Value>
+    </Setting>
+    <Setting Name="globalSkipHistory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[]</Value>
+    </Setting>
+    <Setting Name="pandoraOne" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="downloadLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="noProxy" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
