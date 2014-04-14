@@ -58,7 +58,7 @@ Partial Class frmSettings
         Me.lblProxyUser.Location = New System.Drawing.Point(12, 161)
         Me.lblProxyUser.Name = "lblProxyUser"
         Me.lblProxyUser.Size = New System.Drawing.Size(84, 13)
-        Me.lblProxyUser.TabIndex = 1
+        Me.lblProxyUser.TabIndex = 0
         Me.lblProxyUser.Text = "Proxy Username"
         '
         'lblProxyPass
@@ -67,7 +67,7 @@ Partial Class frmSettings
         Me.lblProxyPass.Location = New System.Drawing.Point(12, 183)
         Me.lblProxyPass.Name = "lblProxyPass"
         Me.lblProxyPass.Size = New System.Drawing.Size(82, 13)
-        Me.lblProxyPass.TabIndex = 2
+        Me.lblProxyPass.TabIndex = 0
         Me.lblProxyPass.Text = "Proxy Password"
         '
         'Label4
@@ -76,7 +76,7 @@ Partial Class frmSettings
         Me.Label4.Location = New System.Drawing.Point(12, 9)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(98, 13)
-        Me.Label4.TabIndex = 3
+        Me.Label4.TabIndex = 0
         Me.Label4.Text = "Pandora Username"
         '
         'Label5
@@ -85,7 +85,7 @@ Partial Class frmSettings
         Me.Label5.Location = New System.Drawing.Point(12, 31)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(96, 13)
-        Me.Label5.TabIndex = 4
+        Me.Label5.TabIndex = 0
         Me.Label5.Text = "Pandora Password"
         '
         'pnPassword
@@ -94,7 +94,7 @@ Partial Class frmSettings
         Me.pnPassword.Location = New System.Drawing.Point(115, 28)
         Me.pnPassword.Name = "pnPassword"
         Me.pnPassword.Size = New System.Drawing.Size(157, 20)
-        Me.pnPassword.TabIndex = 5
+        Me.pnPassword.TabIndex = 2
         '
         'pnUsername
         '
@@ -102,7 +102,7 @@ Partial Class frmSettings
         Me.pnUsername.Location = New System.Drawing.Point(115, 6)
         Me.pnUsername.Name = "pnUsername"
         Me.pnUsername.Size = New System.Drawing.Size(157, 20)
-        Me.pnUsername.TabIndex = 4
+        Me.pnUsername.TabIndex = 1
         '
         'prxPassword
         '
@@ -110,7 +110,7 @@ Partial Class frmSettings
         Me.prxPassword.Location = New System.Drawing.Point(114, 180)
         Me.prxPassword.Name = "prxPassword"
         Me.prxPassword.Size = New System.Drawing.Size(157, 20)
-        Me.prxPassword.TabIndex = 3
+        Me.prxPassword.TabIndex = 8
         '
         'prxUserName
         '
@@ -118,7 +118,7 @@ Partial Class frmSettings
         Me.prxUserName.Location = New System.Drawing.Point(114, 158)
         Me.prxUserName.Name = "prxUserName"
         Me.prxUserName.Size = New System.Drawing.Size(157, 20)
-        Me.prxUserName.TabIndex = 2
+        Me.prxUserName.TabIndex = 7
         '
         'prxAddress
         '
@@ -126,14 +126,14 @@ Partial Class frmSettings
         Me.prxAddress.Location = New System.Drawing.Point(114, 136)
         Me.prxAddress.Name = "prxAddress"
         Me.prxAddress.Size = New System.Drawing.Size(157, 20)
-        Me.prxAddress.TabIndex = 1
+        Me.prxAddress.TabIndex = 6
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(60, 316)
+        Me.Button1.Location = New System.Drawing.Point(64, 316)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(155, 26)
-        Me.Button1.TabIndex = 7
+        Me.Button1.TabIndex = 12
         Me.Button1.Text = "Save Settings"
         Me.Button1.UseVisualStyleBackColor = True
         '
@@ -143,7 +143,7 @@ Partial Class frmSettings
         Me.lnkPandora.Location = New System.Drawing.Point(113, 53)
         Me.lnkPandora.Name = "lnkPandora"
         Me.lnkPandora.Size = New System.Drawing.Size(117, 13)
-        Me.lnkPandora.TabIndex = 8
+        Me.lnkPandora.TabIndex = 3
         Me.lnkPandora.TabStop = True
         Me.lnkPandora.Text = "Get a pandora account"
         '
@@ -163,10 +163,10 @@ Partial Class frmSettings
         Me.btnPayPal.FlatAppearance.BorderSize = 0
         Me.btnPayPal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPayPal.Image = Global.Pandorian.My.Resources.Resources.paypal
-        Me.btnPayPal.Location = New System.Drawing.Point(60, 250)
+        Me.btnPayPal.Location = New System.Drawing.Point(64, 250)
         Me.btnPayPal.Name = "btnPayPal"
         Me.btnPayPal.Size = New System.Drawing.Size(155, 56)
-        Me.btnPayPal.TabIndex = 10
+        Me.btnPayPal.TabIndex = 11
         Me.btnPayPal.UseVisualStyleBackColor = True
         '
         'Label6
@@ -175,7 +175,7 @@ Partial Class frmSettings
         Me.Label6.Location = New System.Drawing.Point(12, 105)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(69, 13)
-        Me.Label6.TabIndex = 11
+        Me.Label6.TabIndex = 0
         Me.Label6.Text = "Audio Quality"
         '
         'ddQuality
@@ -186,7 +186,7 @@ Partial Class frmSettings
         Me.ddQuality.Location = New System.Drawing.Point(115, 102)
         Me.ddQuality.Name = "ddQuality"
         Me.ddQuality.Size = New System.Drawing.Size(78, 21)
-        Me.ddQuality.TabIndex = 12
+        Me.ddQuality.TabIndex = 5
         '
         'chkPandoraOne
         '
@@ -194,7 +194,7 @@ Partial Class frmSettings
         Me.chkPandoraOne.Location = New System.Drawing.Point(115, 77)
         Me.chkPandoraOne.Name = "chkPandoraOne"
         Me.chkPandoraOne.Size = New System.Drawing.Size(111, 17)
-        Me.chkPandoraOne.TabIndex = 13
+        Me.chkPandoraOne.TabIndex = 4
         Me.chkPandoraOne.Text = "Use Pandora One"
         Me.chkPandoraOne.UseVisualStyleBackColor = True
         '
@@ -204,7 +204,7 @@ Partial Class frmSettings
         Me.chkNoProxy.Location = New System.Drawing.Point(114, 226)
         Me.chkNoProxy.Name = "chkNoProxy"
         Me.chkNoProxy.Size = New System.Drawing.Size(112, 17)
-        Me.chkNoProxy.TabIndex = 14
+        Me.chkNoProxy.TabIndex = 10
         Me.chkNoProxy.Text = "Don't Use A Proxy"
         Me.chkNoProxy.UseVisualStyleBackColor = True
         '
