@@ -1,4 +1,4 @@
-![Screenshot](http://i.imgur.com/Nm3zCGZ.png)
+![Screenshot](https://raw.githubusercontent.com/dj-nitehawk/Pandorian/master/main.png) ![Screenshot](https://raw.githubusercontent.com/dj-nitehawk/Pandorian/master/settings.png)
 
 [<img src="http://i.imgur.com/eUMjRwZ.png"/>](https://sourceforge.net/projects/pandorian/) [<img src="http://i.imgur.com/OvUC7uO.png"/>] (http://www.softpedia.com/get/Internet/Internet-Radio-TV-Player/Pandorian.shtml) [<img src="http://i.imgur.com/xzS45do.jpgo" height="100"/>] (http://pandorian.en.softonic.com/) [<img src="http://i.i.cbsi.com/cnwk.1d/i/dl/button/anim_button.gif"/>] (http://download.cnet.com/Pandorian/3000-2168_4-76113466.html)
 
