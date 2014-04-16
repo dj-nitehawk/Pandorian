@@ -572,7 +572,7 @@ Public Class frmMain
         End If
     End Sub
     Private Sub miUpdate_Click(sender As Object, e As EventArgs) Handles miUpdate.Click
-        Process.Start("http://sourceforge.net/projects/pandorian/")
+        Process.Start("http://pandorian.djnitehawk.com/")
     End Sub
     Private Sub MenuStrip_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MenuStrip.Opening
         Try
