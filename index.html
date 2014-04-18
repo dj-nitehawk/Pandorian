@@ -18,8 +18,6 @@
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
       ga('create', 'UA-39155502-3', 'djnitehawk.com');
-      ga('require', 'displayfeatures');
-      ga('require', 'linkid', 'linkid.js');
       ga('send', 'pageview');
     </script>
 </head>
@@ -29,7 +27,13 @@
         <div class="inner">
             <h1>Pandorian</h1>
             <h2>A Pandora client with built-in proxy support written in VB.Net</h2>
-            <a id="ViewSourceOnGitHub" href="https://github.com/dj-nitehawk/Pandorian" class="button"><small>View source on</small>GitHub</a>
+            <a 
+                onClick="ga('send', 'event', 'LINK', 'CLICK', 'View Source On GitHub');" 
+                href="https://github.com/dj-nitehawk/Pandorian" 
+                class="button"
+                target="_blank">
+                <small>View source on</small>GitHub
+            </a>
         </div>
     </header>
 
@@ -78,13 +82,29 @@
 
                 <ul>
                     <li>
-                        <a id="PandoraMusicBox" href="https://code.google.com/p/pandora-musicbox/">PandoraMusicBoxEngine</a> </li>
-                    <li><a id="BASS" href="http://www.un4seen.com/">BASS</a></li>
+                        <a
+                            onClick="ga('send', 'event', 'LINK', 'CLICK', 'Pandora Music Box');"
+                            href="https://code.google.com/p/pandora-musicbox/"
+                            target="_blank">PandoraMusicBoxEngine
+                        </a> 
+                    </li>
+                    <li>
+                        <a 
+                            onClick="ga('send', 'event', 'LINK', 'CLICK', 'BASS');"
+                            href="http://www.un4seen.com/"
+                            target="_blank">BASS
+                        </a>
+                    </li>
                 </ul>
 
                 <h1>Support/Feedback:</h1>
 
-                <p>If you need support or would like to send some feedback, please <a id="FeedBackSupport" href="https://github.com/dj-nitehawk/Pandorian/issues">create a new issue here</a></p>
+                <p>If you need support or would like to send some feedback, please 
+                    <a 
+                        href="https://github.com/dj-nitehawk/Pandorian/issues"
+                        onClick="ga('send', 'event', 'LINK', 'CLICK', 'FeedBack Support');">create a new issue here
+                    </a>
+                </p>
 
                 <h1>To Do:</h1>
 
@@ -199,25 +219,44 @@
             </section>
 
             <aside id="sidebar">
-                <a id="DownloadWindows" href="https://github.com/dj-nitehawk/Pandorian/releases/latest" class="button">
+                <a 
+                    href="https://github.com/dj-nitehawk/Pandorian/releases/latest" 
+                    class="button"
+                    onClick="ga('send', 'event', 'LINK', 'CLICK', 'Download Windows');" >
                     <small>Windows Setup</small> Download
                 </a>
-                <a id="DownloadSource" href="https://github.com/dj-nitehawk/Pandorian/zipball/master" class="button">
+                <a 
+                    href="https://github.com/dj-nitehawk/Pandorian/zipball/master" 
+                    class="button"
+                    onClick="ga('send', 'event', 'LINK', 'CLICK', 'Download Source');" >
                     <small>Source Code</small> Download
                 </a>
 
                 <p style="text-align: center;">
-                    <a id="SoftPedia" href="http://www.softpedia.com/get/Internet/Internet-Radio-TV-Player/Pandorian.shtml">
-                        <img style="margin-bottom: 20px" src="http://i.imgur.com/OvUC7uO.png"></a>
-                    <a id="CNet" href="http://download.cnet.com/Pandorian/3000-2168_4-76113466.html">
-                        <img style="margin-bottom: 20px" src="http://i.i.cbsi.com/cnwk.1d/i/dl/button/anim_button.gif"></a>
-                    <a id="Softonic" href="http://pandorian.en.softonic.com/">
-                        <img src="http://i.imgur.com/xzS45do.jpgo" height="100"></a>
+                    <a 
+                        href="http://www.softpedia.com/get/Internet/Internet-Radio-TV-Player/Pandorian.shtml"
+                        onClick="ga('send', 'event', 'LINK', 'CLICK', 'Softpedia');">
+                        <img style="margin-bottom: 20px" src="http://i.imgur.com/OvUC7uO.png">
+                    </a>
+                    <a 
+                        href="http://download.cnet.com/Pandorian/3000-2168_4-76113466.html"
+                        onClick="ga('send', 'event', 'LINK', 'CLICK', 'CNet');">
+                        <img style="margin-bottom: 20px" src="http://i.i.cbsi.com/cnwk.1d/i/dl/button/anim_button.gif">
+                    </a>
+                    <a 
+                        href="http://pandorian.en.softonic.com/"
+                        onClick="ga('send', 'event', 'LINK', 'CLICK', 'Softonic');">
+                        <img src="http://i.imgur.com/xzS45do.jpgo" height="100">
+                    </a>
                 </p>
 
                 <p style="text-align: center;" class="repo-owner">
                     Pandorian is brought to you by:<br /><br />
-                    <a id="DJNiteHawk" href="http://djnitehawk.com">Đĵ ΝιΓΞΗΛψΚ</a>
+                    <a 
+                        href="http://djnitehawk.com"
+                        onClick="ga('send', 'event', 'LINK', 'CLICK', 'DJ NiteHawk');">
+                        Đĵ ΝιΓΞΗΛψΚ
+                    </a>
                 </p>
             </aside>
         </div>
