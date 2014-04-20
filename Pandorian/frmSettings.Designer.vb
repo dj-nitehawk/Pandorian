@@ -185,7 +185,7 @@ Partial Class frmSettings
         Me.ddQuality.FormattingEnabled = True
         Me.ddQuality.Location = New System.Drawing.Point(115, 102)
         Me.ddQuality.Name = "ddQuality"
-        Me.ddQuality.Size = New System.Drawing.Size(78, 21)
+        Me.ddQuality.Size = New System.Drawing.Size(120, 21)
         Me.ddQuality.TabIndex = 5
         '
         'chkPandoraOne

@@ -1,6 +1,6 @@
 ﻿Public Class frmSettings
 
-    Private SelectableQualities As New Dictionary(Of String, String)
+    Private Qualities As New Dictionary(Of String, String)
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -79,17 +79,17 @@
     End Sub
 
     Private Sub PopulateQualityList(IsPandoraOne As Boolean)
-        SelectableQualities.Clear()
-        SelectableQualities.Add("High", "highQuality")
+        Qualities.Clear()
         If IsPandoraOne Then
-            SelectableQualities.Add("Medium", "mediumQuality")
-        End If
-        If Not IsPandoraOne Then
-            SelectableQualities.Add("Low", "lowQuality")
+            Qualities.Add("High (192k MP3)", "highQuality")
+            Qualities.Add("Medium (64k AAC+)", "mediumQuality")
+        Else
+            Qualities.Add("Medium (64k AAC+)", "mediumQuality")
+            Qualities.Add("Low (32k AAC+)", "lowQuality")
         End If
         ddQuality.ValueMember = "Value"
         ddQuality.DisplayMember = "Key"
-        ddQuality.DataSource = New BindingSource(SelectableQualities, Nothing)
+        ddQuality.DataSource = New BindingSource(Qualities, Nothing)
     End Sub
 
     Private Sub chkNoProxy_CheckedChanged(sender As Object, e As EventArgs) Handles chkNoProxy.CheckedChanged
