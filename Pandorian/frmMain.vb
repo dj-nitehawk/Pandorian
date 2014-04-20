@@ -15,6 +15,7 @@ Public Class frmMain
     Dim Downloader As WebClient
     Dim IsActiveForm As Boolean
     Dim SleepAt As Date
+    Dim SleepNow As Boolean
     Dim BASSReady As Boolean = False
 
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
@@ -43,6 +44,11 @@ Public Class frmMain
                 End If
             Case 6
                 btnBlock_Click(Nothing, Nothing)
+            Case 7
+                If Not chkSleep.Checked Then
+                    SleepNow = True
+                    chkSleep.Checked = True
+                End If
         End Select
     End Sub
 
@@ -53,10 +59,11 @@ Public Class frmMain
         Hotkeys.RegisterHotKey(Me, 4, Keys.S, Hotkeys.KeyModifier.Alt) 'skip
         Hotkeys.RegisterHotKey(Me, 5, Keys.P, Hotkeys.KeyModifier.Alt) 'show/hide pandorian
         Hotkeys.RegisterHotKey(Me, 6, Keys.B, Hotkeys.KeyModifier.Alt) 'block
+        Hotkeys.RegisterHotKey(Me, 7, Keys.Escape, Hotkeys.KeyModifier.Alt) 'sleep
     End Sub
     Private Sub unRegisterHotkeys()
         Dim i As Integer = 1
-        Do While i <= 6
+        Do While i <= 7
             Hotkeys.unregisterHotkeys(Me, i)
             i = i + 1
         Loop
@@ -68,7 +75,8 @@ Public Class frmMain
                "Dislike Current Song: ALT + D" + vbCrLf +
                "Skip Current Song: ALT + S" + vbCrLf +
                "Block Current Song: ALT + B" + vbCrLf +
-               "Show/Hide Pandorian: ALT + P", MsgBoxStyle.Information)
+               "Show/Hide Pandorian: ALT + P" + vbCrLf +
+               "Sleep computer now: ALT + Esc", MsgBoxStyle.Information)
     End Sub
 
     Sub AddCurrentSongToStationBuffer()
@@ -627,8 +635,13 @@ Public Class frmMain
     Private Sub chkSleep_CheckedChanged(sender As Object, e As EventArgs) Handles chkSleep.CheckedChanged
         If chkSleep.Checked Then
             ddSleepTimes.Enabled = False
-            'SleepAt = Now.AddHours(ddSleepTimes.SelectedValue)
-            SleepAt = Now.AddSeconds(ddSleepTimes.SelectedValue) 'TEST MODE
+            If SleepNow Then
+                SleepNow = False
+                SleepAt = Now
+            Else
+                SleepAt = Now.AddHours(ddSleepTimes.SelectedValue)
+                'SleepAt = Now.AddSeconds(ddSleepTimes.SelectedValue) 'TEST MODE
+            End If
         Else
             ddSleepTimes.Enabled = True
             SleepAt = Date.MinValue
