@@ -2,6 +2,7 @@
 Imports Un4seen.Bass
 Imports System.Runtime.InteropServices
 Imports System.Net
+Imports Microsoft.Win32
 Public Class frmMain
     Dim Pandora As API
     Dim Proxy As Net.WebProxy
@@ -13,6 +14,8 @@ Public Class frmMain
     Dim StationCurrentSongBuffer As New Dictionary(Of String, Data.PandoraSong)
     Dim Downloader As WebClient
     Dim IsActiveForm As Boolean
+    Dim SleepAt As Date
+    Dim BASSReady As Boolean = False
 
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
         If m.Msg = Hotkeys.WM_HOTKEY Then
@@ -133,7 +136,7 @@ Public Class frmMain
             End If
         Next
     End Sub
-    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 3 REFERENCES (PlayNextSong/RunNow/ReplaySong)
+    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/ReplaySong/WokeUpFromSleep)
         Dim Song As New Data.PandoraSong
         If IsNothing(Pandora.CurrentSong) Then
             Try
@@ -207,24 +210,26 @@ Public Class frmMain
     Private Sub frmMain_Deactivate(sender As Object, e As EventArgs) Handles Me.Deactivate
         IsActiveForm = False
     End Sub
-    Private Sub frmMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        Bass.BASS_ChannelStop(Stream)
-        Bass.BASS_StreamFree(Stream)
+
+    Private Sub SaveSkipHistory()
         If Not IsNothing(Pandora) Then
             My.Settings.stationSkipHistory = Pandora.SkipHistory.GetStationSkipHisoryJSON
             My.Settings.globalSkipHistory = Pandora.SkipHistory.GetGlobalSkipHistoryJSON
             My.Settings.Save()
+        End If
+    End Sub
+
+    Private Sub frmMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        SaveSkipHistory()
+        If Not IsNothing(Pandora) Then
             Pandora.Logout()
         End If
-        Bass.BASS_PluginFree(AAC)
-        Bass.BASS_PluginFree(FX)
-        Bass.BASS_Free()
-        Marshal.FreeHGlobal(ProxyPtr)
+        DeInitBass()
         unRegisterHotkeys()
     End Sub
     Sub InitBass()
         BassNet.Registration("pandorian@sharklasers.com", "2X2531425283122")
-        Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero)
+        BASSReady = Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero)
         If Not My.Settings.noProxy Then
             Dim proxy As String = My.Settings.proyxUsername + ":" +
                                   My.Settings.proxyPassword + "@" +
@@ -238,6 +243,17 @@ Public Class frmMain
             MsgBox("Wrong BassFx Version. Volume will be not normalize!", MsgBoxStyle.Exclamation)
         End If
     End Sub
+
+    Sub DeInitBass()
+        Bass.BASS_ChannelStop(Stream)
+        Bass.BASS_StreamFree(Stream)
+        Bass.BASS_PluginFree(AAC)
+        Bass.BASS_PluginFree(FX)
+        Bass.BASS_Free()
+        Marshal.FreeHGlobal(ProxyPtr)
+        BASSReady = False
+    End Sub
+
     Sub ApplyReplayGain()
         Dim VolFX As Integer = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_BFX_VOLUME, 0)
         Dim VolParm As New AddOn.Fx.BASS_BFX_VOLUME
@@ -338,8 +354,10 @@ Public Class frmMain
         Control.CheckForIllegalCrossThreadCalls = False
         frmSettings.Hide()
         LogAppStartEvent()
-        Application.DoEvents()
         registerHotkeys()
+        populateSleepTimes()
+        AddHandler SystemEvents.PowerModeChanged, AddressOf WokeUpFromSleep
+        Application.DoEvents()
     End Sub
     Private Sub frmMain_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Application.DoEvents()
@@ -404,6 +422,7 @@ Public Class frmMain
     End Sub
     Private Sub Timer_Tick(sender As Object, e As EventArgs) Handles Timer.Tick
         UpdatePlayPosition()
+        SleepCheck()
     End Sub
     Function HasToResumeLastSong() As Boolean
 
@@ -582,5 +601,79 @@ Public Class frmMain
         End Try
     End Sub
 
+    Private Sub miSleepTimer_Click(sender As Object, e As EventArgs) Handles miSleepTimer.Click
+        pnlSleepTimer.Visible = True
+    End Sub
+
+    Private Sub populateSleepTimes()
+        Dim dict As New Dictionary(Of String, Integer)
+        Dim i As Integer = 1
+
+        Do Until i = 25
+            dict.Add(i.ToString + " Hours", i)
+            i = i + 1
+        Loop
+
+        ddSleepTimes.ValueMember = "Value"
+        ddSleepTimes.DisplayMember = "Key"
+        ddSleepTimes.DataSource = New BindingSource(dict, Nothing)
+
+    End Sub
+
+    Private Sub btnSTDone_Click(sender As Object, e As EventArgs) Handles btnSTDone.Click
+        pnlSleepTimer.Visible = False
+    End Sub
+
+    Private Sub chkSleep_CheckedChanged(sender As Object, e As EventArgs) Handles chkSleep.CheckedChanged
+        If chkSleep.Checked Then
+            ddSleepTimes.Enabled = False
+            'SleepAt = Now.AddHours(ddSleepTimes.SelectedValue)
+            SleepAt = Now.AddSeconds(ddSleepTimes.SelectedValue) 'TEST MODE
+        Else
+            ddSleepTimes.Enabled = True
+            SleepAt = Date.MinValue
+            lblSleepStatus.Text = "Sleep Timer Disabled"
+        End If
+    End Sub
+
+    Private Sub SleepCheck()
+        If chkSleep.Checked And Not SleepAt = Date.MinValue Then
+
+            If Now >= SleepAt Then
+                Timer.Enabled = False
+                DeInitBass()
+                chkSleep.Checked = False
+                ddSleepTimes.Enabled = True
+                lblSleepStatus.Text = "Sleep Timer Disabled"
+                SleepAt = DateTime.MinValue
+                SaveSkipHistory()
+                Application.SetSuspendState(PowerState.Suspend, False, False)
+            Else
+                Dim remTime As TimeSpan = SleepAt.Subtract(Now)
+                lblSleepStatus.Text = remTime.Hours.ToString + ":" + remTime.Minutes.ToString + ":" + remTime.Seconds.ToString
+            End If
+
+        End If
+    End Sub
+
+    Private Sub WokeUpFromSleep(sender As Object, e As PowerModeChangedEventArgs)
+        If e.Mode = PowerModes.Resume Then
+            Spinner.Visible = True
+            Application.DoEvents()
+            System.Threading.Thread.Sleep(5000)
+            InitBass()
+            Dim sw As New Stopwatch
+            sw.Start()
+            Do Until BASSReady
+                If sw.ElapsedMilliseconds > 10000 Then
+                    Exit Do
+                End If
+                System.Threading.Thread.Sleep(1000)
+            Loop
+            sw.Stop()
+            PlayCurrentSong()
+            Timer.Enabled = True
+        End If
+    End Sub
 
 End Class

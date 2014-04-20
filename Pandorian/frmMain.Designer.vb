@@ -42,14 +42,22 @@ Partial Class frmMain
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.miShowSettings = New System.Windows.Forms.ToolStripMenuItem()
         Me.miShowHotkeys = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miSleepTimer = New System.Windows.Forms.ToolStripMenuItem()
         Me.miUpdate = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.miVersion = New System.Windows.Forms.ToolStripMenuItem()
         Me.prgDownload = New System.Windows.Forms.ProgressBar()
         Me.folderBrowser = New System.Windows.Forms.FolderBrowserDialog()
+        Me.pnlSleepTimer = New System.Windows.Forms.Panel()
+        Me.btnSTDone = New System.Windows.Forms.Button()
+        Me.chkSleep = New System.Windows.Forms.CheckBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.ddSleepTimes = New System.Windows.Forms.ComboBox()
+        Me.lblSleepStatus = New System.Windows.Forms.Label()
         CType(Me.Spinner, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
+        Me.pnlSleepTimer.SuspendLayout()
         Me.SuspendLayout()
         '
         'ddStations
@@ -57,15 +65,15 @@ Partial Class frmMain
         Me.ddStations.BackColor = System.Drawing.Color.Azure
         Me.ddStations.DropDownHeight = 400
         Me.ddStations.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ddStations.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ddStations.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ddStations.ForeColor = System.Drawing.Color.DarkBlue
         Me.ddStations.FormattingEnabled = True
         Me.ddStations.IntegralHeight = False
-        Me.ddStations.ItemHeight = 19
+        Me.ddStations.ItemHeight = 20
         Me.ddStations.Location = New System.Drawing.Point(9, 9)
         Me.ddStations.MaxDropDownItems = 20
         Me.ddStations.Name = "ddStations"
-        Me.ddStations.Size = New System.Drawing.Size(300, 27)
+        Me.ddStations.Size = New System.Drawing.Size(300, 28)
         Me.ddStations.TabIndex = 1
         '
         'lblSongName
@@ -198,10 +206,10 @@ Partial Class frmMain
         '
         'MenuStrip
         '
-        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miManageStation, Me.ToolStripSeparator1, Me.miShowSettings, Me.miShowHotkeys, Me.miUpdate, Me.ToolStripSeparator2, Me.miVersion})
+        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miManageStation, Me.ToolStripSeparator1, Me.miShowSettings, Me.miShowHotkeys, Me.miSleepTimer, Me.miUpdate, Me.ToolStripSeparator2, Me.miVersion})
         Me.MenuStrip.Name = "MenuStrip"
         Me.MenuStrip.ShowImageMargin = False
-        Me.MenuStrip.Size = New System.Drawing.Size(168, 126)
+        Me.MenuStrip.Size = New System.Drawing.Size(168, 148)
         '
         'miManageStation
         '
@@ -225,6 +233,12 @@ Partial Class frmMain
         Me.miShowHotkeys.Name = "miShowHotkeys"
         Me.miShowHotkeys.Size = New System.Drawing.Size(167, 22)
         Me.miShowHotkeys.Text = "Show HotKeys"
+        '
+        'miSleepTimer
+        '
+        Me.miSleepTimer.Name = "miSleepTimer"
+        Me.miSleepTimer.Size = New System.Drawing.Size(167, 22)
+        Me.miSleepTimer.Text = "Sleep Timer"
         '
         'miUpdate
         '
@@ -253,14 +267,77 @@ Partial Class frmMain
         Me.prgDownload.TabIndex = 14
         Me.prgDownload.Visible = False
         '
+        'pnlSleepTimer
+        '
+        Me.pnlSleepTimer.BackColor = System.Drawing.Color.SteelBlue
+        Me.pnlSleepTimer.Controls.Add(Me.btnSTDone)
+        Me.pnlSleepTimer.Controls.Add(Me.chkSleep)
+        Me.pnlSleepTimer.Controls.Add(Me.Label1)
+        Me.pnlSleepTimer.Controls.Add(Me.ddSleepTimes)
+        Me.pnlSleepTimer.Controls.Add(Me.lblSleepStatus)
+        Me.pnlSleepTimer.Location = New System.Drawing.Point(9, 44)
+        Me.pnlSleepTimer.Name = "pnlSleepTimer"
+        Me.pnlSleepTimer.Size = New System.Drawing.Size(300, 300)
+        Me.pnlSleepTimer.TabIndex = 15
+        Me.pnlSleepTimer.Visible = False
+        '
+        'btnSTDone
+        '
+        Me.btnSTDone.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.btnSTDone.Location = New System.Drawing.Point(112, 221)
+        Me.btnSTDone.Name = "btnSTDone"
+        Me.btnSTDone.Size = New System.Drawing.Size(75, 23)
+        Me.btnSTDone.TabIndex = 4
+        Me.btnSTDone.Text = "Done"
+        Me.btnSTDone.UseVisualStyleBackColor = True
+        '
+        'chkSleep
+        '
+        Me.chkSleep.AutoSize = True
+        Me.chkSleep.Location = New System.Drawing.Point(94, 172)
+        Me.chkSleep.Name = "chkSleep"
+        Me.chkSleep.Size = New System.Drawing.Size(118, 17)
+        Me.chkSleep.TabIndex = 3
+        Me.chkSleep.Text = "Enable Sleep Timer"
+        Me.chkSleep.UseVisualStyleBackColor = True
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(94, 103)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(112, 13)
+        Me.Label1.TabIndex = 2
+        Me.Label1.Text = "Put system to sleep in:"
+        '
+        'ddSleepTimes
+        '
+        Me.ddSleepTimes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ddSleepTimes.FormattingEnabled = True
+        Me.ddSleepTimes.Location = New System.Drawing.Point(105, 135)
+        Me.ddSleepTimes.Name = "ddSleepTimes"
+        Me.ddSleepTimes.Size = New System.Drawing.Size(89, 21)
+        Me.ddSleepTimes.TabIndex = 1
+        '
+        'lblSleepStatus
+        '
+        Me.lblSleepStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSleepStatus.Location = New System.Drawing.Point(3, 45)
+        Me.lblSleepStatus.Name = "lblSleepStatus"
+        Me.lblSleepStatus.Size = New System.Drawing.Size(293, 33)
+        Me.lblSleepStatus.TabIndex = 0
+        Me.lblSleepStatus.Text = "Sleep Timer Disabled"
+        Me.lblSleepStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
         Me.ClientSize = New System.Drawing.Size(317, 461)
-        Me.Controls.Add(Me.prgDownload)
         Me.Controls.Add(Me.Spinner)
+        Me.Controls.Add(Me.pnlSleepTimer)
+        Me.Controls.Add(Me.prgDownload)
         Me.Controls.Add(Me.btnBlock)
         Me.Controls.Add(Me.prgBar)
         Me.Controls.Add(Me.btnSkip)
@@ -284,6 +361,8 @@ Partial Class frmMain
         CType(Me.Spinner, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip.ResumeLayout(False)
+        Me.pnlSleepTimer.ResumeLayout(False)
+        Me.pnlSleepTimer.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -311,5 +390,12 @@ Partial Class frmMain
     Friend WithEvents prgDownload As System.Windows.Forms.ProgressBar
     Friend WithEvents folderBrowser As System.Windows.Forms.FolderBrowserDialog
     Friend WithEvents miShowHotkeys As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents miSleepTimer As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents pnlSleepTimer As System.Windows.Forms.Panel
+    Friend WithEvents lblSleepStatus As System.Windows.Forms.Label
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents ddSleepTimes As System.Windows.Forms.ComboBox
+    Friend WithEvents chkSleep As System.Windows.Forms.CheckBox
+    Friend WithEvents btnSTDone As System.Windows.Forms.Button
 
 End Class
