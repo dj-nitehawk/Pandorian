@@ -151,7 +151,6 @@ Partial Class frmMain
         'prgBar
         '
         Me.prgBar.Location = New System.Drawing.Point(9, 352)
-        Me.prgBar.MarqueeAnimationSpeed = 5000
         Me.prgBar.Minimum = 1
         Me.prgBar.Name = "prgBar"
         Me.prgBar.Size = New System.Drawing.Size(300, 10)
@@ -161,7 +160,7 @@ Partial Class frmMain
         '
         'Timer
         '
-        Me.Timer.Interval = 1000
+        Me.Timer.Interval = 500
         '
         'btnBlock
         '
@@ -179,9 +178,9 @@ Partial Class frmMain
         'Spinner
         '
         Me.Spinner.Image = Global.Pandorian.My.Resources.Resources.spinner
-        Me.Spinner.Location = New System.Drawing.Point(2, 0)
+        Me.Spinner.Location = New System.Drawing.Point(2, 1)
         Me.Spinner.Name = "Spinner"
-        Me.Spinner.Size = New System.Drawing.Size(312, 464)
+        Me.Spinner.Size = New System.Drawing.Size(312, 460)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.Spinner.TabIndex = 13
         Me.Spinner.TabStop = False
@@ -247,8 +246,7 @@ Partial Class frmMain
         '
         'prgDownload
         '
-        Me.prgDownload.ForeColor = System.Drawing.Color.Aqua
-        Me.prgDownload.Location = New System.Drawing.Point(0, 454)
+        Me.prgDownload.Location = New System.Drawing.Point(0, 451)
         Me.prgDownload.Name = "prgDownload"
         Me.prgDownload.Size = New System.Drawing.Size(317, 10)
         Me.prgDownload.Step = 1
@@ -260,7 +258,7 @@ Partial Class frmMain
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
-        Me.ClientSize = New System.Drawing.Size(317, 464)
+        Me.ClientSize = New System.Drawing.Size(317, 461)
         Me.Controls.Add(Me.prgDownload)
         Me.Controls.Add(Me.Spinner)
         Me.Controls.Add(Me.btnBlock)
