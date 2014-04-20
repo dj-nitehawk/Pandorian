@@ -41,12 +41,12 @@ Partial Class frmMain
         Me.miManageStation = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.miShowSettings = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miShowHotkeys = New System.Windows.Forms.ToolStripMenuItem()
         Me.miUpdate = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.miVersion = New System.Windows.Forms.ToolStripMenuItem()
         Me.prgDownload = New System.Windows.Forms.ProgressBar()
         Me.folderBrowser = New System.Windows.Forms.FolderBrowserDialog()
-        Me.miShowHotkeys = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.Spinner, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
@@ -55,17 +55,23 @@ Partial Class frmMain
         'ddStations
         '
         Me.ddStations.BackColor = System.Drawing.Color.Azure
+        Me.ddStations.DropDownHeight = 400
         Me.ddStations.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ddStations.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ddStations.ForeColor = System.Drawing.Color.DarkBlue
         Me.ddStations.FormattingEnabled = True
-        Me.ddStations.Location = New System.Drawing.Point(30, 17)
+        Me.ddStations.IntegralHeight = False
+        Me.ddStations.ItemHeight = 19
+        Me.ddStations.Location = New System.Drawing.Point(9, 9)
+        Me.ddStations.MaxDropDownItems = 20
         Me.ddStations.Name = "ddStations"
-        Me.ddStations.Size = New System.Drawing.Size(300, 21)
+        Me.ddStations.Size = New System.Drawing.Size(300, 27)
         Me.ddStations.TabIndex = 1
         '
         'lblSongName
         '
         Me.lblSongName.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSongName.Location = New System.Drawing.Point(12, 375)
+        Me.lblSongName.Location = New System.Drawing.Point(-9, 368)
         Me.lblSongName.Name = "lblSongName"
         Me.lblSongName.Size = New System.Drawing.Size(332, 15)
         Me.lblSongName.TabIndex = 3
@@ -74,7 +80,7 @@ Partial Class frmMain
         '
         'lblArtistName
         '
-        Me.lblArtistName.Location = New System.Drawing.Point(12, 390)
+        Me.lblArtistName.Location = New System.Drawing.Point(-9, 384)
         Me.lblArtistName.Name = "lblArtistName"
         Me.lblArtistName.Size = New System.Drawing.Size(332, 15)
         Me.lblArtistName.TabIndex = 4
@@ -83,7 +89,7 @@ Partial Class frmMain
         '
         'lblAlbumName
         '
-        Me.lblAlbumName.Location = New System.Drawing.Point(15, 405)
+        Me.lblAlbumName.Location = New System.Drawing.Point(-6, 400)
         Me.lblAlbumName.Name = "lblAlbumName"
         Me.lblAlbumName.Size = New System.Drawing.Size(329, 15)
         Me.lblAlbumName.TabIndex = 5
@@ -95,10 +101,11 @@ Partial Class frmMain
         Me.btnLike.BackColor = System.Drawing.Color.Azure
         Me.btnLike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLike.ForeColor = System.Drawing.Color.Black
-        Me.btnLike.Location = New System.Drawing.Point(30, 425)
+        Me.btnLike.Location = New System.Drawing.Point(9, 421)
         Me.btnLike.Name = "btnLike"
-        Me.btnLike.Size = New System.Drawing.Size(50, 23)
+        Me.btnLike.Size = New System.Drawing.Size(53, 30)
         Me.btnLike.TabIndex = 6
+        Me.btnLike.TabStop = False
         Me.btnLike.Text = "Like"
         Me.btnLike.UseVisualStyleBackColor = False
         '
@@ -107,10 +114,11 @@ Partial Class frmMain
         Me.btnDislike.BackColor = System.Drawing.Color.Azure
         Me.btnDislike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDislike.ForeColor = System.Drawing.Color.Black
-        Me.btnDislike.Location = New System.Drawing.Point(87, 425)
+        Me.btnDislike.Location = New System.Drawing.Point(66, 421)
         Me.btnDislike.Name = "btnDislike"
-        Me.btnDislike.Size = New System.Drawing.Size(50, 23)
+        Me.btnDislike.Size = New System.Drawing.Size(53, 30)
         Me.btnDislike.TabIndex = 7
+        Me.btnDislike.TabStop = False
         Me.btnDislike.Text = "Dislike"
         Me.btnDislike.UseVisualStyleBackColor = False
         '
@@ -119,10 +127,11 @@ Partial Class frmMain
         Me.btnPlayPause.BackColor = System.Drawing.Color.Azure
         Me.btnPlayPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPlayPause.ForeColor = System.Drawing.Color.Black
-        Me.btnPlayPause.Location = New System.Drawing.Point(157, 425)
+        Me.btnPlayPause.Location = New System.Drawing.Point(134, 421)
         Me.btnPlayPause.Name = "btnPlayPause"
-        Me.btnPlayPause.Size = New System.Drawing.Size(50, 23)
+        Me.btnPlayPause.Size = New System.Drawing.Size(53, 30)
         Me.btnPlayPause.TabIndex = 8
+        Me.btnPlayPause.TabStop = False
         Me.btnPlayPause.Text = "Pause"
         Me.btnPlayPause.UseVisualStyleBackColor = False
         '
@@ -131,16 +140,17 @@ Partial Class frmMain
         Me.btnSkip.BackColor = System.Drawing.Color.Azure
         Me.btnSkip.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnSkip.ForeColor = System.Drawing.Color.Black
-        Me.btnSkip.Location = New System.Drawing.Point(212, 425)
+        Me.btnSkip.Location = New System.Drawing.Point(191, 421)
         Me.btnSkip.Name = "btnSkip"
-        Me.btnSkip.Size = New System.Drawing.Size(50, 23)
+        Me.btnSkip.Size = New System.Drawing.Size(53, 30)
         Me.btnSkip.TabIndex = 9
+        Me.btnSkip.TabStop = False
         Me.btnSkip.Text = "Skip"
         Me.btnSkip.UseVisualStyleBackColor = False
         '
         'prgBar
         '
-        Me.prgBar.Location = New System.Drawing.Point(30, 360)
+        Me.prgBar.Location = New System.Drawing.Point(9, 352)
         Me.prgBar.MarqueeAnimationSpeed = 5000
         Me.prgBar.Minimum = 1
         Me.prgBar.Name = "prgBar"
@@ -158,19 +168,20 @@ Partial Class frmMain
         Me.btnBlock.BackColor = System.Drawing.Color.Azure
         Me.btnBlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnBlock.ForeColor = System.Drawing.Color.Black
-        Me.btnBlock.Location = New System.Drawing.Point(280, 425)
+        Me.btnBlock.Location = New System.Drawing.Point(259, 421)
         Me.btnBlock.Name = "btnBlock"
-        Me.btnBlock.Size = New System.Drawing.Size(50, 23)
+        Me.btnBlock.Size = New System.Drawing.Size(53, 30)
         Me.btnBlock.TabIndex = 12
+        Me.btnBlock.TabStop = False
         Me.btnBlock.Text = "Block"
         Me.btnBlock.UseVisualStyleBackColor = False
         '
         'Spinner
         '
         Me.Spinner.Image = Global.Pandorian.My.Resources.Resources.spinner
-        Me.Spinner.Location = New System.Drawing.Point(0, 0)
+        Me.Spinner.Location = New System.Drawing.Point(2, 0)
         Me.Spinner.Name = "Spinner"
-        Me.Spinner.Size = New System.Drawing.Size(357, 464)
+        Me.Spinner.Size = New System.Drawing.Size(312, 464)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.Spinner.TabIndex = 13
         Me.Spinner.TabStop = False
@@ -179,7 +190,7 @@ Partial Class frmMain
         '
         Me.SongCoverImage.BackColor = System.Drawing.Color.SteelBlue
         Me.SongCoverImage.ContextMenuStrip = Me.MenuStrip
-        Me.SongCoverImage.Location = New System.Drawing.Point(30, 51)
+        Me.SongCoverImage.Location = New System.Drawing.Point(9, 44)
         Me.SongCoverImage.Name = "SongCoverImage"
         Me.SongCoverImage.Size = New System.Drawing.Size(300, 300)
         Me.SongCoverImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -191,7 +202,7 @@ Partial Class frmMain
         Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miManageStation, Me.ToolStripSeparator1, Me.miShowSettings, Me.miShowHotkeys, Me.miUpdate, Me.ToolStripSeparator2, Me.miVersion})
         Me.MenuStrip.Name = "MenuStrip"
         Me.MenuStrip.ShowImageMargin = False
-        Me.MenuStrip.Size = New System.Drawing.Size(168, 148)
+        Me.MenuStrip.Size = New System.Drawing.Size(168, 126)
         '
         'miManageStation
         '
@@ -209,6 +220,12 @@ Partial Class frmMain
         Me.miShowSettings.Name = "miShowSettings"
         Me.miShowSettings.Size = New System.Drawing.Size(167, 22)
         Me.miShowSettings.Text = "Show Settings"
+        '
+        'miShowHotkeys
+        '
+        Me.miShowHotkeys.Name = "miShowHotkeys"
+        Me.miShowHotkeys.Size = New System.Drawing.Size(167, 22)
+        Me.miShowHotkeys.Text = "Show HotKeys"
         '
         'miUpdate
         '
@@ -233,23 +250,17 @@ Partial Class frmMain
         Me.prgDownload.ForeColor = System.Drawing.Color.Aqua
         Me.prgDownload.Location = New System.Drawing.Point(0, 454)
         Me.prgDownload.Name = "prgDownload"
-        Me.prgDownload.Size = New System.Drawing.Size(357, 10)
+        Me.prgDownload.Size = New System.Drawing.Size(317, 10)
         Me.prgDownload.Step = 1
         Me.prgDownload.TabIndex = 14
         Me.prgDownload.Visible = False
-        '
-        'miShowHotkeys
-        '
-        Me.miShowHotkeys.Name = "miShowHotkeys"
-        Me.miShowHotkeys.Size = New System.Drawing.Size(167, 22)
-        Me.miShowHotkeys.Text = "Show HotKeys"
         '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
-        Me.ClientSize = New System.Drawing.Size(356, 464)
+        Me.ClientSize = New System.Drawing.Size(317, 464)
         Me.Controls.Add(Me.prgDownload)
         Me.Controls.Add(Me.Spinner)
         Me.Controls.Add(Me.btnBlock)
