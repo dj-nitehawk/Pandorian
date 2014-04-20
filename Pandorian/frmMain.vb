@@ -364,7 +364,7 @@ Public Class frmMain
         LogAppStartEvent()
         registerHotkeys()
         populateSleepTimes()
-        AddHandler SystemEvents.PowerModeChanged, AddressOf WokeUpFromSleep
+        AddHandler SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
         Application.DoEvents()
     End Sub
     Private Sub frmMain_Shown(sender As Object, e As EventArgs) Handles Me.Shown
@@ -653,13 +653,6 @@ Public Class frmMain
         If chkSleep.Checked And Not SleepAt = Date.MinValue Then
 
             If Now >= SleepAt Then
-                Timer.Enabled = False
-                DeInitBass()
-                chkSleep.Checked = False
-                ddSleepTimes.Enabled = True
-                lblSleepStatus.Text = "Sleep Timer Disabled"
-                SleepAt = DateTime.MinValue
-                SaveSkipHistory()
                 Application.SetSuspendState(PowerState.Suspend, False, False)
             Else
                 Dim remTime As TimeSpan = SleepAt.Subtract(Now)
@@ -669,24 +662,33 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub WokeUpFromSleep(sender As Object, e As PowerModeChangedEventArgs)
-        If e.Mode = PowerModes.Resume Then
-            Spinner.Visible = True
-            Application.DoEvents()
-            System.Threading.Thread.Sleep(5000)
-            InitBass()
-            Dim sw As New Stopwatch
-            sw.Start()
-            Do Until BASSReady
-                If sw.ElapsedMilliseconds > 10000 Then
-                    Exit Do
-                End If
-                System.Threading.Thread.Sleep(1000)
-            Loop
-            sw.Stop()
-            PlayCurrentSong()
-            Timer.Enabled = True
-        End If
+    Private Sub PowerModeChanged(sender As Object, e As PowerModeChangedEventArgs)
+        Select Case e.Mode
+            Case PowerModes.Resume
+                Spinner.Visible = True
+                Application.DoEvents()
+                System.Threading.Thread.Sleep(5000)
+                InitBass()
+                Dim sw As New Stopwatch
+                sw.Start()
+                Do Until BASSReady
+                    If sw.ElapsedMilliseconds > 10000 Then
+                        Exit Do
+                    End If
+                    System.Threading.Thread.Sleep(1000)
+                Loop
+                sw.Stop()
+                PlayCurrentSong()
+                Timer.Enabled = True
+            Case PowerModes.Suspend
+                Timer.Enabled = False
+                DeInitBass()
+                chkSleep.Checked = False
+                ddSleepTimes.Enabled = True
+                lblSleepStatus.Text = "Sleep Timer Disabled"
+                SleepAt = DateTime.MinValue
+                SaveSkipHistory()
+        End Select
     End Sub
 
 End Class
