@@ -663,6 +663,7 @@ Public Class frmMain
         If chkSleep.Checked And Not SleepAt = Date.MinValue Then
 
             If Now >= SleepAt Then
+                DeInitBass()
                 Application.SetSuspendState(PowerState.Suspend, False, False)
             Else
                 Dim remTime As TimeSpan = SleepAt.Subtract(Now)
