@@ -58,7 +58,7 @@ Namespace Data
                 Return m_PartnerAuthToken
             End Get
             Friend Set(value As String)
-                m_PartnerAuthToken = Value
+                m_PartnerAuthToken = value
             End Set
         End Property
         Private m_PartnerAuthToken As String
@@ -108,6 +108,10 @@ Namespace Data
         Private ClientStartTime As Long
         Public Sub New()
             ClientStartTime = TicksToUnixTimeStamp(DateTime.UtcNow.Ticks)
+        End Sub
+
+        Public Sub DebugCorruptAuthToken()
+            PartnerAuthToken = "dsfuldshfdugiulghwuihwefuiewgwruig"
         End Sub
     End Class
 End Namespace

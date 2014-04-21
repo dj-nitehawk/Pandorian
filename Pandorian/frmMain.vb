@@ -288,9 +288,7 @@ Public Class frmMain
             Pandora.CurrentSong.AudioDurationSecs = SongDurationSecs()
         Else
             MsgBox("Couldn't open stream: " + Bass.BASS_ErrorGetCode().ToString + vbCr +
-                   "Please try skipping this track or changing the station." + vbCrLf +
-                   "If that doesn't work, try a different pandora a/c." + vbCrLf +
-                   "Your free pandora a/c could be temporarily flagged for excessive skipping/listening.", MsgBoxStyle.Critical)
+                   "Try restarting the app...", MsgBoxStyle.Critical)
         End If
     End Sub
     Function HasSettings() As Boolean
@@ -397,9 +395,21 @@ Public Class frmMain
             If Not IsNothing(Pandora.CurrentStation) Then
                 If Not String.IsNullOrEmpty(Pandora.CurrentStation.Id) Then
                     ddStations.SelectedIndex = ddStations.FindStringExact(Pandora.CurrentStation.Name)
-                    InitBass()
+
                     Spinner.Visible = True
                     Application.DoEvents()
+
+                    InitBass()
+                    Dim sw As New Stopwatch
+                    sw.Start()
+                    Do Until BASSReady
+                        If sw.ElapsedMilliseconds > 10000 Then
+                            Exit Do
+                        End If
+                        System.Threading.Thread.Sleep(1000)
+                    Loop
+                    sw.Stop()
+
                     PlayCurrentSong()
                 End If
             End If
@@ -436,7 +446,7 @@ Public Class frmMain
 
         If StationCurrentSongBuffer.ContainsKey(Pandora.CurrentStation.Id) Then
             Dim song As Data.PandoraSong = StationCurrentSongBuffer(Pandora.CurrentStation.Id)
-            If song.PlayingStartTime.AddSeconds(song.AudioDurationSecs) > Now Then
+            If song.DurationElapsed = False Then
                 Debug.WriteLine("Has to resume last song :-(")
                 Debug.WriteLine("SongDuration: " + song.AudioDurationSecs.ToString)
                 Debug.WriteLine("TimeElapsed: " + Now.Subtract(song.PlayingStartTime).TotalSeconds.ToString)
@@ -665,29 +675,26 @@ Public Class frmMain
     Private Sub PowerModeChanged(sender As Object, e As PowerModeChangedEventArgs)
         Select Case e.Mode
             Case PowerModes.Resume
+
+                System.Threading.Thread.Sleep(5000)
+                RunNow()
+                Timer.Enabled = True
+
+            Case PowerModes.Suspend
+
                 Spinner.Visible = True
                 Application.DoEvents()
-                System.Threading.Thread.Sleep(5000)
-                InitBass()
-                Dim sw As New Stopwatch
-                sw.Start()
-                Do Until BASSReady
-                    If sw.ElapsedMilliseconds > 10000 Then
-                        Exit Do
-                    End If
-                    System.Threading.Thread.Sleep(1000)
-                Loop
-                sw.Stop()
-                PlayCurrentSong()
-                Timer.Enabled = True
-            Case PowerModes.Suspend
                 Timer.Enabled = False
-                DeInitBass()
                 chkSleep.Checked = False
                 ddSleepTimes.Enabled = True
                 lblSleepStatus.Text = "Sleep Timer Disabled"
                 SleepAt = DateTime.MinValue
+                DeInitBass()
                 SaveSkipHistory()
+                Pandora.Logout()
+                Pandora = Nothing
+                GC.Collect()
+
         End Select
     End Sub
 

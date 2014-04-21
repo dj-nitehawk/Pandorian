@@ -252,6 +252,21 @@ Namespace Data
                 _audioDuration = value
             End Set
         End Property
-        Private _audioDuration As Double
-	End Class
+        Private _audioDuration As Double = 0
+
+        Public ReadOnly Property DurationElapsed As Boolean
+            Get
+                If (Not PlayingStartTime = DateTime.MinValue) And (AudioDurationSecs > 0) Then
+                    If PlayingStartTime.AddSeconds(AudioDurationSecs) < Now Then
+                        Return True
+                    Else
+                        Return False
+                    End If
+                Else
+                    Throw New PandoraException("Please set PlayStartTime & AudioDurationSecs before accessing this property")
+                End If
+            End Get
+        End Property
+
+    End Class
 End Namespace

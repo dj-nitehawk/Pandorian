@@ -49,7 +49,7 @@ Public Class PandoraIO
 		Catch e As PandoraException
 			If e.ErrorCode = ErrorCodeEnum.AUTH_INVALID_USERNAME_PASSWORD Then
 				Return Nothing
-			End If
+            End If
 			Throw
 		End Try
 	End Function

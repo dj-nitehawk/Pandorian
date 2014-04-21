@@ -180,7 +180,7 @@ Public Class API
         ' check if there's really a need to log a skip, cause the user may have paused the song 
         ' and song duration may have elapsed
         If isSkip = True Then
-            If CurrentSong.PlayingStartTime.AddSeconds(CurrentSong.AudioDurationSecs) < Now Then
+            If CurrentSong.DurationElapsed Then
                 isSkip = False
             End If
         End If
@@ -214,7 +214,7 @@ Public Class API
     ''' <param name="rating"></param>
     ''' <param name="song"></param>
     Public Sub RateSong(song As PandoraSong, rating As PandoraRating)
-        VerifyAndExecute(Sub() pandora.RateSong(Session, CurrentStation, song, rating, Proxy))
+        pandora.RateSong(Session, CurrentStation, song, rating, Proxy)
     End Sub
 
     ''' <summary>
@@ -222,7 +222,7 @@ Public Class API
     ''' </summary>
     ''' <param name="song"></param>
     Public Sub TemporarilyBanSong(song As PandoraSong)
-        VerifyAndExecute(Sub() pandora.AddTiredSong(Session, song, Proxy))
+        pandora.AddTiredSong(Session, song, Proxy)
     End Sub
 
     Protected Sub Clear()
@@ -240,7 +240,7 @@ Public Class API
     Protected Sub LoadMoreSongs()
         Dim newSongs As New List(Of PandoraSong)()
 
-        VerifyAndExecute(Sub() newSongs = pandora.GetSongs(Session, CurrentStation, Proxy))
+        newSongs = pandora.GetSongs(Session, CurrentStation, Proxy)
 
         ' add our new songs to the appropriate station playlist
         For Each currSong As PandoraSong In newSongs
@@ -265,31 +265,8 @@ Public Class API
         Next
     End Sub
 
-    ''' <summary>
-    ''' Try to execute the supplied logic, if we get an authentication error, relogin and try again.
-    ''' </summary>
-    ''' <param name="logic"></param>
-    Protected Sub VerifyAndExecute(logic As ExecuteDelegate)
-        Try
-            logic()
-        Catch ex As PandoraException
-            ' if there was an error and it was NOT an expired session, just toss it up to the client
-            If ex.ErrorCode <> ErrorCodeEnum.AUTH_INVALID_TOKEN AndAlso ex.ErrorCode <> ErrorCodeEnum.INSUFFICIENT_CONNECTIVITY Then
-                Throw
-            End If
-
-            ' this is an AUTH_INVALID_TOKEN error meaning our login expired, try logging in again
-            Session = pandora.PartnerLogin(Proxy)
-            User = pandora.UserLogin(Session, User.Name, User.Password, Proxy)
-
-            playlist.Clear()
-            If Session Is Nothing OrElse User Is Nothing Then
-                Throw New PandoraException("Username and/or password are no longer valid!")
-            End If
-
-            ' and again, try the desired action
-            logic()
-        End Try
+    Public Sub DebugClearPlayList()
+        playlist.Clear()
     End Sub
 
 End Class

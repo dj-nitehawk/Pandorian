@@ -132,7 +132,11 @@ Namespace Data
 			Get
 				Return New TimeSpan(0, TimeoutMinutes, 0)
 			End Get
-		End Property
+        End Property
+
+        Public Sub DebugCorruptAuthToken()
+            AuthorizationToken = "Dfsdlfhsdguhsduidsagiusdlgfdi"
+        End Sub
 
     End Class
 End Namespace
