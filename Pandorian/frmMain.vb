@@ -663,6 +663,7 @@ Public Class frmMain
         If chkSleep.Checked And Not SleepAt = Date.MinValue Then
 
             If Now >= SleepAt Then
+                PreSleepActivities()
                 Application.SetSuspendState(PowerState.Suspend, False, False)
             Else
                 Dim remTime As TimeSpan = SleepAt.Subtract(Now)
@@ -676,11 +677,8 @@ Public Class frmMain
         Select Case e.Mode
             Case PowerModes.Resume
 
-                DeInitBass()
-
                 Spinner.Visible = True
                 Application.DoEvents()
-
                 SaveSkipHistory()
                 Pandora.Logout()
                 Pandora = Nothing
@@ -691,13 +689,19 @@ Public Class frmMain
 
             Case PowerModes.Suspend
 
-                Timer.Enabled = False
-                chkSleep.Checked = False
-                ddSleepTimes.Enabled = True
-                lblSleepStatus.Text = "Sleep Timer Disabled"
-                SleepAt = DateTime.MinValue
+                PreSleepActivities()
 
         End Select
     End Sub
 
+    Private Sub PreSleepActivities()
+        Timer.Enabled = False
+        chkSleep.Checked = False
+        ddSleepTimes.Enabled = True
+        lblSleepStatus.Text = "Sleep Timer Disabled"
+        SleepAt = DateTime.MinValue
+        If BASSReady Then
+            DeInitBass()
+        End If
+    End Sub
 End Class
