@@ -678,7 +678,6 @@ Public Class frmMain
 
                 Spinner.Visible = True
                 Application.DoEvents()
-                DeInitBass()
                 SaveSkipHistory()
                 Pandora.Logout()
                 Pandora = Nothing
@@ -694,6 +693,7 @@ Public Class frmMain
                 ddSleepTimes.Enabled = True
                 lblSleepStatus.Text = "Sleep Timer Disabled"
                 SleepAt = DateTime.MinValue
+                DeInitBass()
 
         End Select
     End Sub
