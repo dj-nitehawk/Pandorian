@@ -676,24 +676,24 @@ Public Class frmMain
         Select Case e.Mode
             Case PowerModes.Resume
 
-                System.Threading.Thread.Sleep(5000)
+                Spinner.Visible = True
+                Application.DoEvents()
+                DeInitBass()
+                SaveSkipHistory()
+                Pandora.Logout()
+                Pandora = Nothing
+
+                System.Threading.Thread.Sleep(5000) ' wait for net and sound devices to be ready
+
                 RunNow()
-                Timer.Enabled = True
 
             Case PowerModes.Suspend
 
-                Spinner.Visible = True
-                Application.DoEvents()
                 Timer.Enabled = False
                 chkSleep.Checked = False
                 ddSleepTimes.Enabled = True
                 lblSleepStatus.Text = "Sleep Timer Disabled"
                 SleepAt = DateTime.MinValue
-                DeInitBass()
-                SaveSkipHistory()
-                Pandora.Logout()
-                Pandora = Nothing
-                GC.Collect()
 
         End Select
     End Sub
