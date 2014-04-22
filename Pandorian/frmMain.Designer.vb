@@ -244,7 +244,7 @@ Partial Class frmMain
         '
         Me.miUpdate.Name = "miUpdate"
         Me.miUpdate.Size = New System.Drawing.Size(167, 22)
-        Me.miUpdate.Text = "Check For An Update"
+        Me.miUpdate.Text = "Visit Website"
         '
         'ToolStripSeparator2
         '
