@@ -332,6 +332,7 @@ Public Class frmMain
                 Dim TargeFile As String = My.Settings.downloadLocation + "\" + Pandora.CurrentSong.Artist + " - " + Pandora.CurrentSong.Title + ".mp3"
 
                 Downloader = New WebClient
+
                 AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
                 AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
                 If Not My.Settings.noProxy Then
@@ -360,6 +361,7 @@ Public Class frmMain
         Control.CheckForIllegalCrossThreadCalls = False
         frmSettings.Hide()
         LogAppStartEvent()
+        CheckForUpdate()
         registerHotkeys()
         populateSleepTimes()
         AddHandler SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
@@ -619,6 +621,28 @@ Public Class frmMain
         End Try
     End Sub
 
+    Private Sub CheckForUpdate()
+        Dim web As New WebClient()
+        AddHandler web.DownloadStringCompleted, AddressOf CheckForUpdateCompleted
+        web.DownloadStringAsync(New Uri("http://pandorian.djnitehawk.com/LATEST.VERSION"))
+    End Sub
+
+    Private Sub CheckForUpdateCompleted(sender As Object, e As DownloadStringCompletedEventArgs)
+        Try
+
+            'System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString
+            Dim currVer As New Version("1.6.3.5")
+            Dim newVer As New Version(e.Result)
+
+            If currVer < newVer Then
+                MsgBox("Pandorian has a new update: v" + e.Result.ToString)
+            End If
+
+        Catch ex As Exception
+            'do none
+        End Try
+    End Sub
+
     Private Sub miSleepTimer_Click(sender As Object, e As EventArgs) Handles miSleepTimer.Click
         pnlSleepTimer.Visible = True
     End Sub
@@ -704,4 +728,6 @@ Public Class frmMain
             DeInitBass()
         End If
     End Sub
+
+
 End Class
