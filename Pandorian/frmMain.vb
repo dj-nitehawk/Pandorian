@@ -624,7 +624,7 @@ Public Class frmMain
     Private Sub CheckForUpdate()
         Dim web As New WebClient()
         AddHandler web.DownloadStringCompleted, AddressOf CheckForUpdateCompleted
-        web.DownloadStringAsync(New Uri("http://pandorian.djnitehawk.com/LATEST.VERSION"))
+        web.DownloadStringAsync(New Uri("http://pandorian.djnitehawk.com/version.html"))
     End Sub
 
     Private Sub CheckForUpdateCompleted(sender As Object, e As DownloadStringCompletedEventArgs)
