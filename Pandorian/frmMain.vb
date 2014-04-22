@@ -630,12 +630,15 @@ Public Class frmMain
     Private Sub CheckForUpdateCompleted(sender As Object, e As DownloadStringCompletedEventArgs)
         Try
 
-            'System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString
-            Dim currVer As New Version("1.6.3.5")
+            Dim currVer As New Version(System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString)
             Dim newVer As New Version(e.Result)
 
             If currVer < newVer Then
-                MsgBox("Pandorian has a new update: v" + e.Result.ToString)
+                Dim res As MsgBoxResult = MsgBox("Pandorian has a new update: v" + e.Result.ToString + vbCrLf + vbCrLf +
+                                                 "Would you like to visit the Pandorian website now?", MsgBoxStyle.YesNo, Title:="New Update Available")
+                If res = MsgBoxResult.Yes Then
+                    Process.Start("http://pandorian.djnitehawk.com")
+                End If
             End If
 
         Catch ex As Exception
