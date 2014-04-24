@@ -314,14 +314,16 @@ Public Class frmMain
     End Function
     Private Sub frmMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
 
+#If DEBUG Then
         If e.Control And e.Alt And e.KeyCode = Keys.E Then
             DebugExpireSessionNow()
         End If
+#End If
 
         If e.Control And e.KeyCode = Keys.D And
-                        Not IsNothing(Pandora.CurrentSong) And
-                        prgDownload.Value = 0 And
-                        Pandora.User.PartnerCredentials.AccountType = Data.AccountType.PANDORA_ONE_USER Then
+                            Not IsNothing(Pandora.CurrentSong) And
+                            prgDownload.Value = 0 And
+                            Pandora.User.PartnerCredentials.AccountType = Data.AccountType.PANDORA_ONE_USER Then
 
             If Not IO.Directory.Exists(My.Settings.downloadLocation) Then
                 If folderBrowser.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -333,17 +335,20 @@ Public Class frmMain
             End If
 
             If IO.Directory.Exists(My.Settings.downloadLocation) Then
-                Dim TargeFile As String = My.Settings.downloadLocation + "\" + Pandora.CurrentSong.Artist + " - " + Pandora.CurrentSong.Title + ".mp3"
-
-                Downloader = New WebClient
-
-                AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
-                AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
-                If Not My.Settings.noProxy Then
-                    Downloader.Proxy = Me.Proxy
-                End If
+                Dim TargeFile As String =
+                    My.Settings.downloadLocation +
+                    "\" +
+                    ValidFileName(Pandora.CurrentSong.Artist) + " - " +
+                    ValidFileName(Pandora.CurrentSong.Title) +
+                    ".mp3"
 
                 If Not System.IO.File.Exists(TargeFile) Then
+                    Downloader = New WebClient
+                    AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
+                    AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
+                    If Not My.Settings.noProxy Then
+                        Downloader.Proxy = Me.Proxy
+                    End If
                     Downloader.DownloadFileAsync(
                             New Uri(Pandora.CurrentSong.AudioUrlMap("highQuality").Url), TargeFile)
                     prgDownload.Visible = True
@@ -351,6 +356,14 @@ Public Class frmMain
             End If
         End If
     End Sub
+
+    Private Function ValidFileName(Text As String) As String
+        For Each c In IO.Path.GetInvalidFileNameChars
+            Text = Text.Replace(c, "_")
+        Next
+        Return Text
+    End Function
+
     Private Sub FileDownloadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs)
         prgDownload.Visible = False
         prgDownload.Value = 0
