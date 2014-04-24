@@ -188,6 +188,7 @@ Public Class frmMain
                 btnLike.Enabled = True
                 btnDislike.Enabled = True
         End Select
+        btnPlayPause.Enabled = True
         btnPlayPause.Text = "Pause"
         If Song.TemporarilyBanned Then
             btnBlock.Text = "(B)"
@@ -228,7 +229,9 @@ Public Class frmMain
         If Not IsNothing(Pandora) Then
             Pandora.Logout()
         End If
-        DeInitBass()
+        If BASSReady Then
+            DeInitBass()
+        End If
         unRegisterHotkeys()
     End Sub
     Sub InitBass()
@@ -310,6 +313,11 @@ Public Class frmMain
         End If
     End Function
     Private Sub frmMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
+
+        If e.Control And e.Alt And e.KeyCode = Keys.E Then
+            DebugExpireSessionNow()
+        End If
+
         If e.Control And e.KeyCode = Keys.D And
                         Not IsNothing(Pandora.CurrentSong) And
                         prgDownload.Value = 0 And
@@ -482,13 +490,25 @@ Public Class frmMain
                     MsgBox("Pandora Error: " + pex.Message + vbCrLf + vbCrLf +
                            "Error Code: " + pex.ErrorCode.ToString + vbCrLf + vbCrLf +
                            "Caller: " + Caller, MsgBoxStyle.Critical)
+                    AfterErrorActions()
             End Select
 
         Catch ex As Exception
             MsgBox("Error: " + ex.Message + vbCrLf + vbCrLf +
-                   "Caller: " + Caller + vbCrLf + vbCrLf +
-                   "Please restart Pandorian...", MsgBoxStyle.Critical)
+                   "Caller: " + Caller, MsgBoxStyle.Critical)
+            AfterErrorActions()
         End Try
+    End Sub
+
+    Sub AfterErrorActions()
+        Spinner.Visible = False
+        Application.DoEvents()
+        ddStations.Enabled = False
+        btnBlock.Enabled = False
+        btnPlayPause.Enabled = False
+        btnDislike.Enabled = False
+        btnLike.Enabled = False
+        btnSkip.Enabled = True
     End Sub
 
     Private Sub ReLoginToPandora()
@@ -725,6 +745,5 @@ Public Class frmMain
             DeInitBass()
         End If
     End Sub
-
 
 End Class

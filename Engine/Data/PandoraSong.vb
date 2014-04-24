@@ -256,14 +256,10 @@ Namespace Data
 
         Public ReadOnly Property DurationElapsed As Boolean
             Get
-                If (Not PlayingStartTime = DateTime.MinValue) And (AudioDurationSecs > 0) Then
-                    If PlayingStartTime.AddSeconds(AudioDurationSecs) < Now Then
-                        Return True
-                    Else
-                        Return False
-                    End If
+                If PlayingStartTime.AddSeconds(AudioDurationSecs) < Now Then
+                    Return True
                 Else
-                    Throw New PandoraException("Please set PlayStartTime & AudioDurationSecs before accessing this property")
+                    Return False
                 End If
             End Get
         End Property

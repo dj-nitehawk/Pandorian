@@ -143,7 +143,7 @@ Public Class API
                 Next
                 Return True
             Else
-                Throw New PandoraException(1003, "Your are not a Pandora One subscriber. Please change the settings.")
+                Throw New PandoraException(ErrorCodeEnum.LISTENER_NOT_AUTHORIZED, "Your are not a Pandora One subscriber. Please change the settings.")
             End If
         End If
         Clear()
@@ -177,7 +177,7 @@ Public Class API
 
         ' check if there's really a need to log a skip, cause the user may have paused the song 
         ' and song duration may have elapsed
-        If isSkip = True Then
+        If isSkip = True And Not IsNothing(CurrentSong) Then
             If CurrentSong.DurationElapsed Then
                 isSkip = False
             End If
