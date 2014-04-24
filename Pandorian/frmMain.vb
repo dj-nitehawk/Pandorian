@@ -363,6 +363,9 @@ Public Class frmMain
     End Sub
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
         Control.CheckForIllegalCrossThreadCalls = False
+        lblAlbumName.UseMnemonic = False
+        lblArtistName.UseMnemonic = False
+        lblSongName.UseMnemonic = False
         frmSettings.Hide()
         LogAppStartEvent()
         CheckForUpdate()
