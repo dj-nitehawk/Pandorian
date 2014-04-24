@@ -5,8 +5,6 @@ Imports System.Net
 
 Public Class API
 
-    Protected Delegate Sub ExecuteDelegate()
-
     Protected pandora As PandoraIO
     Protected playlist As New Dictionary(Of String, Queue(Of PandoraSong))
 

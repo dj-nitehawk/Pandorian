@@ -167,7 +167,6 @@ Public Class PandoraIO
 
                 ' parse and throw any errors or return our result
                 If Not reply.Success Then
-                    'Console.WriteLine(url);
                     Throw New PandoraException(reply)
                 End If
 

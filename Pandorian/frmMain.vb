@@ -76,7 +76,7 @@ Public Class frmMain
                "Skip Current Song: ALT + S" + vbCrLf +
                "Block Current Song: ALT + B" + vbCrLf +
                "Show/Hide Pandorian: ALT + P" + vbCrLf +
-               "Sleep computer now: ALT + Esc", MsgBoxStyle.Information)
+               "Sleep computer now: ALT + ESC", MsgBoxStyle.Information)
     End Sub
 
     Sub AddCurrentSongToStationBuffer()
@@ -144,14 +144,10 @@ Public Class frmMain
             End If
         Next
     End Sub
-    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/ReplaySong/WokeUpFromSleep)
+    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 3 REFERENCES (PlayNextSong/RunNow/ReplaySong)
         Dim Song As New Data.PandoraSong
         If IsNothing(Pandora.CurrentSong) Then
-            Try
-                Song = Pandora.GetNextSong(False)
-            Catch ex As PandoraException
-                MsgBox("PlayCurrentSong: " + ex.Message, MsgBoxStyle.Information)
-            End Try
+            Song = Pandora.GetNextSong(False)
         Else
             Song = Pandora.CurrentSong
         End If
@@ -208,7 +204,7 @@ Public Class frmMain
         Bass.BASS_ChannelStop(Stream)
         Bass.BASS_StreamFree(Stream)
         Pandora.GetNextSong(Skip)
-        PlayCurrentSong()
+        PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
     End Sub
 
     Private Sub frmMain_Activated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -369,13 +365,7 @@ Public Class frmMain
     End Sub
     Private Sub frmMain_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Application.DoEvents()
-        Try
-            RunNow()
-        Catch ex As Exception
-            MsgBox("frmMainRunNow: " = ex.Message, MsgBoxStyle.Critical)
-            frmSettings.Show()
-            Me.Hide()
-        End Try
+        Execute(Sub() RunNow(), "frmMain_Shown")
     End Sub
     Sub RunNow()
         If Not HasSettings() Then
@@ -412,7 +402,7 @@ Public Class frmMain
                     Loop
                     sw.Stop()
 
-                    PlayCurrentSong()
+                    Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
                 End If
             End If
         Else
@@ -461,51 +451,67 @@ Public Class frmMain
     End Function
     Sub ReplaySong()
         Pandora.CurrentSong = StationCurrentSongBuffer(Pandora.CurrentStation.Id)
-        Try
-            Spinner.Visible = True
-            Application.DoEvents()
-            Bass.BASS_ChannelStop(Stream)
-            Bass.BASS_StreamFree(Stream)
-            PlayCurrentSong()
-        Catch ex As Exception
-            MsgBox("ReplaySong: " + ex.Message, MsgBoxStyle.Critical)
-        End Try
+        Spinner.Visible = True
+        Application.DoEvents()
+        Bass.BASS_ChannelStop(Stream)
+        Bass.BASS_StreamFree(Stream)
+        Execute(Sub() PlayCurrentSong(), "ReplaySong.PlayCurrentSong()")
     End Sub
     Sub SongEnded(ByVal handle As Integer, ByVal channel As Integer, ByVal data As Integer, ByVal user As IntPtr)
+        Execute(Sub() PlayNextSong(False), "SongEnded")
+    End Sub
+
+    Private Sub DebugExpireSessionNow()
+        Pandora.Session.DebugCorruptAuthToken()
+        Pandora.User.DebugCorruptAuthToken()
+        Pandora.DebugClearPlayList()
+    End Sub
+
+    Private Delegate Sub ExecuteDelegate()
+    Private Sub Execute(Logic As ExecuteDelegate, Caller As String)
         Try
-            PlayNextSong(False)
+            Logic()
+        Catch pex As PandoraException
+
+            Select Case pex.ErrorCode
+                Case ErrorCodeEnum.AUTH_INVALID_TOKEN
+                    MsgBox("Pandora session has expired." + vbCrLf + vbCrLf +
+                           "Will try to re-login. If it doesn't work, restart Pandorian...", MsgBoxStyle.Exclamation)
+                    ReLoginToPandora()
+                Case Else
+                    MsgBox("Pandora Error: " + pex.Message + vbCrLf + vbCrLf +
+                           "Error Code: " + pex.ErrorCode.ToString + vbCrLf + vbCrLf +
+                           "Caller: " + Caller, MsgBoxStyle.Critical)
+            End Select
+
         Catch ex As Exception
-            MsgBox("SongEndedPlayNextSong" + ex.Message, MsgBoxStyle.Critical)
-            Spinner.Visible = False
+            MsgBox("Error: " + ex.Message + vbCrLf + vbCrLf +
+                   "Caller: " + Caller + vbCrLf + vbCrLf +
+                   "Please restart Pandorian...", MsgBoxStyle.Critical)
         End Try
     End Sub
-    Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
-        If btnSkip.Enabled Then
-            btnSkip.Enabled = False
-            Try
-                If Pandora.CanSkip Then
-                    PlayNextSong(True)
-                End If
-            Catch ex As Exception
-                MsgBox("btnSkipPlayNextSong: " + ex.Message, MsgBoxStyle.Critical)
-                Spinner.Visible = False
-            End Try
+
+    Private Sub ReLoginToPandora()
+        Spinner.Visible = True
+        Application.DoEvents()
+        If BASSReady Then
+            DeInitBass()
         End If
+        SaveSkipHistory()
+        Pandora.Logout()
+        Pandora = Nothing
+        RunNow()
+    End Sub
+
+    Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
+        Execute(Sub() PlayNextSong(True), "btnSkip_Click")
     End Sub
     Private Sub btnBlock_Click(sender As Object, e As EventArgs) Handles btnBlock.Click
         If btnBlock.Enabled Then
             btnBlock.Text = "(B)"
             btnBlock.Enabled = False
-            Pandora.TemporarilyBanSong(Pandora.CurrentSong)
-            Try
-                If Pandora.CanSkip Then
-                    PlayNextSong(True)
-                End If
-            Catch ex As Exception
-                MsgBox("btnBlockPlayNextSong: " + ex.Message, MsgBoxStyle.Critical)
-                Spinner.Visible = False
-            End Try
-            'Bass.BASS_ChannelSetPosition(Stream, SongDurationSecs() - 10)
+            Execute(Sub() Pandora.TemporarilyBanSong(Pandora.CurrentSong), "btnBlock_Click.TemporarilyBanSong")
+            Execute(Sub() PlayNextSong(True), "btnBlock_Click.PlayNextSong")
         End If
     End Sub
     Function SongDurationSecs() As Double
@@ -522,7 +528,7 @@ Public Class frmMain
             btnLike.Enabled = False
             btnDislike.Text = "Dislike"
             btnDislike.Enabled = True
-            Pandora.RateSong(Pandora.CurrentSong, PandoraRating.Love)
+            Execute(Sub() Pandora.RateSong(Pandora.CurrentSong, PandoraRating.Love), "btnLike_Click")
         End If
     End Sub
     Private Sub btnDislike_Click(sender As Object, e As EventArgs) Handles btnDislike.Click
@@ -531,15 +537,8 @@ Public Class frmMain
             btnDislike.Enabled = False
             btnLike.Text = "Like"
             btnLike.Enabled = True
-            Pandora.RateSong(Pandora.CurrentSong, PandoraRating.Hate)
-            Try
-                If Pandora.CanSkip Then
-                    PlayNextSong(True)
-                End If
-            Catch ex As Exception
-                MsgBox("btnDislikePlayNextSong: " + ex.Message, MsgBoxStyle.Critical)
-                Spinner.Visible = False
-            End Try
+            Execute(Sub() Pandora.RateSong(Pandora.CurrentSong, PandoraRating.Hate), "btnDislike_Click.RateSong")
+            Execute(Sub() PlayNextSong(True), "btnDislike_Click.PlayNextSong")
         End If
     End Sub
     Function GetCoverViaProxy(URL As String) As Drawing.Image
@@ -580,12 +579,7 @@ Public Class frmMain
                     Exit Sub
                 End If
 
-                Try
-                    PlayNextSong(False)
-                Catch ex As Exception
-                    MsgBox("ddStationChangedPlayNextSong" + ex.Message, MsgBoxStyle.Critical)
-                    Spinner.Visible = False
-                End Try
+                Execute(Sub() PlayNextSong(False), "ddStations_SelectedIndexChanged")
             End If
         End If
     End Sub
