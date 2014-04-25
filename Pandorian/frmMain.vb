@@ -641,7 +641,7 @@ Public Class frmMain
         End If
     End Sub
     Private Sub miUpdate_Click(sender As Object, e As EventArgs) Handles miUpdate.Click
-        Process.Start("http://pandorian.djnitehawk.com/")
+        Process.Start("http://pandorian.djnitehawk.com/?utm_source=pandorian.app&utm_medium=direct.link&utm_campaign=visit.website")
     End Sub
     Private Sub MenuStrip_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MenuStrip.Opening
         Try
@@ -667,7 +667,7 @@ Public Class frmMain
                 Dim res As MsgBoxResult = MsgBox("Pandorian has a new update: v" + e.Result.ToString + vbCrLf + vbCrLf +
                                                  "Would you like to visit the Pandorian website now?", MsgBoxStyle.YesNo, Title:="New Update Available")
                 If res = MsgBoxResult.Yes Then
-                    Process.Start("http://pandorian.djnitehawk.com")
+                    Process.Start("http://pandorian.djnitehawk.com/?utm_source=pandorian.app&utm_medium=direct.link&utm_campaign=download.update")
                 End If
             End If
 
