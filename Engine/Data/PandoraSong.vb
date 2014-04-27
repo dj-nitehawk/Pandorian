@@ -264,6 +264,8 @@ Namespace Data
             End Get
         End Property
 
-
+        Public Sub DebugCorruptAudioUrl(quality)
+            AudioUrlMap(quality).Url = "http://notvalid.com/song.mp3"
+        End Sub
     End Class
 End Namespace

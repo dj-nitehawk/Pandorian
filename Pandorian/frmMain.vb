@@ -17,6 +17,7 @@ Public Class frmMain
     Dim SleepAt As Date
     Dim SleepNow As Boolean
     Dim BASSReady As Boolean = False
+    Dim ResumePlaying As Boolean = True
 
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
         If m.Msg = Hotkeys.WM_HOTKEY Then
@@ -189,7 +190,9 @@ Public Class frmMain
                 btnDislike.Enabled = True
         End Select
         btnPlayPause.Enabled = True
-        btnPlayPause.Text = "Pause"
+        If ResumePlaying Then
+            btnPlayPause.Text = "Pause"
+        End If
         If Song.TemporarilyBanned Then
             btnBlock.Text = "(B)"
             btnBlock.Enabled = False
@@ -205,6 +208,7 @@ Public Class frmMain
         Bass.BASS_ChannelStop(Stream)
         Bass.BASS_StreamFree(Stream)
         Pandora.GetNextSong(Skip)
+        ResumePlaying = True
         PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
     End Sub
 
@@ -301,13 +305,20 @@ Public Class frmMain
         If Not Stream = 0 Then
             Bass.BASS_ChannelSetSync(Stream, BASSSync.BASS_SYNC_END, 0, Sync, IntPtr.Zero)
             ApplyReplayGain()
-            Bass.BASS_ChannelPlay(Stream, False)
+            If ResumePlaying Then
+                Bass.BASS_ChannelPlay(Stream, False)
+            End If
             Application.DoEvents()
             Pandora.CurrentSong.PlayingStartTime = Now
             Pandora.CurrentSong.AudioDurationSecs = SongDurationSecs()
         Else
-            MsgBox("Couldn't open stream: " + Bass.BASS_ErrorGetCode().ToString + vbCr +
-                   "Try restarting the app...", MsgBoxStyle.Critical)
+            If Bass.BASS_ErrorGetCode = BASSError.BASS_ERROR_FILEOPEN Then
+                Throw New PandoraException(ErrorCodeEnum.AUTH_INVALID_TOKEN, "Audio URL has probably expired...")
+            Else
+                MsgBox("Couldn't open stream: " + Bass.BASS_ErrorGetCode().ToString + vbCr +
+                       "Try restarting the app...", MsgBoxStyle.Critical)
+            End If
+
         End If
     End Sub
     Function HasSettings() As Boolean
@@ -455,6 +466,10 @@ Public Class frmMain
         ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_PAUSED Then
             Bass.BASS_ChannelPlay(Stream, False)
             btnPlayPause.Text = "Pause"
+        ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_STOPPED And ResumePlaying = False Then
+            ResumePlaying = True
+            Bass.BASS_ChannelPlay(Stream, False)
+            btnPlayPause.Text = "Pause"
         Else
             btnPlayPause.Text = ":-("
         End If
@@ -500,6 +515,7 @@ Public Class frmMain
         Pandora.Session.DebugCorruptAuthToken()
         Pandora.User.DebugCorruptAuthToken()
         Pandora.DebugClearPlayList()
+        Pandora.CurrentSong.DebugCorruptAudioUrl(My.Settings.audioQuality)
     End Sub
 
     Private Delegate Sub ExecuteDelegate()
@@ -738,23 +754,40 @@ Public Class frmMain
         End If
     End Sub
 
+    Private Sub WaitForNetConnection()
+        Dim sw As New Stopwatch
+        sw.Start()
+        Do Until NetConnectionAvailable()
+            If sw.ElapsedMilliseconds > 10000 Then
+                Exit Do
+            End If
+            Threading.Thread.Sleep(1000)
+        Loop
+        sw.Stop()
+    End Sub
+
+    Private Function NetConnectionAvailable() As Boolean
+        Try
+            Using client = New WebClient()
+                Using stream = client.OpenRead("http://www.google.com")
+                    Return True
+                End Using
+            End Using
+        Catch
+            Return False
+        End Try
+    End Function
+
     Private Sub PowerModeChanged(sender As Object, e As PowerModeChangedEventArgs)
         Select Case e.Mode
             Case PowerModes.Resume
-
                 Spinner.Visible = True
                 Application.DoEvents()
-
-                System.Threading.Thread.Sleep(5000) ' wait for net and sound devices to be ready
-
+                WaitForNetConnection()
                 InitBass()
-
                 Execute(Sub() PlayCurrentSong(), "PowerModeChanged.Resume")
-
             Case PowerModes.Suspend
-
                 PreSleepActivities()
-
         End Select
     End Sub
 
@@ -764,6 +797,11 @@ Public Class frmMain
         ddSleepTimes.Enabled = True
         lblSleepStatus.Text = "Sleep Timer Disabled"
         SleepAt = DateTime.MinValue
+        If BASSChannelState() = BASSActive.BASS_ACTIVE_PAUSED Then
+            ResumePlaying = False
+        ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
+            ResumePlaying = True
+        End If
         DeInitBass()
     End Sub
 
