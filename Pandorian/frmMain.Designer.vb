@@ -54,6 +54,7 @@ Partial Class frmMain
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ddSleepTimes = New System.Windows.Forms.ComboBox()
         Me.lblSleepStatus = New System.Windows.Forms.Label()
+        Me.TrayIcon = New System.Windows.Forms.NotifyIcon(Me.components)
         CType(Me.Spinner, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
@@ -329,6 +330,12 @@ Partial Class frmMain
         Me.lblSleepStatus.Text = "Sleep Timer Disabled"
         Me.lblSleepStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'TrayIcon
+        '
+        Me.TrayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.TrayIcon.Icon = CType(resources.GetObject("TrayIcon.Icon"), System.Drawing.Icon)
+        Me.TrayIcon.Text = "Pandorian"
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -354,7 +361,6 @@ Partial Class frmMain
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.MaximizeBox = False
-        Me.MinimizeBox = False
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Pandorian By Đĵ ΝιΓΞΗΛψΚ"
@@ -397,5 +403,6 @@ Partial Class frmMain
     Friend WithEvents ddSleepTimes As System.Windows.Forms.ComboBox
     Friend WithEvents chkSleep As System.Windows.Forms.CheckBox
     Friend WithEvents btnSTDone As System.Windows.Forms.Button
+    Friend WithEvents TrayIcon As System.Windows.Forms.NotifyIcon
 
 End Class

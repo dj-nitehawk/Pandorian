@@ -39,9 +39,9 @@ Public Class frmMain
             Case 5
                 If IsActiveForm Then
                     Me.Visible = False
+                    frmMain_Resize(Nothing, Nothing)
                 Else
-                    Me.Visible = True
-                    Me.Activate()
+                    TrayIcon_MouseClick(Nothing, Nothing)
                 End If
             Case 6
                 btnBlock_Click(Nothing, Nothing)
@@ -418,6 +418,26 @@ Public Class frmMain
         AddHandler SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
         Application.DoEvents()
     End Sub
+    Private Sub TrayIcon_MouseClick(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseClick
+        TrayIcon.Visible = False
+        Me.Visible = True
+        Me.WindowState = FormWindowState.Normal
+        Me.Activate()
+    End Sub
+    Private Sub frmMain_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+
+        If WindowState = FormWindowState.Normal Or Me.Visible = True Then
+            TrayIcon.Visible = False
+        End If
+
+        If WindowState = FormWindowState.Minimized Or (Me.Visible = False And IsNothing(sender)) Then
+            TrayIcon.Visible = True
+            TrayIcon.BalloonTipText = "Pandorian has been minimized to tray"
+            TrayIcon.ShowBalloonTip(1000)
+            Me.Visible = False
+        End If
+
+    End Sub
     Private Sub frmMain_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Application.DoEvents()
         Execute(Sub() RunNow(), "frmMain_Shown")
@@ -526,8 +546,8 @@ Public Class frmMain
 
             Select Case pex.ErrorCode
                 Case ErrorCodeEnum.AUTH_INVALID_TOKEN
-                    MsgBox("Pandora session has expired." + vbCrLf + vbCrLf +
-                           "Will try to re-login. If it doesn't work, restart Pandorian...", MsgBoxStyle.Exclamation)
+                    'MsgBox("Pandora session has expired." + vbCrLf + vbCrLf +
+                    '       "Will try to re-login. If it doesn't work, restart Pandorian...", MsgBoxStyle.Exclamation)
                     ReLoginToPandora()
                 Case Else
                     MsgBox("Pandora Error: " + pex.Message + vbCrLf + vbCrLf +
