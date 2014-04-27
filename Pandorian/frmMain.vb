@@ -144,7 +144,7 @@ Public Class frmMain
             End If
         Next
     End Sub
-    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 3 REFERENCES (PlayNextSong/RunNow/ReplaySong)
+    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/ReplaySong/PowerModeChanged)
         Dim Song As New Data.PandoraSong
         If IsNothing(Pandora.CurrentSong) Then
             Song = Pandora.GetNextSong(False)
@@ -235,30 +235,50 @@ Public Class frmMain
         unRegisterHotkeys()
     End Sub
     Sub InitBass()
-        BassNet.Registration("pandorian@sharklasers.com", "2X2531425283122")
-        BASSReady = Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero)
-        If Not My.Settings.noProxy Then
-            Dim proxy As String = My.Settings.proyxUsername + ":" +
-                                  My.Settings.proxyPassword + "@" +
-                                  My.Settings.proxyAddress.Replace("http://", "")
-            ProxyPtr = Marshal.StringToHGlobalAnsi(proxy)
-            Bass.BASS_SetConfigPtr(BASSConfig.BASS_CONFIG_NET_PROXY, ProxyPtr)
-        End If
-        AAC = Bass.BASS_PluginLoad("bass_aac.dll")
-        FX = Bass.BASS_PluginLoad("bass_fx.dll")
-        If Utils.HighWord(AddOn.Fx.BassFx.BASS_FX_GetVersion()) <> AddOn.Fx.BassFx.BASSFXVERSION Then
-            MsgBox("Wrong BassFx Version. Volume will be not normalize!", MsgBoxStyle.Exclamation)
+        If Not BASSReady Then
+            BassNet.Registration("pandorian@sharklasers.com", "2X2531425283122")
+            BASSReady = Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero)
+
+            Dim sw As New Stopwatch
+            sw.Start()
+            Do Until BASSReady
+                If sw.ElapsedMilliseconds > 10000 Then
+                    Exit Do
+                End If
+                System.Threading.Thread.Sleep(1000)
+            Loop
+            sw.Stop()
+
+            If Not BASSReady Then
+                MsgBox("Sorry, having trouble accessing your audio device :-(" + vbCrLf + vbCrLf +
+                       "Please double check your gear and restart Pandorian...", MsgBoxStyle.Critical)
+            End If
+
+            If Not My.Settings.noProxy Then
+                Dim proxy As String = My.Settings.proyxUsername + ":" +
+                                      My.Settings.proxyPassword + "@" +
+                                      My.Settings.proxyAddress.Replace("http://", "")
+                ProxyPtr = Marshal.StringToHGlobalAnsi(proxy)
+                Bass.BASS_SetConfigPtr(BASSConfig.BASS_CONFIG_NET_PROXY, ProxyPtr)
+            End If
+            AAC = Bass.BASS_PluginLoad("bass_aac.dll")
+            FX = Bass.BASS_PluginLoad("bass_fx.dll")
+            If Utils.HighWord(AddOn.Fx.BassFx.BASS_FX_GetVersion()) <> AddOn.Fx.BassFx.BASSFXVERSION Then
+                MsgBox("Wrong BassFx Version. Volume will be not normalize!", MsgBoxStyle.Exclamation)
+            End If
         End If
     End Sub
 
     Sub DeInitBass()
-        Bass.BASS_ChannelStop(Stream)
-        Bass.BASS_StreamFree(Stream)
-        Bass.BASS_PluginFree(AAC)
-        Bass.BASS_PluginFree(FX)
-        Bass.BASS_Free()
-        Marshal.FreeHGlobal(ProxyPtr)
-        BASSReady = False
+        If BASSReady Then
+            Bass.BASS_ChannelStop(Stream)
+            Bass.BASS_StreamFree(Stream)
+            Bass.BASS_PluginFree(AAC)
+            Bass.BASS_PluginFree(FX)
+            Bass.BASS_Free()
+            Marshal.FreeHGlobal(ProxyPtr)
+            BASSReady = False
+        End If
     End Sub
 
     Sub ApplyReplayGain()
@@ -416,15 +436,6 @@ Public Class frmMain
                     Application.DoEvents()
 
                     InitBass()
-                    Dim sw As New Stopwatch
-                    sw.Start()
-                    Do Until BASSReady
-                        If sw.ElapsedMilliseconds > 10000 Then
-                            Exit Do
-                        End If
-                        System.Threading.Thread.Sleep(1000)
-                    Loop
-                    sw.Stop()
 
                     Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
                 End If
@@ -530,9 +541,6 @@ Public Class frmMain
     Private Sub ReLoginToPandora()
         Spinner.Visible = True
         Application.DoEvents()
-        If BASSReady Then
-            DeInitBass()
-        End If
         SaveSkipHistory()
         Pandora.Logout()
         Pandora = Nothing
@@ -736,13 +744,10 @@ Public Class frmMain
 
                 Spinner.Visible = True
                 Application.DoEvents()
-                SaveSkipHistory()
-                Pandora.Logout()
-                Pandora = Nothing
 
                 System.Threading.Thread.Sleep(5000) ' wait for net and sound devices to be ready
 
-                RunNow()
+                Execute(Sub() PlayCurrentSong(), "PowerModeChanged.Resume")
 
             Case PowerModes.Suspend
 
@@ -757,9 +762,7 @@ Public Class frmMain
         ddSleepTimes.Enabled = True
         lblSleepStatus.Text = "Sleep Timer Disabled"
         SleepAt = DateTime.MinValue
-        If BASSReady Then
-            DeInitBass()
-        End If
+        DeInitBass()
     End Sub
 
 End Class
