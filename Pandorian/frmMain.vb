@@ -747,6 +747,8 @@ Public Class frmMain
 
                 System.Threading.Thread.Sleep(5000) ' wait for net and sound devices to be ready
 
+                InitBass()
+
                 Execute(Sub() PlayCurrentSong(), "PowerModeChanged.Resume")
 
             Case PowerModes.Suspend
