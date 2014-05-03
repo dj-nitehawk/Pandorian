@@ -8,11 +8,11 @@ Namespace Responses
 	<JsonObject(MemberSerialization.OptIn)> _
 	Friend Class PandoraResponse
 		Inherits PandoraData
-		Public ReadOnly Property Success() As Boolean
-			Get
-				Return Status = "ok"
-			End Get
-		End Property
+        Public ReadOnly Property Success() As Boolean
+            Get
+                Return Status = "ok"
+            End Get
+        End Property
 
 		<JsonProperty(PropertyName := "stat")> _
 		Public Property Status() As String

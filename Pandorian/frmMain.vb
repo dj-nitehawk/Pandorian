@@ -448,10 +448,13 @@ Public Class frmMain
         Application.DoEvents()
     End Sub
     Private Sub TrayIcon_MouseClick(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseClick
-        TrayIcon.Visible = False
-        Me.Visible = True
-        Me.WindowState = FormWindowState.Normal
-        Me.Activate()
+        Select Case e.Button
+            Case Windows.Forms.MouseButtons.Left
+                TrayIcon.Visible = False
+                Me.Visible = True
+                Me.WindowState = FormWindowState.Normal
+                Me.Activate()
+        End Select
     End Sub
     Private Sub frmMain_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 
@@ -882,4 +885,47 @@ Public Class frmMain
         DeInitBass()
     End Sub
 
+    Private Sub TrayMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TrayMenu.Opening
+        If Not IsNothing(Pandora) Then
+            If Not IsNothing(Pandora.CurrentSong) Then
+                tmiSongTitle.Text = Pandora.CurrentSong.Title + " - " + Pandora.CurrentSong.Artist
+            End If
+            Select Case BASSChannelState()
+                Case BASSActive.BASS_ACTIVE_PAUSED
+                    tmiPlayPause.Text = "Play"
+                Case BASSActive.BASS_ACTIVE_PLAYING
+                    tmiPlayPause.Text = "Pause"
+                Case Else
+                    tmiPlayPause.Text = "Play/Pause"
+            End Select
+        End If
+    End Sub
+
+    Private Sub tmiLikeCurrentSong_Click(sender As Object, e As EventArgs) Handles tmiLikeCurrentSong.Click
+        btnLike_Click(Nothing, Nothing)
+    End Sub
+
+    Private Sub tmiDislikeCurrentSong_Click(sender As Object, e As EventArgs) Handles tmiDislikeCurrentSong.Click
+        btnDislike_Click(Nothing, Nothing)
+    End Sub
+
+    Private Sub tmiPlayPause_Click(sender As Object, e As EventArgs) Handles tmiPlayPause.Click
+        btnPlayPause_Click(Nothing, Nothing)
+    End Sub
+
+    Private Sub tmiSkipSong_Click(sender As Object, e As EventArgs) Handles tmiSkipSong.Click
+        btnSkip_Click(Nothing, Nothing)
+    End Sub
+
+    Private Sub tmiBlockSong_Click(sender As Object, e As EventArgs) Handles tmiBlockSong.Click
+        btnBlock_Click(Nothing, Nothing)
+    End Sub
+
+    Private Sub tmiSleepComputer_Click(sender As Object, e As EventArgs) Handles tmiSleepComputer.Click
+        handleHotKeyEvent(7)
+    End Sub
+
+    Private Sub tmiExit_Click(sender As Object, e As EventArgs) Handles tmiExit.Click
+        Me.Close()
+    End Sub
 End Class

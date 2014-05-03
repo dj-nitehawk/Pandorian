@@ -55,10 +55,24 @@ Partial Class frmMain
         Me.ddSleepTimes = New System.Windows.Forms.ComboBox()
         Me.lblSleepStatus = New System.Windows.Forms.Label()
         Me.TrayIcon = New System.Windows.Forms.NotifyIcon(Me.components)
+        Me.TrayMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.tmiSongTitle = New System.Windows.Forms.ToolStripTextBox()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tmiLikeCurrentSong = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tmiDislikeCurrentSong = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tmiPlayPause = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tmiSkipSong = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tmiBlockSong = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tmiSleepComputer = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tmiExit = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.Spinner, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
+        Me.TrayMenu.SuspendLayout()
         Me.SuspendLayout()
         '
         'ddStations
@@ -333,8 +347,91 @@ Partial Class frmMain
         'TrayIcon
         '
         Me.TrayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.TrayIcon.ContextMenuStrip = Me.TrayMenu
         Me.TrayIcon.Icon = CType(resources.GetObject("TrayIcon.Icon"), System.Drawing.Icon)
         Me.TrayIcon.Text = "Pandorian"
+        '
+        'TrayMenu
+        '
+        Me.TrayMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tmiSongTitle, Me.ToolStripSeparator3, Me.tmiLikeCurrentSong, Me.tmiDislikeCurrentSong, Me.ToolStripSeparator4, Me.tmiPlayPause, Me.tmiSkipSong, Me.ToolStripSeparator5, Me.tmiBlockSong, Me.ToolStripSeparator6, Me.tmiSleepComputer, Me.tmiExit})
+        Me.TrayMenu.Name = "TrayMenu"
+        Me.TrayMenu.Size = New System.Drawing.Size(224, 229)
+        '
+        'tmiSongTitle
+        '
+        Me.tmiSongTitle.BackColor = System.Drawing.SystemColors.Window
+        Me.tmiSongTitle.Name = "tmiSongTitle"
+        Me.tmiSongTitle.ReadOnly = True
+        Me.tmiSongTitle.Size = New System.Drawing.Size(160, 23)
+        Me.tmiSongTitle.Text = "Name Of Song"
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(220, 6)
+        '
+        'tmiLikeCurrentSong
+        '
+        Me.tmiLikeCurrentSong.Name = "tmiLikeCurrentSong"
+        Me.tmiLikeCurrentSong.ShortcutKeyDisplayString = "(ALT+L)"
+        Me.tmiLikeCurrentSong.Size = New System.Drawing.Size(223, 22)
+        Me.tmiLikeCurrentSong.Text = "Like"
+        '
+        'tmiDislikeCurrentSong
+        '
+        Me.tmiDislikeCurrentSong.Name = "tmiDislikeCurrentSong"
+        Me.tmiDislikeCurrentSong.ShortcutKeyDisplayString = "(ALT+D)"
+        Me.tmiDislikeCurrentSong.Size = New System.Drawing.Size(223, 22)
+        Me.tmiDislikeCurrentSong.Text = "Dislike"
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(220, 6)
+        '
+        'tmiPlayPause
+        '
+        Me.tmiPlayPause.Name = "tmiPlayPause"
+        Me.tmiPlayPause.ShortcutKeyDisplayString = "(ALT+SPACE)"
+        Me.tmiPlayPause.Size = New System.Drawing.Size(223, 22)
+        Me.tmiPlayPause.Text = "Play/Pause"
+        '
+        'tmiSkipSong
+        '
+        Me.tmiSkipSong.Name = "tmiSkipSong"
+        Me.tmiSkipSong.ShortcutKeyDisplayString = "(ALT+S)"
+        Me.tmiSkipSong.Size = New System.Drawing.Size(223, 22)
+        Me.tmiSkipSong.Text = "Skip"
+        '
+        'ToolStripSeparator5
+        '
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(220, 6)
+        '
+        'tmiBlockSong
+        '
+        Me.tmiBlockSong.Name = "tmiBlockSong"
+        Me.tmiBlockSong.ShortcutKeyDisplayString = "(ALT+B)"
+        Me.tmiBlockSong.Size = New System.Drawing.Size(223, 22)
+        Me.tmiBlockSong.Text = "Block"
+        '
+        'ToolStripSeparator6
+        '
+        Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
+        Me.ToolStripSeparator6.Size = New System.Drawing.Size(220, 6)
+        '
+        'tmiSleepComputer
+        '
+        Me.tmiSleepComputer.Name = "tmiSleepComputer"
+        Me.tmiSleepComputer.ShortcutKeyDisplayString = "(ALT+ESC)"
+        Me.tmiSleepComputer.Size = New System.Drawing.Size(223, 22)
+        Me.tmiSleepComputer.Text = "Sleep Computer"
+        '
+        'tmiExit
+        '
+        Me.tmiExit.Name = "tmiExit"
+        Me.tmiExit.Size = New System.Drawing.Size(223, 22)
+        Me.tmiExit.Text = "Exit"
         '
         'frmMain
         '
@@ -369,6 +466,8 @@ Partial Class frmMain
         Me.MenuStrip.ResumeLayout(False)
         Me.pnlSleepTimer.ResumeLayout(False)
         Me.pnlSleepTimer.PerformLayout()
+        Me.TrayMenu.ResumeLayout(False)
+        Me.TrayMenu.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -404,5 +503,18 @@ Partial Class frmMain
     Friend WithEvents chkSleep As System.Windows.Forms.CheckBox
     Friend WithEvents btnSTDone As System.Windows.Forms.Button
     Friend WithEvents TrayIcon As System.Windows.Forms.NotifyIcon
+    Friend WithEvents TrayMenu As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents tmiSongTitle As System.Windows.Forms.ToolStripTextBox
+    Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents tmiLikeCurrentSong As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents tmiDislikeCurrentSong As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents tmiPlayPause As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents tmiSkipSong As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator5 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents tmiBlockSong As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents tmiSleepComputer As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents tmiExit As System.Windows.Forms.ToolStripMenuItem
 
 End Class
