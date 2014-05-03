@@ -42,7 +42,7 @@ Public Class frmMain
                     Me.Visible = False
                     frmMain_Resize(Nothing, Nothing)
                 Else
-                    TrayIcon_MouseClick(Nothing, Nothing)
+                    TrayIcon_MouseClick(Nothing, New MouseEventArgs(Windows.Forms.MouseButtons.Left, 1, 0, 0, 0))
                 End If
             Case 6
                 btnBlock_Click(Nothing, Nothing)
