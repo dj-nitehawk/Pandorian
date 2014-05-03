@@ -546,27 +546,55 @@ Public Class frmMain
 
             Select Case pex.ErrorCode
                 Case ErrorCodeEnum.AUTH_INVALID_TOKEN
-                    'MsgBox("Pandora session has expired." + vbCrLf + vbCrLf +
-                    '       "Will try to re-login. If it doesn't work, restart Pandorian...", MsgBoxStyle.Exclamation)
-                    ReLoginToPandora()
+                    Try
+                        ReLoginToPandora()
+                    Catch ex As Exception
+                        MsgBox("Pandora session has expired." + vbCrLf + vbCrLf +
+                               "Tried to re-login but something went wrong :-(" + vbCrLf + vbCrLf +
+                               "Try restarting Pandorian...", MsgBoxStyle.Exclamation)
+                        AfterErrorActions()
+                    End Try
                 Case Else
-                    MsgBox("Pandora Error: " + pex.Message + vbCrLf + vbCrLf +
-                           "Error Code: " + pex.ErrorCode.ToString + vbCrLf + vbCrLf +
-                           "Caller: " + Caller, MsgBoxStyle.Critical)
+                    ReportError(pex, Caller)
                     AfterErrorActions()
             End Select
 
         Catch ex As Exception
-            MsgBox("Error: " + ex.Message + vbCrLf + vbCrLf +
-                   "Caller: " + Caller, MsgBoxStyle.Critical)
+            ReportError(ex, Caller)
             AfterErrorActions()
         End Try
+    End Sub
+
+    Private Sub ReportError(Exception As Exception, Caller As String)
+
+        Dim msg As String
+
+        If TypeOf Exception Is PandoraException Then
+
+            Dim exp As PandoraException = DirectCast(Exception, PandoraException)
+            msg = "Pandora Error: " + exp.Message + vbCrLf +
+                  "Error Code: " + exp.ErrorCode.ToString + vbCrLf +
+                  "Caller: " + Caller
+        Else
+            msg = "Error: " + Exception.Message + vbCrLf +
+                  "Caller: " + Caller
+        End If
+
+        Dim resp = MsgBox(msg + vbCrLf + vbCrLf +
+                          "Would you like to report this error?", MsgBoxStyle.YesNo + MsgBoxStyle.Critical, Title:="Whoops!")
+
+        If resp = MsgBoxResult.Yes Then
+            Clipboard.SetText(msg)
+            MsgBox("Error details have been copied to the clipboard." + vbCrLf +
+                   "You will now be taken to the Pandorian support page.", vbInformation)
+            Process.Start("https://github.com/dj-nitehawk/Pandorian/issues/new")
+        End If
+
     End Sub
 
     Sub AfterErrorActions()
         Spinner.Visible = False
         Application.DoEvents()
-        ddStations.Enabled = False
         btnBlock.Enabled = False
         btnPlayPause.Enabled = False
         btnDislike.Enabled = False
@@ -709,7 +737,7 @@ Public Class frmMain
 
             If currVer < newVer Then
                 Dim res As MsgBoxResult = MsgBox("Pandorian has a new update: v" + e.Result.ToString + vbCrLf + vbCrLf +
-                                                 "Would you like to visit the Pandorian website now?", MsgBoxStyle.YesNo, Title:="New Update Available")
+                                                 "Would you like to visit the Pandorian website now?", MsgBoxStyle.YesNo + MsgBoxStyle.Information, Title:="New Update Available")
                 If res = MsgBoxResult.Yes Then
                     Process.Start("http://pandorian.djnitehawk.com/?utm_source=pandorian.app&utm_medium=direct.link&utm_campaign=download.update")
                 End If

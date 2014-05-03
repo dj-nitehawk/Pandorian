@@ -76,7 +76,7 @@ Public Class PandoraException
 			End If
 
 			_message = response.ErrorMessage
-			_errorCode = CType(response.ErrorCode, ErrorCodeEnum)
+            _errorCode = CType(response.ErrorCode, ErrorCodeEnum)
 		Catch e As Exception
 			Throw New PandoraException("Failed parsing error response.", e)
 		End Try
