@@ -18,6 +18,7 @@ Public Class frmMain
     Dim SleepNow As Boolean
     Dim BASSReady As Boolean = False
     Dim ResumePlaying As Boolean = True
+    Dim NagShown As Boolean = False
 
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
         If m.Msg = Hotkeys.WM_HOTKEY Then
@@ -326,14 +327,15 @@ Public Class frmMain
     Private Sub ShareTheLove()
         Dim triggers As Integer() = {3, 10, 20, 30, 40}
         For Each t In triggers
-            If t = My.Settings.launchCount Then
+            If t = My.Settings.launchCount And NagShown = False Then
 
                 If MsgBox("Hi there!" + vbCrLf + vbCrLf +
                           "Glad to see you're enjoying Pandorian..." + vbCrLf + vbCrLf +
                           "Would you like to help Pandorian grow by sharing on Facebook?",
                           vbInformation + MsgBoxStyle.YesNo,
-                          Title:="SHARE THE LOVE!") Then
+                          Title:="SHARE THE LOVE!") = MsgBoxResult.Yes Then
                     Process.Start("https://www.facebook.com/dialog/feed?app_id=1442573219316352&link=http://pandorian.djnitehawk.com&redirect_uri=https://www.facebook.com/&name=I%27m%20listening%20to%20Pandora%20on%20my%20desktop%20with%20PANDORIAN...")
+                    NagShown = True
                 End If
 
                 Exit For
