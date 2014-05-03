@@ -311,6 +311,7 @@ Public Class frmMain
             Application.DoEvents()
             Pandora.CurrentSong.PlayingStartTime = Now
             Pandora.CurrentSong.AudioDurationSecs = SongDurationSecs()
+            ShareTheLove()
         Else
             If Bass.BASS_ErrorGetCode = BASSError.BASS_ERROR_FILEOPEN Then
                 Throw New PandoraException(ErrorCodeEnum.AUTH_INVALID_TOKEN, "Audio URL has probably expired...")
@@ -321,6 +322,30 @@ Public Class frmMain
 
         End If
     End Sub
+
+    Private Sub ShareTheLove()
+        Dim triggers As Integer() = {3, 10, 20, 30, 40}
+        For Each t In triggers
+            If t = My.Settings.launchCount Then
+
+                If MsgBox("Hi there!" + vbCrLf + vbCrLf +
+                          "Glad to see you're enjoying Pandorian..." + vbCrLf + vbCrLf +
+                          "Would you like to help Pandorian grow by sharing on Facebook?",
+                          vbInformation + MsgBoxStyle.YesNo,
+                          Title:="SHARE THE LOVE!") Then
+                    Process.Start("https://www.facebook.com/dialog/feed?app_id=1442573219316352&link=http://pandorian.djnitehawk.com&redirect_uri=https://www.facebook.com/&name=I%27m%20listening%20to%20Pandora%20on%20my%20desktop%20with%20PANDORIAN...")
+                End If
+
+                Exit For
+            End If
+        Next
+
+        If My.Settings.launchCount >= 90 Then
+            My.Settings.launchCount = 39
+            My.Settings.Save()
+        End If
+    End Sub
+
     Function HasSettings() As Boolean
 
         Dim prxSettingsReqd As Boolean
@@ -412,6 +437,8 @@ Public Class frmMain
         lblSongName.UseMnemonic = False
         frmSettings.Hide()
         LogAppStartEvent()
+        My.Settings.launchCount = My.Settings.launchCount + 1
+        My.Settings.Save()
         CheckForUpdate()
         registerHotkeys()
         populateSleepTimes()

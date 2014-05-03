@@ -197,6 +197,18 @@ Namespace My
                 Me("noProxy") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property launchCount() As Integer
+            Get
+                Return CType(Me("launchCount"),Integer)
+            End Get
+            Set
+                Me("launchCount") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
