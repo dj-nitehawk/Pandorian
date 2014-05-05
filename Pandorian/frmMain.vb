@@ -54,7 +54,9 @@ Public Class frmMain
                     End If
                 End If
             Case 8
-                If TrayIcon.Visible Then
+                If TrayMenu.Visible Then
+                    TrayMenu.Visible = False
+                Else
                     TrayMenu.Show(MousePosition)
                 End If
         End Select
@@ -85,8 +87,8 @@ Public Class frmMain
                "Skip Current Song: ALT + S" + vbCrLf +
                "Block Current Song: ALT + B" + vbCrLf +
                "Show/Hide Pandorian: ALT + P" + vbCrLf +
-               "Show Tray Icon Menu: ALT + M" + vbCrLf +
-               "Sleep computer now: ALT + ESC", MsgBoxStyle.Information)
+               "Show/Hide Global Menu: ALT + M" + vbCrLf +
+               "Sleep computer now: ALT + ESC", MsgBoxStyle.Information, Title:="GLOBAL HOTKEYS")
     End Sub
 
     Sub AddCurrentSongToStationBuffer()
@@ -897,8 +899,10 @@ Public Class frmMain
 
     Private Sub TrayMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TrayMenu.Opening
         If Not IsNothing(Pandora) Then
-            If Not IsNothing(Pandora.CurrentSong) Then
-                tmiSongTitle.Text = Pandora.CurrentSong.Title + " - " + Pandora.CurrentSong.Artist
+            If Not IsNothing(Pandora.CurrentSong) And Not IsNothing(Pandora.CurrentStation) Then
+                tmiSongTitle.Text = Pandora.CurrentSong.Title
+                tmiArtistTitle.Text = Pandora.CurrentSong.Artist
+                tmiStationTitle.Text = Pandora.CurrentStation.Name
             End If
             Select Case BASSChannelState()
                 Case BASSActive.BASS_ACTIVE_PAUSED
@@ -908,6 +912,10 @@ Public Class frmMain
                 Case Else
                     tmiPlayPause.Text = "Play/Pause"
             End Select
+            tmiLikeCurrentSong.Enabled = btnLike.Enabled
+            tmiDislikeCurrentSong.Enabled = btnDislike.Enabled
+            tmiSkipSong.Enabled = btnSkip.Enabled
+            tmiBlockSong.Enabled = btnBlock.Enabled
         End If
     End Sub
 
@@ -937,12 +945,6 @@ Public Class frmMain
 
     Private Sub tmiExit_Click(sender As Object, e As EventArgs) Handles tmiExit.Click
         Me.Close()
-    End Sub
-
-    Private Sub tmiSongTitle_Click(sender As Object, e As EventArgs) Handles tmiSongTitle.Click
-        tmiSongTitle.SelectAll()
-        Clipboard.SetText(tmiSongTitle.Text)
-        tmiSongTitle.ToolTipText = "Click here to copy the song info to clipboard..."
     End Sub
 
 End Class
