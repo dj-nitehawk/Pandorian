@@ -930,4 +930,10 @@ Public Class frmMain
     Private Sub tmiExit_Click(sender As Object, e As EventArgs) Handles tmiExit.Click
         Me.Close()
     End Sub
+
+    Private Sub tmiSongTitle_Click(sender As Object, e As EventArgs) Handles tmiSongTitle.Click
+        tmiSongTitle.SelectAll()
+        Clipboard.SetText(tmiSongTitle.Text)
+        tmiSongTitle.ToolTipText = "Click here to copy the song info to clipboard..."
+    End Sub
 End Class
