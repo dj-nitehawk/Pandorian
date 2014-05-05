@@ -382,11 +382,11 @@ Public Class frmMain
     End Function
     Private Sub frmMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
 
-#If DEBUG Then
-        If e.Control And e.Alt And e.KeyCode = Keys.E Then
-            DebugExpireSessionNow()
+        If System.Diagnostics.Debugger.IsAttached Then
+            If e.Control And e.Alt And e.KeyCode = Keys.E Then
+                DebugExpireSessionNow()
+            End If
         End If
-#End If
 
         If e.Control And e.KeyCode = Keys.D And
                             Not IsNothing(Pandora.CurrentSong) And
@@ -448,7 +448,9 @@ Public Class frmMain
         lblArtistName.UseMnemonic = False
         lblSongName.UseMnemonic = False
         frmSettings.Hide()
-        LogAppStartEvent()
+        If Not System.Diagnostics.Debugger.IsAttached Then
+            LogAppStartEvent()
+        End If
         My.Settings.launchCount = My.Settings.launchCount + 1
         My.Settings.Save()
         CheckForUpdate()
@@ -708,6 +710,7 @@ Public Class frmMain
         End Try
         Return img
     End Function
+
     Sub LogAppStartEvent()
         Dim web As New WebClient()
         Try

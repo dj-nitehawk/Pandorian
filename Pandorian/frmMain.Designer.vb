@@ -55,6 +55,7 @@ Partial Class frmMain
         Me.ddSleepTimes = New System.Windows.Forms.ComboBox()
         Me.lblSleepStatus = New System.Windows.Forms.Label()
         Me.TrayIcon = New System.Windows.Forms.NotifyIcon(Me.components)
+        Me.TrayMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.tmiStationTitle = New System.Windows.Forms.ToolStripMenuItem()
         Me.tmiSongTitle = New System.Windows.Forms.ToolStripMenuItem()
         Me.tmiArtistTitle = New System.Windows.Forms.ToolStripMenuItem()
@@ -69,7 +70,6 @@ Partial Class frmMain
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.tmiSleepComputer = New System.Windows.Forms.ToolStripMenuItem()
         Me.tmiExit = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TrayMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         CType(Me.Spinner, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
@@ -225,54 +225,53 @@ Partial Class frmMain
         '
         Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miManageStation, Me.ToolStripSeparator1, Me.miShowSettings, Me.miShowHotkeys, Me.miSleepTimer, Me.miUpdate, Me.ToolStripSeparator2, Me.miVersion})
         Me.MenuStrip.Name = "MenuStrip"
-        Me.MenuStrip.ShowImageMargin = False
-        Me.MenuStrip.Size = New System.Drawing.Size(168, 148)
+        Me.MenuStrip.Size = New System.Drawing.Size(193, 170)
         '
         'miManageStation
         '
         Me.miManageStation.Name = "miManageStation"
-        Me.miManageStation.Size = New System.Drawing.Size(167, 22)
+        Me.miManageStation.Size = New System.Drawing.Size(192, 22)
         Me.miManageStation.Text = "Manage Station"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(164, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(189, 6)
         '
         'miShowSettings
         '
         Me.miShowSettings.Name = "miShowSettings"
-        Me.miShowSettings.Size = New System.Drawing.Size(167, 22)
+        Me.miShowSettings.Size = New System.Drawing.Size(192, 22)
         Me.miShowSettings.Text = "Show Settings"
         '
         'miShowHotkeys
         '
         Me.miShowHotkeys.Name = "miShowHotkeys"
-        Me.miShowHotkeys.Size = New System.Drawing.Size(167, 22)
+        Me.miShowHotkeys.Size = New System.Drawing.Size(192, 22)
         Me.miShowHotkeys.Text = "Show HotKeys"
         '
         'miSleepTimer
         '
         Me.miSleepTimer.Name = "miSleepTimer"
-        Me.miSleepTimer.Size = New System.Drawing.Size(167, 22)
+        Me.miSleepTimer.Size = New System.Drawing.Size(192, 22)
         Me.miSleepTimer.Text = "Sleep Timer"
         '
         'miUpdate
         '
         Me.miUpdate.Name = "miUpdate"
-        Me.miUpdate.Size = New System.Drawing.Size(167, 22)
+        Me.miUpdate.Size = New System.Drawing.Size(192, 22)
         Me.miUpdate.Text = "Visit Website"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(164, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(189, 6)
         '
         'miVersion
         '
         Me.miVersion.Enabled = False
         Me.miVersion.Name = "miVersion"
-        Me.miVersion.Size = New System.Drawing.Size(167, 22)
+        Me.miVersion.Size = New System.Drawing.Size(192, 22)
         Me.miVersion.Text = "Current Version: v1.4.0"
         '
         'prgDownload
@@ -352,6 +351,12 @@ Partial Class frmMain
         Me.TrayIcon.ContextMenuStrip = Me.TrayMenu
         Me.TrayIcon.Icon = CType(resources.GetObject("TrayIcon.Icon"), System.Drawing.Icon)
         Me.TrayIcon.Text = "Pandorian"
+        '
+        'TrayMenu
+        '
+        Me.TrayMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tmiStationTitle, Me.tmiSongTitle, Me.tmiArtistTitle, Me.ToolStripSeparator3, Me.tmiLikeCurrentSong, Me.tmiDislikeCurrentSong, Me.ToolStripSeparator4, Me.tmiPlayPause, Me.tmiSkipSong, Me.ToolStripSeparator5, Me.tmiBlockSong, Me.ToolStripSeparator6, Me.tmiSleepComputer, Me.tmiExit})
+        Me.TrayMenu.Name = "TrayMenu"
+        Me.TrayMenu.Size = New System.Drawing.Size(224, 248)
         '
         'tmiStationTitle
         '
@@ -454,12 +459,6 @@ Partial Class frmMain
         Me.tmiExit.Name = "tmiExit"
         Me.tmiExit.Size = New System.Drawing.Size(210, 22)
         Me.tmiExit.Text = "Exit"
-        '
-        'TrayMenu
-        '
-        Me.TrayMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tmiStationTitle, Me.tmiSongTitle, Me.tmiArtistTitle, Me.ToolStripSeparator3, Me.tmiLikeCurrentSong, Me.tmiDislikeCurrentSong, Me.ToolStripSeparator4, Me.tmiPlayPause, Me.tmiSkipSong, Me.ToolStripSeparator5, Me.tmiBlockSong, Me.ToolStripSeparator6, Me.tmiSleepComputer, Me.tmiExit})
-        Me.TrayMenu.Name = "TrayMenu"
-        Me.TrayMenu.Size = New System.Drawing.Size(224, 270)
         '
         'frmMain
         '
