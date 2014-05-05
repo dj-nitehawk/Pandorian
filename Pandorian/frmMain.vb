@@ -47,9 +47,11 @@ Public Class frmMain
             Case 6
                 btnBlock_Click(Nothing, Nothing)
             Case 7
-                If Not chkSleep.Checked Then
-                    SleepNow = True
-                    chkSleep.Checked = True
+                If MsgBox("Are you sure you want to put the machine to sleep?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, Title:="Sleep Now?") = MsgBoxResult.Yes Then
+                    If Not chkSleep.Checked Then
+                        SleepNow = True
+                        chkSleep.Checked = True
+                    End If
                 End If
         End Select
     End Sub
