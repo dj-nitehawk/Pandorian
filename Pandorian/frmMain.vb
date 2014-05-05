@@ -646,7 +646,9 @@ Public Class frmMain
     End Sub
 
     Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
-        Execute(Sub() PlayNextSong(True), "btnSkip_Click")
+        If btnSkip.Enabled Then
+            Execute(Sub() PlayNextSong(True), "btnSkip_Click")
+        End If
     End Sub
     Private Sub btnBlock_Click(sender As Object, e As EventArgs) Handles btnBlock.Click
         If btnBlock.Enabled Then
