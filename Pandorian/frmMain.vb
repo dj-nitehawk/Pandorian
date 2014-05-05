@@ -334,8 +334,8 @@ Public Class frmMain
                 If MsgBox("Hi there!" + vbCrLf + vbCrLf +
                           "Glad to see you're enjoying Pandorian..." + vbCrLf + vbCrLf +
                           "Would you like to help Pandorian grow by sharing on Facebook?",
-                          vbInformation + MsgBoxStyle.YesNo,
-                          Title:="SHARE THE LOVE!") = MsgBoxResult.Yes Then
+                          MsgBoxStyle.Question + MsgBoxStyle.YesNo,
+                          Title:="SHARE THE LOVE?") = MsgBoxResult.Yes Then
                     Process.Start("https://www.facebook.com/dialog/feed?app_id=1442573219316352&link=http://pandorian.djnitehawk.com&redirect_uri=https://www.facebook.com/&name=I%27m%20listening%20to%20Pandora%20on%20my%20desktop%20with%20PANDORIAN...")
                     NagShown = True
                 End If
@@ -771,7 +771,7 @@ Public Class frmMain
 
             If currVer < newVer Then
                 Dim res As MsgBoxResult = MsgBox("Pandorian has a new update: v" + e.Result.ToString + vbCrLf + vbCrLf +
-                                                 "Would you like to visit the Pandorian website now?", MsgBoxStyle.YesNo + MsgBoxStyle.Information, Title:="New Update Available")
+                                                 "Would you like to visit the Pandorian website now?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, Title:="New Update Available")
                 If res = MsgBoxResult.Yes Then
                     Process.Start("http://pandorian.djnitehawk.com/?utm_source=pandorian.app&utm_medium=direct.link&utm_campaign=download.update")
                 End If
