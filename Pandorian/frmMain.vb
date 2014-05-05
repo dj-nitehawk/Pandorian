@@ -53,6 +53,10 @@ Public Class frmMain
                         chkSleep.Checked = True
                     End If
                 End If
+            Case 8
+                If TrayIcon.Visible Then
+                    TrayMenu.Show(MousePosition)
+                End If
         End Select
     End Sub
 
@@ -64,10 +68,11 @@ Public Class frmMain
         Hotkeys.RegisterHotKey(Me, 5, Keys.P, Hotkeys.KeyModifier.Alt) 'show/hide pandorian
         Hotkeys.RegisterHotKey(Me, 6, Keys.B, Hotkeys.KeyModifier.Alt) 'block
         Hotkeys.RegisterHotKey(Me, 7, Keys.Escape, Hotkeys.KeyModifier.Alt) 'sleep
+        Hotkeys.RegisterHotKey(Me, 8, Keys.M, Hotkeys.KeyModifier.Alt) 'show tray menu
     End Sub
     Private Sub unRegisterHotkeys()
         Dim i As Integer = 1
-        Do While i <= 7
+        Do While i <= 8
             Hotkeys.unregisterHotkeys(Me, i)
             i = i + 1
         Loop
@@ -80,6 +85,7 @@ Public Class frmMain
                "Skip Current Song: ALT + S" + vbCrLf +
                "Block Current Song: ALT + B" + vbCrLf +
                "Show/Hide Pandorian: ALT + P" + vbCrLf +
+               "Show Tray Icon Menu: ALT + M" + vbCrLf +
                "Sleep computer now: ALT + ESC", MsgBoxStyle.Information)
     End Sub
 
@@ -450,13 +456,12 @@ Public Class frmMain
         Application.DoEvents()
     End Sub
     Private Sub TrayIcon_MouseClick(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseClick
-        Select Case e.Button
-            Case Windows.Forms.MouseButtons.Left
-                TrayIcon.Visible = False
-                Me.Visible = True
-                Me.WindowState = FormWindowState.Normal
-                Me.Activate()
-        End Select
+        If e.Button = Windows.Forms.MouseButtons.Left Then
+            TrayIcon.Visible = False
+            Me.Visible = True
+            Me.WindowState = FormWindowState.Normal
+            Me.Activate()
+        End If
     End Sub
     Private Sub frmMain_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 
@@ -490,6 +495,7 @@ Public Class frmMain
             End If
             Pandora.Proxy = Me.Proxy
         End If
+        WaitForNetConnection()
         If SuccessfulLogin() Then
             LoadStationList()
             RestoreSkipHistory()
@@ -938,4 +944,5 @@ Public Class frmMain
         Clipboard.SetText(tmiSongTitle.Text)
         tmiSongTitle.ToolTipText = "Click here to copy the song info to clipboard..."
     End Sub
+
 End Class
