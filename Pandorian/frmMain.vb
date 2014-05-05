@@ -900,9 +900,9 @@ Public Class frmMain
     Private Sub TrayMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TrayMenu.Opening
         If Not IsNothing(Pandora) Then
             If Not IsNothing(Pandora.CurrentSong) And Not IsNothing(Pandora.CurrentStation) Then
-                tmiSongTitle.Text = Pandora.CurrentSong.Title
-                tmiArtistTitle.Text = Pandora.CurrentSong.Artist
-                tmiStationTitle.Text = Pandora.CurrentStation.Name
+                tmiSongTitle.Text = Pandora.CurrentSong.Title.Replace("&", "&&")
+                tmiArtistTitle.Text = Pandora.CurrentSong.Artist.Replace("&", "&&")
+                tmiStationTitle.Text = Pandora.CurrentStation.Name.Replace("&", "&&")
             End If
             Select Case BASSChannelState()
                 Case BASSActive.BASS_ACTIVE_PAUSED
