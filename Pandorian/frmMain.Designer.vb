@@ -203,9 +203,9 @@ Partial Class frmMain
         'Spinner
         '
         Me.Spinner.Image = Global.Pandorian.My.Resources.Resources.spinner
-        Me.Spinner.Location = New System.Drawing.Point(2, 1)
+        Me.Spinner.Location = New System.Drawing.Point(-6, -6)
         Me.Spinner.Name = "Spinner"
-        Me.Spinner.Size = New System.Drawing.Size(312, 460)
+        Me.Spinner.Size = New System.Drawing.Size(329, 476)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.Spinner.TabIndex = 13
         Me.Spinner.TabStop = False
@@ -225,7 +225,7 @@ Partial Class frmMain
         '
         Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miManageStation, Me.ToolStripSeparator1, Me.miShowSettings, Me.miShowHotkeys, Me.miSleepTimer, Me.miUpdate, Me.ToolStripSeparator2, Me.miVersion})
         Me.MenuStrip.Name = "MenuStrip"
-        Me.MenuStrip.Size = New System.Drawing.Size(193, 170)
+        Me.MenuStrip.Size = New System.Drawing.Size(193, 148)
         '
         'miManageStation
         '

@@ -117,7 +117,7 @@ Public Class frmMain
     End Function
     Function SuccessfulLogin() As Boolean
         Try
-            If Pandora.Login(My.Settings.pandoraUsername, My.Settings.pandoraPassword) Then
+            If Pandora.Login(Decrypt(My.Settings.pandoraUsername), Decrypt(My.Settings.pandoraPassword)) Then
                 Return True
             Else
                 MsgBox("Couldn't log in to Pandora. Check pandora a/c details.", MsgBoxStyle.Exclamation)
@@ -270,9 +270,9 @@ Public Class frmMain
             End If
 
             If Not My.Settings.noProxy Then
-                Dim proxy As String = My.Settings.proyxUsername + ":" +
-                                      My.Settings.proxyPassword + "@" +
-                                      My.Settings.proxyAddress.Replace("http://", "")
+                Dim proxy As String = Decrypt(My.Settings.proyxUsername) + ":" +
+                                      Decrypt(My.Settings.proxyPassword) + "@" +
+                                      Decrypt(My.Settings.proxyAddress).Replace("http://", "")
                 ProxyPtr = Marshal.StringToHGlobalAnsi(proxy)
                 Bass.BASS_SetConfigPtr(BASSConfig.BASS_CONFIG_NET_PROXY, ProxyPtr)
             End If
@@ -365,16 +365,16 @@ Public Class frmMain
         If My.Settings.noProxy = True Then
             prxSettingsReqd = False
         Else
-            If My.Settings.proxyAddress = "http://server:port" Or
-                My.Settings.proyxUsername = "proxy_username" Or
-                My.Settings.proxyPassword = "proxy_password" Then
+            If Decrypt(My.Settings.proxyAddress) = "http://server:port" Or
+                Decrypt(My.Settings.proyxUsername) = "proxy_username" Or
+                Decrypt(My.Settings.proxyPassword) = "proxy_password" Then
                 prxSettingsReqd = True
             End If
         End If
 
         If prxSettingsReqd Or
-            My.Settings.pandoraUsername = "pandora_username" Or
-            My.Settings.pandoraPassword = "pandora_password" Then
+            Decrypt(My.Settings.pandoraUsername) = "pandora_username" Or
+            Decrypt(My.Settings.pandoraPassword) = "pandora_password" Then
             Return False
         Else
             Return True
@@ -493,9 +493,9 @@ Public Class frmMain
         End If
         Pandora = New API(My.Settings.pandoraOne)
         If Not My.Settings.noProxy Then
-            Me.Proxy = New Net.WebProxy(My.Settings.proxyAddress)
-            If Not String.IsNullOrEmpty(My.Settings.proyxUsername) And Not String.IsNullOrEmpty(My.Settings.proxyPassword) Then
-                Me.Proxy.Credentials = New Net.NetworkCredential(My.Settings.proyxUsername, My.Settings.proxyPassword)
+            Me.Proxy = New Net.WebProxy(Decrypt(My.Settings.proxyAddress))
+            If Not String.IsNullOrEmpty(Decrypt(My.Settings.proyxUsername)) And Not String.IsNullOrEmpty(Decrypt(My.Settings.proxyPassword)) Then
+                Me.Proxy.Credentials = New Net.NetworkCredential(Decrypt(My.Settings.proyxUsername), Decrypt(My.Settings.proxyPassword))
             End If
             Pandora.Proxy = Me.Proxy
         End If

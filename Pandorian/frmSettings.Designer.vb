@@ -93,8 +93,10 @@ Partial Class frmSettings
         Me.pnPassword.BackColor = System.Drawing.Color.White
         Me.pnPassword.Location = New System.Drawing.Point(115, 28)
         Me.pnPassword.Name = "pnPassword"
+        Me.pnPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.pnPassword.Size = New System.Drawing.Size(157, 20)
         Me.pnPassword.TabIndex = 2
+        Me.pnPassword.UseSystemPasswordChar = True
         '
         'pnUsername
         '
@@ -109,8 +111,10 @@ Partial Class frmSettings
         Me.prxPassword.BackColor = System.Drawing.Color.White
         Me.prxPassword.Location = New System.Drawing.Point(114, 180)
         Me.prxPassword.Name = "prxPassword"
+        Me.prxPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.prxPassword.Size = New System.Drawing.Size(157, 20)
         Me.prxPassword.TabIndex = 8
+        Me.prxPassword.UseSystemPasswordChar = True
         '
         'prxUserName
         '

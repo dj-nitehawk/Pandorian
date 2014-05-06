@@ -12,12 +12,12 @@
 
         If Not pnUsername.Text = "" And Not pnPassword.Text = "" Then
 
-            My.Settings.proxyAddress = prxAddress.Text
-            My.Settings.proxyPassword = prxPassword.Text
-            My.Settings.proyxUsername = prxUserName.Text
+            My.Settings.proxyAddress = Encrypt(prxAddress.Text)
+            My.Settings.proxyPassword = Encrypt(prxPassword.Text)
+            My.Settings.proyxUsername = Encrypt(prxUserName.Text)
             My.Settings.noProxy = chkNoProxy.Checked
-            My.Settings.pandoraUsername = pnUsername.Text
-            My.Settings.pandoraPassword = pnPassword.Text
+            My.Settings.pandoraUsername = Encrypt(pnUsername.Text)
+            My.Settings.pandoraPassword = Encrypt(pnPassword.Text)
             My.Settings.pandoraOne = chkPandoraOne.Checked
             My.Settings.audioQuality = ddQuality.SelectedValue
             My.Settings.Save()
@@ -43,12 +43,12 @@
     End Sub
 
     Private Sub frmSettings_Load(sender As Object, e As EventArgs) Handles Me.Load
-        prxAddress.Text = My.Settings.proxyAddress
-        prxUserName.Text = My.Settings.proyxUsername
-        prxPassword.Text = My.Settings.proxyPassword
+        prxAddress.Text = Decrypt(My.Settings.proxyAddress)
+        prxUserName.Text = Decrypt(My.Settings.proyxUsername)
+        prxPassword.Text = Decrypt(My.Settings.proxyPassword)
         chkNoProxy.Checked = My.Settings.noProxy
-        pnUsername.Text = My.Settings.pandoraUsername
-        pnPassword.Text = My.Settings.pandoraPassword
+        pnUsername.Text = Decrypt(My.Settings.pandoraUsername)
+        pnPassword.Text = Decrypt(My.Settings.pandoraPassword)
         chkPandoraOne.Checked = My.Settings.pandoraOne
         chkNoProxy.Checked = My.Settings.noProxy
 

@@ -10,9 +10,9 @@
         If Not My.Settings.noProxy Then
             Dim p As New InternetProxy
             With p
-                .Address = My.Settings.proxyAddress
-                .UserName = My.Settings.proyxUsername
-                .Password = My.Settings.proxyPassword
+                .Address = Decrypt(My.Settings.proxyAddress)
+                .UserName = Decrypt(My.Settings.proyxUsername)
+                .Password = Decrypt(My.Settings.proxyPassword)
             End With
             wBrowser.Proxy = p
         End If
