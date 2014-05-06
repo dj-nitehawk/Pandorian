@@ -365,16 +365,14 @@ Public Class frmMain
         If My.Settings.noProxy = True Then
             prxSettingsReqd = False
         Else
-            If Decrypt(My.Settings.proxyAddress) = "http://server:port" Or
-                Decrypt(My.Settings.proyxUsername) = "proxy_username" Or
-                Decrypt(My.Settings.proxyPassword) = "proxy_password" Then
+            If Decrypt(My.Settings.proxyAddress) = "http://server:port" Then
                 prxSettingsReqd = True
             End If
         End If
 
         If prxSettingsReqd Or
-            Decrypt(My.Settings.pandoraUsername) = "pandora_username" Or
-            Decrypt(My.Settings.pandoraPassword) = "pandora_password" Then
+            String.IsNullOrEmpty(Decrypt(My.Settings.pandoraUsername)) Or
+            String.IsNullOrEmpty(Decrypt(My.Settings.pandoraPassword)) Then
             Return False
         Else
             Return True

@@ -4,13 +4,17 @@
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        If Not chkNoProxy.Checked And prxAddress.Text = "" Then
-            MsgBox("Please specify a proxy server and port." + vbCrLf +
-                   "Or check 'Don't Use A Proxy'", MsgBoxStyle.Exclamation)
-            Exit Sub
+        If Not chkNoProxy.Checked Then
+
+            If String.IsNullOrEmpty(prxAddress.Text) Or prxAddress.Text = "http://server:port" Then
+                MsgBox("Please specify a proxy server and port." + vbCrLf +
+                                   "Or check 'Don't Use A Proxy'", MsgBoxStyle.Exclamation)
+                Exit Sub
+            End If
+
         End If
 
-        If Not pnUsername.Text = "" And Not pnPassword.Text = "" Then
+        If Not String.IsNullOrEmpty(pnUsername.Text) And Not String.IsNullOrEmpty(pnPassword.Text) Then
 
             My.Settings.proxyAddress = Encrypt(prxAddress.Text)
             My.Settings.proxyPassword = Encrypt(prxPassword.Text)
@@ -38,7 +42,7 @@
             End If
 
         Else
-            MsgBox("All the fields are required.", MsgBoxStyle.Exclamation)
+            MsgBox("Pandora A/C details are required!", MsgBoxStyle.Exclamation)
         End If
     End Sub
 
@@ -113,4 +117,10 @@
             lnkProxy.Enabled = True
         End If
     End Sub
+
+    Private Sub SelectText(sender As Object, e As EventArgs) Handles pnUsername.Click, pnPassword.Click, prxAddress.Click, prxUserName.Click, prxPassword.Click
+        Dim tb As TextBox = DirectCast(sender, TextBox)
+        tb.SelectAll()
+    End Sub
+
 End Class

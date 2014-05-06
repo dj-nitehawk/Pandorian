@@ -6,22 +6,22 @@
       <Value Profile="(Default)">http://server:port</Value>
     </Setting>
     <Setting Name="proyxUsername" Type="System.String" Scope="User">
-      <Value Profile="(Default)">proxy_username</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="proxyPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)">proxy_password</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="pandoraUsername" Type="System.String" Scope="User">
-      <Value Profile="(Default)">pandora_username</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="pandoraPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)">pandora_password</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="lastStationID" Type="System.String" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="audioQuality" Type="System.String" Scope="User">
-      <Value Profile="(Default)">highQuality</Value>
+      <Value Profile="(Default)">mediumQuality</Value>
     </Setting>
     <Setting Name="stationSkipHistory" Type="System.String" Scope="User">
       <Value Profile="(Default)">{}</Value>

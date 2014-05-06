@@ -68,7 +68,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("proxy_username")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property proyxUsername() As String
             Get
                 Return CType(Me("proyxUsername"),String)
@@ -80,7 +80,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("proxy_password")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property proxyPassword() As String
             Get
                 Return CType(Me("proxyPassword"),String)
@@ -92,7 +92,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("pandora_username")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property pandoraUsername() As String
             Get
                 Return CType(Me("pandoraUsername"),String)
@@ -104,7 +104,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("pandora_password")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property pandoraPassword() As String
             Get
                 Return CType(Me("pandoraPassword"),String)
@@ -128,7 +128,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("highQuality")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("mediumQuality")>  _
         Public Property audioQuality() As String
             Get
                 Return CType(Me("audioQuality"),String)
