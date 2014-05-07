@@ -656,7 +656,7 @@ Public Class frmMain
     End Sub
 
     Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
-        If btnSkip.Enabled Then
+        If btnSkip.Enabled And Pandora.CanSkip Then
             Execute(Sub() PlayNextSong(True), "btnSkip_Click")
         End If
     End Sub
@@ -665,7 +665,9 @@ Public Class frmMain
             btnBlock.Text = "(B)"
             btnBlock.Enabled = False
             Execute(Sub() Pandora.TemporarilyBanSong(Pandora.CurrentSong), "btnBlock_Click.TemporarilyBanSong")
-            Execute(Sub() PlayNextSong(True), "btnBlock_Click.PlayNextSong")
+            If Pandora.CanSkip Then
+                Execute(Sub() PlayNextSong(True), "btnBlock_Click.PlayNextSong")
+            End If
         End If
     End Sub
     Function SongDurationSecs() As Double
@@ -692,7 +694,9 @@ Public Class frmMain
             btnLike.Text = "Like"
             btnLike.Enabled = True
             Execute(Sub() Pandora.RateSong(Pandora.CurrentSong, PandoraRating.Hate), "btnDislike_Click.RateSong")
-            Execute(Sub() PlayNextSong(True), "btnDislike_Click.PlayNextSong")
+            If Pandora.CanSkip() Then
+                Execute(Sub() PlayNextSong(True), "btnDislike_Click.PlayNextSong")
+            End If
         End If
     End Sub
     Function GetCoverViaProxy(URL As String) As Drawing.Image
