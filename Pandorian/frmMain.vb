@@ -307,12 +307,15 @@ Public Class frmMain
         'Debug.WriteLine("ReplayGain: " + Pandora.CurrentSong.TrackGain.ToString + " From 0 |" + " New Gain: " + VolParm.fVolume.ToString + " From 1")
     End Sub
     Private Sub PlayCurrentSongWithBASS()
+        If Not Stream = 0 Then
+            Bass.BASS_ChannelStop(Stream)
+        End If
         Stream = Bass.BASS_StreamCreateURL(
-            Pandora.CurrentSong.AudioUrlMap(My.Settings.audioQuality).Url,
-            0,
-            BASSFlag.BASS_STREAM_AUTOFREE,
-            Nothing,
-            IntPtr.Zero)
+                Pandora.CurrentSong.AudioUrlMap(My.Settings.audioQuality).Url,
+                0,
+                BASSFlag.BASS_STREAM_AUTOFREE,
+                Nothing,
+                IntPtr.Zero)
         If Not Stream = 0 Then
             Bass.BASS_ChannelSetSync(Stream, BASSSync.BASS_SYNC_END, 0, Sync, IntPtr.Zero)
             ApplyReplayGain()
@@ -852,6 +855,8 @@ Public Class frmMain
         sw.Start()
         Do Until NetConnectionAvailable()
             If sw.ElapsedMilliseconds > 10000 Then
+                MsgBox("Sorry, but it looks like your internet is down." + vbCrLf + vbCrLf +
+                       "Please try again later...", MsgBoxStyle.Exclamation)
                 Exit Do
             End If
             Threading.Thread.Sleep(1000)
