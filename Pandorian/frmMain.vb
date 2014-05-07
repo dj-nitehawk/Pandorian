@@ -348,9 +348,8 @@ Public Class frmMain
                           MsgBoxStyle.Question + MsgBoxStyle.YesNo,
                           Title:="SHARE THE LOVE?") = MsgBoxResult.Yes Then
                     Process.Start("https://www.facebook.com/dialog/feed?app_id=1442573219316352&link=http://pandorian.djnitehawk.com&redirect_uri=https://www.facebook.com/&name=I%27m%20listening%20to%20Pandora%20on%20my%20desktop%20with%20PANDORIAN...")
-                    NagShown = True
                 End If
-
+                NagShown = True
                 Exit For
             End If
         Next
