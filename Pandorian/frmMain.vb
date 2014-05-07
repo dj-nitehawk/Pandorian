@@ -63,14 +63,39 @@ Public Class frmMain
     End Sub
 
     Private Sub registerHotkeys()
-        Hotkeys.RegisterHotKey(Me, 1, Keys.Space, Hotkeys.KeyModifier.Alt) 'play/pause
-        Hotkeys.RegisterHotKey(Me, 2, Keys.L, Hotkeys.KeyModifier.Alt) 'like
-        Hotkeys.RegisterHotKey(Me, 3, Keys.D, Hotkeys.KeyModifier.Alt) 'dislike
-        Hotkeys.RegisterHotKey(Me, 4, Keys.S, Hotkeys.KeyModifier.Alt) 'skip
-        Hotkeys.RegisterHotKey(Me, 5, Keys.P, Hotkeys.KeyModifier.Alt) 'show/hide pandorian
-        Hotkeys.RegisterHotKey(Me, 6, Keys.B, Hotkeys.KeyModifier.Alt) 'block
-        Hotkeys.RegisterHotKey(Me, 7, Keys.Escape, Hotkeys.KeyModifier.Alt) 'sleep
-        Hotkeys.RegisterHotKey(Me, 8, Keys.M, Hotkeys.KeyModifier.Alt) 'show tray menu
+        Dim modKeys As New Dictionary(Of String, Integer)
+        For Each k As Hotkeys.KeyModifier In [Enum].GetValues(GetType(Hotkeys.KeyModifier))
+            modKeys.Add(k.ToString, k)
+        Next
+        cbModKey.DisplayMember = "Key"
+        cbModKey.ValueMember = "Value"
+        cbModKey.DataSource = New BindingSource(modKeys, Nothing)
+        cbModKey.SelectedIndex = cbModKey.FindStringExact(CType(My.Settings.hkModifier, Hotkeys.KeyModifier).ToString)
+        tbHKPlayPause.Text = [Enum].GetName(GetType(Keys), My.Settings.hkPlayPause)
+        tbHKPlayPause.Tag = My.Settings.hkPlayPause
+        tbHKLikeSong.Text = [Enum].GetName(GetType(Keys), My.Settings.hkLike)
+        tbHKLikeSong.Tag = My.Settings.hkLike
+        tbHKDislikeSong.Text = [Enum].GetName(GetType(Keys), My.Settings.hkDislike)
+        tbHKDislikeSong.Tag = My.Settings.hkDislike
+        tbHKSkipSong.Text = [Enum].GetName(GetType(Keys), My.Settings.hkSkip)
+        tbHKSkipSong.Tag = My.Settings.hkSkip
+        tbHKBlockSong.Text = [Enum].GetName(GetType(Keys), My.Settings.hkBlock)
+        tbHKBlockSong.Tag = My.Settings.hkBlock
+        tbHKShowHide.Text = [Enum].GetName(GetType(Keys), My.Settings.hkShowHide)
+        tbHKShowHide.Tag = My.Settings.hkShowHide
+        tbHKGlobalMenu.Text = [Enum].GetName(GetType(Keys), My.Settings.hkGlobalMenu)
+        tbHKGlobalMenu.Tag = My.Settings.hkGlobalMenu
+        tbHKSleepNow.Text = [Enum].GetName(GetType(Keys), My.Settings.hkSleep)
+        tbHKSleepNow.Tag = My.Settings.hkSleep
+
+        Hotkeys.RegisterHotKey(Me, 1, My.Settings.hkPlayPause, My.Settings.hkModifier) 'play/pause
+        Hotkeys.RegisterHotKey(Me, 2, My.Settings.hkLike, My.Settings.hkModifier) 'like
+        Hotkeys.RegisterHotKey(Me, 3, My.Settings.hkDislike, My.Settings.hkModifier) 'dislike
+        Hotkeys.RegisterHotKey(Me, 4, My.Settings.hkSkip, My.Settings.hkModifier) 'skip
+        Hotkeys.RegisterHotKey(Me, 5, My.Settings.hkShowHide, My.Settings.hkModifier) 'show/hide pandorian
+        Hotkeys.RegisterHotKey(Me, 6, My.Settings.hkBlock, My.Settings.hkModifier) 'block
+        Hotkeys.RegisterHotKey(Me, 7, My.Settings.hkSleep, My.Settings.hkModifier) 'sleep
+        Hotkeys.RegisterHotKey(Me, 8, My.Settings.hkGlobalMenu, My.Settings.hkModifier) 'show tray menu
     End Sub
     Private Sub unRegisterHotkeys()
         Dim i As Integer = 1
@@ -81,14 +106,7 @@ Public Class frmMain
     End Sub
 
     Private Sub miShowHotkeys_Click(sender As Object, e As EventArgs) Handles miShowHotkeys.Click
-        MsgBox("Play/Pause Current Song: ALT + SPACE" + vbCrLf +
-               "Like Current Song: ALT + L" + vbCrLf +
-               "Dislike Current Song: ALT + D" + vbCrLf +
-               "Skip Current Song: ALT + S" + vbCrLf +
-               "Block Current Song: ALT + B" + vbCrLf +
-               "Show/Hide Pandorian: ALT + P" + vbCrLf +
-               "Show/Hide Global Menu: ALT + M" + vbCrLf +
-               "Sleep computer now: ALT + ESC", MsgBoxStyle.Information, Title:="GLOBAL HOTKEYS")
+        pnlHotkeys.Visible = True
     End Sub
 
     Sub AddCurrentSongToStationBuffer()
@@ -956,4 +974,51 @@ Public Class frmMain
         Me.Close()
     End Sub
 
+    Private Sub HotKeyTextBoxes_Enter(sender As Object, e As EventArgs) Handles _
+        tbHKPlayPause.Enter,
+        tbHKLikeSong.Enter,
+        tbHKDislikeSong.Enter,
+        tbHKSkipSong.Enter,
+        tbHKShowHide.Enter,
+        tbHKGlobalMenu.Enter,
+        tbHKSleepNow.Enter,
+        tbHKBlockSong.Enter
+
+        Dim tb As TextBox = DirectCast(sender, TextBox)
+        tb.Clear()
+    End Sub
+
+    Private Sub HotKeyTextBoxes_Leave(sender As Object, e As EventArgs) Handles _
+        tbHKPlayPause.Leave,
+        tbHKLikeSong.Leave,
+        tbHKDislikeSong.Leave,
+        tbHKSkipSong.Leave,
+        tbHKShowHide.Leave,
+        tbHKGlobalMenu.Leave,
+        tbHKSleepNow.Leave,
+        tbHKBlockSong.Leave
+
+        Dim tb As TextBox = DirectCast(sender, TextBox)
+        tb.Text = [Enum].GetName(GetType(Keys), tb.Tag)
+    End Sub
+
+    Private Sub HotKeyTextBoxes_KeyUp(sender As Object, e As KeyEventArgs) Handles _
+        tbHKPlayPause.KeyUp,
+        tbHKLikeSong.KeyUp,
+        tbHKDislikeSong.KeyUp,
+        tbHKSkipSong.KeyUp,
+        tbHKShowHide.KeyUp,
+        tbHKGlobalMenu.KeyUp,
+        tbHKSleepNow.KeyUp,
+        tbHKBlockSong.KeyUp
+
+        Dim tb As TextBox = DirectCast(sender, TextBox)
+        tb.Tag = e.KeyData
+        tb.Text = [Enum].GetName(GetType(Keys), tb.Tag)
+        tb.SelectAll()
+    End Sub
+
+    Private Sub btnSaveHotkeys_Click(sender As Object, e As EventArgs) Handles btnSaveHotkeys.Click
+
+    End Sub
 End Class

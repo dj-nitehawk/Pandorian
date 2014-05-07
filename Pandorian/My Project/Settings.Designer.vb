@@ -209,6 +209,114 @@ Namespace My
                 Me("launchCount") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("1")> _
+        Public Property hkModifier() As Integer
+            Get
+                Return CType(Me("hkModifier"), Integer)
+            End Get
+            Set(value As Integer)
+                Me("hkModifier") = value
+            End Set
+        End Property
+
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("32")> _
+        Public Property hkPlayPause() As Integer
+            Get
+                Return CType(Me("hkPlayPause"), Integer)
+            End Get
+            Set(value As Integer)
+                Me("hkPlayPause") = value
+            End Set
+        End Property
+
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("76")> _
+        Public Property hkLike() As Integer
+            Get
+                Return CType(Me("hkLike"), Integer)
+            End Get
+            Set(value As Integer)
+                Me("hkLike") = value
+            End Set
+        End Property
+
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("68")> _
+        Public Property hkDislike() As Integer
+            Get
+                Return CType(Me("hkDislike"), Integer)
+            End Get
+            Set(value As Integer)
+                Me("hkDislike") = value
+            End Set
+        End Property
+
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("83")> _
+        Public Property hkSkip() As Integer
+            Get
+                Return CType(Me("hkSkip"), Integer)
+            End Get
+            Set(value As Integer)
+                Me("hkSkip") = value
+            End Set
+        End Property
+
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("80")> _
+        Public Property hkShowHide() As Integer
+            Get
+                Return CType(Me("hkShowHide"), Integer)
+            End Get
+            Set(value As Integer)
+                Me("hkShowHide") = value
+            End Set
+        End Property
+
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("66")> _
+        Public Property hkBlock() As Integer
+            Get
+                Return CType(Me("hkBlock"), Integer)
+            End Get
+            Set(value As Integer)
+                Me("hkBlock") = value
+            End Set
+        End Property
+
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("27")> _
+        Public Property hkSleep() As Integer
+            Get
+                Return CType(Me("hkSleep"), Integer)
+            End Get
+            Set(value As Integer)
+                Me("hkSleep") = value
+            End Set
+        End Property
+
+        <Global.System.Configuration.UserScopedSettingAttribute(), _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.Configuration.DefaultSettingValueAttribute("77")> _
+        Public Property hkGlobalMenu() As Integer
+            Get
+                Return CType(Me("hkGlobalMenu"), Integer)
+            End Get
+            Set(value As Integer)
+                Me("hkGlobalMenu") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
