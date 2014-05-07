@@ -1019,6 +1019,39 @@ Public Class frmMain
     End Sub
 
     Private Sub btnSaveHotkeys_Click(sender As Object, e As EventArgs) Handles btnSaveHotkeys.Click
+        Dim HKList As New List(Of Keys)
+        For Each c In pnlHotKeys.Controls
+            Dim tb As TextBox = TryCast(c, TextBox)
+            If Not IsNothing(tb) Then
+                If Not HKList.Contains(tb.Tag) Then
+                    HKList.Add(tb.Tag)
+                End If
+            End If
+        Next
+
+        If HKList.Count < 8 Then
+            MsgBox("You cannot use the same key for more than one function!", MsgBoxStyle.Exclamation)
+            Exit Sub
+        End If
+
+        With My.Settings
+            .hkModifier = CType(cbModKey.SelectedValue, Integer)
+            .hkBlock = tbHKBlockSong.Tag
+            .hkDislike = tbHKDislikeSong.Tag
+            .hkGlobalMenu = tbHKGlobalMenu.Tag
+            .hkLike = tbHKLikeSong.Tag
+            .hkPlayPause = tbHKPlayPause.Tag
+            .hkShowHide = tbHKShowHide.Tag
+            .hkSkip = tbHKSkipSong.Tag
+            .hkSleep = tbHKSleepNow.Tag
+        End With
+        My.Settings.Save()
+
+        pnlHotKeys.Visible = False
+
+        MsgBox("HotKeys have been saved." + vbCrLf + vbCrLf +
+               "New configuration will be active the next time you launch Pandorian...", MsgBoxStyle.Information)
+
 
     End Sub
 End Class
