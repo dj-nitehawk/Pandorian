@@ -30,7 +30,7 @@
             frmMain.Show()
 
             If frmMain.IsLoggedIn Then
-                MsgBox("Settings saved. Restart app to use new settings", MsgBoxStyle.Information)
+                MsgBox("Settings saved. Restart app to use new settings.", MsgBoxStyle.Information)
             Else
                 Try
                     frmMain.RunNow()

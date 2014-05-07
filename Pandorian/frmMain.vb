@@ -145,7 +145,7 @@ Public Class frmMain
             If ex.ErrorCode = ErrorCodeEnum.LISTENER_NOT_AUTHORIZED Then
                 MsgBox(ex.Message, MsgBoxStyle.Exclamation)
             Else
-                MsgBox(ex.Message + " Please check your proxy details.", MsgBoxStyle.Critical)
+                MsgBox(ex.Message + ". Please check your internet/proxy settings.", MsgBoxStyle.Critical)
             End If
             Return False
         End Try
@@ -1049,8 +1049,7 @@ Public Class frmMain
 
         pnlHotKeys.Visible = False
 
-        MsgBox("HotKeys have been saved." + vbCrLf + vbCrLf +
-               "New configuration will be active the next time you launch Pandorian...", MsgBoxStyle.Information)
+        MsgBox("HotKeys saved. Restart app to use new configuration.", MsgBoxStyle.Information)
 
 
     End Sub

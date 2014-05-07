@@ -368,98 +368,96 @@ Partial Class frmMain
         '
         Me.TrayMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tmiStationTitle, Me.tmiSongTitle, Me.tmiArtistTitle, Me.ToolStripSeparator3, Me.tmiLikeCurrentSong, Me.tmiDislikeCurrentSong, Me.ToolStripSeparator4, Me.tmiPlayPause, Me.tmiSkipSong, Me.ToolStripSeparator5, Me.tmiBlockSong, Me.ToolStripSeparator6, Me.tmiSleepComputer, Me.tmiExit})
         Me.TrayMenu.Name = "TrayMenu"
-        Me.TrayMenu.Size = New System.Drawing.Size(224, 248)
+        Me.TrayMenu.Size = New System.Drawing.Size(160, 270)
         '
         'tmiStationTitle
         '
         Me.tmiStationTitle.Font = New System.Drawing.Font("Segoe UI", 9.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Underline), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tmiStationTitle.Name = "tmiStationTitle"
-        Me.tmiStationTitle.Size = New System.Drawing.Size(223, 22)
+        Me.tmiStationTitle.Size = New System.Drawing.Size(159, 22)
         Me.tmiStationTitle.Text = "Station Name"
         '
         'tmiSongTitle
         '
         Me.tmiSongTitle.BackColor = System.Drawing.SystemColors.Control
         Me.tmiSongTitle.ForeColor = System.Drawing.Color.DimGray
-        Me.tmiSongTitle.Margin = New System.Windows.Forms.Padding(5, 0, 0, 0)
         Me.tmiSongTitle.Name = "tmiSongTitle"
-        Me.tmiSongTitle.Size = New System.Drawing.Size(223, 22)
+        Me.tmiSongTitle.Size = New System.Drawing.Size(159, 22)
         Me.tmiSongTitle.Text = "Name Of Song"
         '
         'tmiArtistTitle
         '
         Me.tmiArtistTitle.ForeColor = System.Drawing.Color.DimGray
-        Me.tmiArtistTitle.Margin = New System.Windows.Forms.Padding(5, 0, 0, 0)
         Me.tmiArtistTitle.Name = "tmiArtistTitle"
-        Me.tmiArtistTitle.Size = New System.Drawing.Size(223, 22)
+        Me.tmiArtistTitle.Size = New System.Drawing.Size(159, 22)
         Me.tmiArtistTitle.Text = "Artist Name"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(220, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(156, 6)
         '
         'tmiLikeCurrentSong
         '
         Me.tmiLikeCurrentSong.Name = "tmiLikeCurrentSong"
-        Me.tmiLikeCurrentSong.ShortcutKeyDisplayString = "(ALT+L)"
-        Me.tmiLikeCurrentSong.Size = New System.Drawing.Size(223, 22)
+        Me.tmiLikeCurrentSong.ShortcutKeyDisplayString = ""
+        Me.tmiLikeCurrentSong.Size = New System.Drawing.Size(159, 22)
         Me.tmiLikeCurrentSong.Text = "Like"
         '
         'tmiDislikeCurrentSong
         '
         Me.tmiDislikeCurrentSong.Name = "tmiDislikeCurrentSong"
-        Me.tmiDislikeCurrentSong.ShortcutKeyDisplayString = "(ALT+D)"
-        Me.tmiDislikeCurrentSong.Size = New System.Drawing.Size(223, 22)
+        Me.tmiDislikeCurrentSong.ShortcutKeyDisplayString = ""
+        Me.tmiDislikeCurrentSong.Size = New System.Drawing.Size(159, 22)
         Me.tmiDislikeCurrentSong.Text = "Dislike"
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(220, 6)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(156, 6)
         '
         'tmiPlayPause
         '
         Me.tmiPlayPause.Name = "tmiPlayPause"
-        Me.tmiPlayPause.ShortcutKeyDisplayString = "(ALT+SPACE)"
-        Me.tmiPlayPause.Size = New System.Drawing.Size(223, 22)
+        Me.tmiPlayPause.ShortcutKeyDisplayString = ""
+        Me.tmiPlayPause.Size = New System.Drawing.Size(159, 22)
         Me.tmiPlayPause.Text = "Play/Pause"
         '
         'tmiSkipSong
         '
         Me.tmiSkipSong.Name = "tmiSkipSong"
-        Me.tmiSkipSong.ShortcutKeyDisplayString = "(ALT+S)"
-        Me.tmiSkipSong.Size = New System.Drawing.Size(223, 22)
+        Me.tmiSkipSong.ShortcutKeyDisplayString = ""
+        Me.tmiSkipSong.Size = New System.Drawing.Size(159, 22)
         Me.tmiSkipSong.Text = "Skip"
         '
         'ToolStripSeparator5
         '
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(220, 6)
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(156, 6)
         '
         'tmiBlockSong
         '
         Me.tmiBlockSong.Name = "tmiBlockSong"
-        Me.tmiBlockSong.ShortcutKeyDisplayString = "(ALT+B)"
-        Me.tmiBlockSong.Size = New System.Drawing.Size(223, 22)
+        Me.tmiBlockSong.ShortcutKeyDisplayString = ""
+        Me.tmiBlockSong.Size = New System.Drawing.Size(159, 22)
         Me.tmiBlockSong.Text = "Block"
         '
         'ToolStripSeparator6
         '
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New System.Drawing.Size(220, 6)
+        Me.ToolStripSeparator6.Size = New System.Drawing.Size(156, 6)
         '
         'tmiSleepComputer
         '
         Me.tmiSleepComputer.Name = "tmiSleepComputer"
-        Me.tmiSleepComputer.ShortcutKeyDisplayString = "(ALT+ESC)"
-        Me.tmiSleepComputer.Size = New System.Drawing.Size(223, 22)
+        Me.tmiSleepComputer.ShortcutKeyDisplayString = ""
+        Me.tmiSleepComputer.Size = New System.Drawing.Size(159, 22)
         Me.tmiSleepComputer.Text = "Sleep Computer"
         '
         'tmiExit
         '
         Me.tmiExit.Name = "tmiExit"
-        Me.tmiExit.Size = New System.Drawing.Size(223, 22)
+        Me.tmiExit.Size = New System.Drawing.Size(159, 22)
         Me.tmiExit.Text = "Exit"
         '
         'pnlHotKeys
