@@ -187,9 +187,6 @@ Public Class frmMain
         Else
             SongCoverImage.Image = GetCoverViaProxy(Song.AlbumArtLargeURL)
         End If
-        lblSongName.Text = Song.Title
-        lblArtistName.Text = Song.Artist
-        lblAlbumName.Text = Song.Album
         Timer.Enabled = True
         ddStations.Enabled = True
         If Not IsNothing(Pandora.CurrentStation) Then
@@ -228,6 +225,21 @@ Public Class frmMain
         Else
             btnBlock.Text = "Block"
             btnBlock.Enabled = True
+        End If
+        If Pandora.CurrentSong.AudioDurationSecs < 60 Then
+            lblSongName.Text = "This is a 42 sec blank audio track"
+            lblArtistName.Text = "Pandora is punishing you for excessive skipping :-("
+            lblAlbumName.Text = "This will correct itself in about 24hrs"
+            SongCoverImage.Image = Nothing
+            btnLike.Enabled = False
+            btnDislike.Enabled = False
+            btnPlayPause.Enabled = False
+            btnSkip.Enabled = False
+            btnBlock.Enabled = False
+        Else
+            lblSongName.Text = Song.Title
+            lblArtistName.Text = Song.Artist
+            lblAlbumName.Text = Song.Album
         End If
         Spinner.Visible = False
     End Sub
@@ -927,9 +939,15 @@ Public Class frmMain
     Private Sub TrayMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TrayMenu.Opening
         If Not IsNothing(Pandora) Then
             If Not IsNothing(Pandora.CurrentSong) And Not IsNothing(Pandora.CurrentStation) Then
-                tmiSongTitle.Text = Pandora.CurrentSong.Title.Replace("&", "&&")
-                tmiArtistTitle.Text = Pandora.CurrentSong.Artist.Replace("&", "&&")
                 tmiStationTitle.Text = Pandora.CurrentStation.Name.Replace("&", "&&")
+                If Pandora.CurrentSong.AudioDurationSecs > 60 Then
+                    tmiArtistTitle.Text = Pandora.CurrentSong.Artist.Replace("&", "&&")
+                    tmiSongTitle.Text = Pandora.CurrentSong.Title.Replace("&", "&&")
+                Else
+                    tmiArtistTitle.Text = "Pandora The Punisher"
+                    tmiSongTitle.Text = "42 Sec Blank Audio"
+                    tmiPlayPause.Enabled = False
+                End If
             End If
             Select Case BASSChannelState()
                 Case BASSActive.BASS_ACTIVE_PAUSED
