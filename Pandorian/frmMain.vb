@@ -410,12 +410,22 @@ Public Class frmMain
             Return True
         End If
     End Function
+
+    Private Sub ShowLockScreen()
+        frmLockScreen.CoverImage.Image = SongCoverImage.Image
+        frmLockScreen.Show()
+    End Sub
+
     Private Sub frmMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
 
         If System.Diagnostics.Debugger.IsAttached Then
             If e.Control And e.Alt And e.KeyCode = Keys.E Then
                 DebugExpireSessionNow()
             End If
+        End If
+
+        If e.Control And e.KeyCode = Keys.L Then
+            ShowLockScreen()
         End If
 
         If e.Control And e.KeyCode = Keys.D And

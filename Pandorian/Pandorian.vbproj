@@ -125,6 +125,12 @@
     <Compile Include="frmBrowser.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmLockScreen.Designer.vb">
+      <DependentUpon>frmLockScreen.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmLockScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +164,9 @@
   <ItemGroup>
     <EmbeddedResource Include="frmBrowser.resx">
       <DependentUpon>frmBrowser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLockScreen.resx">
+      <DependentUpon>frmLockScreen.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
