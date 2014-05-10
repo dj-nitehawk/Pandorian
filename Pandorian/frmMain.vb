@@ -412,7 +412,6 @@ Public Class frmMain
     End Function
 
     Private Sub ShowLockScreen()
-        frmLockScreen.CoverImage.Image = SongCoverImage.Image
         frmLockScreen.Show()
     End Sub
 
