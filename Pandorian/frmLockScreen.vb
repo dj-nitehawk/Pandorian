@@ -48,9 +48,9 @@ Public NotInheritable Class frmLockScreen
 
     Private Sub frmLockScreen_Load(sender As Object, e As EventArgs) Handles Me.Load
         tbPassword.Focus()
-        lblAlbum.UseMnemonic = True
-        lblArtist.UseMnemonic = True
-        lblTitle.UseMnemonic = True
+        lblAlbum.UseMnemonic = False
+        lblArtist.UseMnemonic = False
+        lblTitle.UseMnemonic = False
     End Sub
 
     Private Sub UpdateInfo()
