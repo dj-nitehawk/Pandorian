@@ -224,7 +224,7 @@ Partial Class frmMain
         '
         'SongCoverImage
         '
-        Me.SongCoverImage.BackColor = System.Drawing.Color.SteelBlue
+        Me.SongCoverImage.BackColor = System.Drawing.Color.Black
         Me.SongCoverImage.ContextMenuStrip = Me.MenuStrip
         Me.SongCoverImage.Location = New System.Drawing.Point(9, 44)
         Me.SongCoverImage.Name = "SongCoverImage"
@@ -368,7 +368,7 @@ Partial Class frmMain
         '
         Me.TrayMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tmiStationTitle, Me.tmiSongTitle, Me.tmiArtistTitle, Me.ToolStripSeparator3, Me.tmiLikeCurrentSong, Me.tmiDislikeCurrentSong, Me.ToolStripSeparator4, Me.tmiPlayPause, Me.tmiSkipSong, Me.ToolStripSeparator5, Me.tmiBlockSong, Me.ToolStripSeparator6, Me.tmiSleepComputer, Me.tmiExit})
         Me.TrayMenu.Name = "TrayMenu"
-        Me.TrayMenu.Size = New System.Drawing.Size(160, 270)
+        Me.TrayMenu.Size = New System.Drawing.Size(160, 248)
         '
         'tmiStationTitle
         '

@@ -43,7 +43,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>Pandorian.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -217,6 +217,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Pandorian.ico" />
+    <None Include="Resources\Icon.png" />
     <None Include="Resources\paypal.gif" />
     <None Include="Resources\spinner.png" />
     <Content Include="bass_aac.dll">

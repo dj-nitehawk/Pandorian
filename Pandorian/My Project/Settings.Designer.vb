@@ -210,111 +210,123 @@ Namespace My
             End Set
         End Property
         
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("1")> _
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1")>  _
         Public Property hkModifier() As Integer
             Get
-                Return CType(Me("hkModifier"), Integer)
+                Return CType(Me("hkModifier"),Integer)
             End Get
-            Set(value As Integer)
+            Set
                 Me("hkModifier") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("32")> _
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("32")>  _
         Public Property hkPlayPause() As Integer
             Get
-                Return CType(Me("hkPlayPause"), Integer)
+                Return CType(Me("hkPlayPause"),Integer)
             End Get
-            Set(value As Integer)
+            Set
                 Me("hkPlayPause") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("76")> _
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("76")>  _
         Public Property hkLike() As Integer
             Get
-                Return CType(Me("hkLike"), Integer)
+                Return CType(Me("hkLike"),Integer)
             End Get
-            Set(value As Integer)
+            Set
                 Me("hkLike") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("68")> _
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("68")>  _
         Public Property hkDislike() As Integer
             Get
-                Return CType(Me("hkDislike"), Integer)
+                Return CType(Me("hkDislike"),Integer)
             End Get
-            Set(value As Integer)
+            Set
                 Me("hkDislike") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("83")> _
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("83")>  _
         Public Property hkSkip() As Integer
             Get
-                Return CType(Me("hkSkip"), Integer)
+                Return CType(Me("hkSkip"),Integer)
             End Get
-            Set(value As Integer)
+            Set
                 Me("hkSkip") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("80")> _
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("80")>  _
         Public Property hkShowHide() As Integer
             Get
-                Return CType(Me("hkShowHide"), Integer)
+                Return CType(Me("hkShowHide"),Integer)
             End Get
-            Set(value As Integer)
+            Set
                 Me("hkShowHide") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("66")> _
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("66")>  _
         Public Property hkBlock() As Integer
             Get
-                Return CType(Me("hkBlock"), Integer)
+                Return CType(Me("hkBlock"),Integer)
             End Get
-            Set(value As Integer)
+            Set
                 Me("hkBlock") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("27")> _
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("27")>  _
         Public Property hkSleep() As Integer
             Get
-                Return CType(Me("hkSleep"), Integer)
+                Return CType(Me("hkSleep"),Integer)
             End Get
-            Set(value As Integer)
+            Set
                 Me("hkSleep") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("77")> _
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("77")>  _
         Public Property hkGlobalMenu() As Integer
             Get
-                Return CType(Me("hkGlobalMenu"), Integer)
+                Return CType(Me("hkGlobalMenu"),Integer)
             End Get
-            Set(value As Integer)
+            Set
                 Me("hkGlobalMenu") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property lockScreenPassword() As String
+            Get
+                Return CType(Me("lockScreenPassword"),String)
+            End Get
+            Set
+                Me("lockScreenPassword") = value
             End Set
         End Property
     End Class

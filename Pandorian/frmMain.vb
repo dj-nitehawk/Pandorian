@@ -19,6 +19,7 @@ Public Class frmMain
     Dim BASSReady As Boolean = False
     Dim ResumePlaying As Boolean = True
     Dim NagShown As Boolean = False
+    Public Property SongToken As String
 
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
         If m.Msg = Hotkeys.WM_HOTKEY Then
@@ -183,11 +184,12 @@ Public Class frmMain
         End If
         PlayCurrentSongWithBASS()
         If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
-            SongCoverImage.Image = Nothing
+            SongCoverImage.Image = My.Resources.logo
         Else
             SongCoverImage.Image = GetCoverViaProxy(Song.AlbumArtLargeURL)
         End If
         Timer.Enabled = True
+        SongToken = Pandora.CurrentSong.Token
         ddStations.Enabled = True
         If Not IsNothing(Pandora.CurrentStation) Then
             My.Settings.lastStationID = Pandora.CurrentStation.Id
@@ -967,6 +969,11 @@ Public Class frmMain
             tmiDislikeCurrentSong.Enabled = btnDislike.Enabled
             tmiSkipSong.Enabled = btnSkip.Enabled
             tmiBlockSong.Enabled = btnBlock.Enabled
+            If frmLockScreen.Visible Then
+                tmiExit.Enabled = False
+            Else
+                tmiExit.Enabled = True
+            End If
         End If
     End Sub
 

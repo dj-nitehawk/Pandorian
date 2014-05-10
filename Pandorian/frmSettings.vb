@@ -24,6 +24,7 @@
             My.Settings.pandoraPassword = Encrypt(pnPassword.Text)
             My.Settings.pandoraOne = chkPandoraOne.Checked
             My.Settings.audioQuality = ddQuality.SelectedValue
+            My.Settings.lockScreenPassword = Encrypt(unlockCode.Text)
             My.Settings.Save()
 
             Me.Hide()
@@ -55,6 +56,7 @@
         pnPassword.Text = Decrypt(My.Settings.pandoraPassword)
         chkPandoraOne.Checked = My.Settings.pandoraOne
         chkNoProxy.Checked = My.Settings.noProxy
+        unlockCode.Text = Decrypt(My.Settings.lockScreenPassword)
 
         PopulateQualityList(My.Settings.pandoraOne)
 
@@ -118,7 +120,7 @@
         End If
     End Sub
 
-    Private Sub SelectText(sender As Object, e As EventArgs) Handles pnUsername.Click, pnPassword.Click, prxAddress.Click, prxUserName.Click, prxPassword.Click
+    Private Sub SelectText(sender As Object, e As EventArgs) Handles pnUsername.Click, pnPassword.Click, prxAddress.Click, prxUserName.Click, prxPassword.Click, unlockCode.Click
         Dim tb As TextBox = DirectCast(sender, TextBox)
         tb.SelectAll()
     End Sub

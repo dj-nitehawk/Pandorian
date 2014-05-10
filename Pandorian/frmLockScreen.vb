@@ -2,13 +2,18 @@
 Imports System.Runtime.InteropServices
 
 Public NotInheritable Class frmLockScreen
+    Private CurrentToken As String
 
     Private Sub frmLockScreen_Deactivate(sender As Object, e As EventArgs) Handles Me.Deactivate
         Me.TopMost = True
     End Sub
 
+    Private Sub tbPassword_Leave(sender As Object, e As EventArgs) Handles tbPassword.Leave
+        tbPassword.Focus()
+    End Sub
+
     Private Sub tbPassword_TextChanged(sender As Object, e As EventArgs) Handles tbPassword.TextChanged
-        If tbPassword.Text = "5284" Then
+        If tbPassword.Text = Decrypt(My.Settings.lockScreenPassword) Then
             Me.Close()
         End If
     End Sub
@@ -28,6 +33,20 @@ Public NotInheritable Class frmLockScreen
         Next
         timer.Enabled = True
         Me.TopMost = True
+        UpdateInfo()
     End Sub
 
+    Private Sub frmLockScreen_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        tbPassword.Focus()
+    End Sub
+
+    Private Sub UpdateInfo()
+        If Not CurrentToken = frmMain.SongToken Then
+            CurrentToken = frmMain.SongToken
+            lblTitle.Text = frmMain.lblSongName.Text
+            lblArtist.Text = frmMain.lblArtistName.Text
+            lblAlbum.Text = frmMain.lblAlbumName.Text
+            CoverImage.Image = frmMain.SongCoverImage.Image
+        End If
+    End Sub
 End Class
