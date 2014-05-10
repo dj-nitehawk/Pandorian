@@ -8,6 +8,12 @@ Public NotInheritable Class frmLockScreen
         Me.TopMost = True
     End Sub
 
+    Private Sub tbPassword_KeyUp(sender As Object, e As KeyEventArgs) Handles tbPassword.KeyUp
+        If e.KeyCode = Keys.Enter Then
+            tbPassword_TextChanged(Nothing, Nothing)
+        End If
+    End Sub
+
     Private Sub tbPassword_Leave(sender As Object, e As EventArgs) Handles tbPassword.Leave
         tbPassword.Focus()
     End Sub

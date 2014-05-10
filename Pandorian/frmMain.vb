@@ -60,6 +60,10 @@ Public Class frmMain
                 Else
                     TrayMenu.Show(MousePosition)
                 End If
+            Case 9
+                If Not frmLockScreen.Visible Then
+                    frmLockScreen.Show()
+                End If
         End Select
     End Sub
 
@@ -88,6 +92,8 @@ Public Class frmMain
         tbHKGlobalMenu.Tag = My.Settings.hkGlobalMenu
         tbHKSleepNow.Text = [Enum].GetName(GetType(Keys), My.Settings.hkSleep)
         tbHKSleepNow.Tag = My.Settings.hkSleep
+        tbHKLockNow.Text = [Enum].GetName(GetType(Keys), My.Settings.hkLock)
+        tbHKLockNow.Tag = My.Settings.hkLock
 
         Hotkeys.RegisterHotKey(Me, 1, My.Settings.hkPlayPause, My.Settings.hkModifier) 'play/pause
         Hotkeys.RegisterHotKey(Me, 2, My.Settings.hkLike, My.Settings.hkModifier) 'like
@@ -97,10 +103,11 @@ Public Class frmMain
         Hotkeys.RegisterHotKey(Me, 6, My.Settings.hkBlock, My.Settings.hkModifier) 'block
         Hotkeys.RegisterHotKey(Me, 7, My.Settings.hkSleep, My.Settings.hkModifier) 'sleep
         Hotkeys.RegisterHotKey(Me, 8, My.Settings.hkGlobalMenu, My.Settings.hkModifier) 'show tray menu
+        Hotkeys.RegisterHotKey(Me, 9, My.Settings.hkLock, My.Settings.hkModifier) 'show lock screen
     End Sub
     Private Sub unRegisterHotkeys()
         Dim i As Integer = 1
-        Do While i <= 8
+        Do While i <= 9
             Hotkeys.unregisterHotkeys(Me, i)
             i = i + 1
         Loop
@@ -1013,7 +1020,8 @@ Public Class frmMain
         tbHKShowHide.Enter,
         tbHKGlobalMenu.Enter,
         tbHKSleepNow.Enter,
-        tbHKBlockSong.Enter
+        tbHKBlockSong.Enter,
+        tbHKLockNow.Enter
 
         Dim tb As TextBox = DirectCast(sender, TextBox)
         tb.Clear()
@@ -1027,7 +1035,8 @@ Public Class frmMain
         tbHKShowHide.Leave,
         tbHKGlobalMenu.Leave,
         tbHKSleepNow.Leave,
-        tbHKBlockSong.Leave
+        tbHKBlockSong.Leave,
+        tbHKLockNow.Leave
 
         Dim tb As TextBox = DirectCast(sender, TextBox)
         tb.Text = [Enum].GetName(GetType(Keys), tb.Tag)
@@ -1041,7 +1050,8 @@ Public Class frmMain
         tbHKShowHide.KeyUp,
         tbHKGlobalMenu.KeyUp,
         tbHKSleepNow.KeyUp,
-        tbHKBlockSong.KeyUp
+        tbHKBlockSong.KeyUp,
+        tbHKLockNow.KeyUp
 
         Dim tb As TextBox = DirectCast(sender, TextBox)
         tb.Tag = e.KeyData
@@ -1060,7 +1070,7 @@ Public Class frmMain
             End If
         Next
 
-        If HKList.Count < 8 Then
+        If HKList.Count < 9 Then
             MsgBox("You cannot use the same key for more than one function!", MsgBoxStyle.Exclamation)
             Exit Sub
         End If
@@ -1075,6 +1085,7 @@ Public Class frmMain
             .hkShowHide = tbHKShowHide.Tag
             .hkSkip = tbHKSkipSong.Tag
             .hkSleep = tbHKSleepNow.Tag
+            .hkLock = tbHKLockNow.Tag
         End With
         My.Settings.Save()
 
@@ -1084,4 +1095,5 @@ Public Class frmMain
 
 
     End Sub
+
 End Class

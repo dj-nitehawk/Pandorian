@@ -329,6 +329,18 @@ Namespace My
                 Me("lockScreenPassword") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("88")>  _
+        Public Property hkLock() As Integer
+            Get
+                Return CType(Me("hkLock"),Integer)
+            End Get
+            Set
+                Me("hkLock") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
