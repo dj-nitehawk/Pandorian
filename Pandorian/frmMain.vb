@@ -908,15 +908,12 @@ Public Class frmMain
     End Sub
 
     Private Function NetConnectionAvailable() As Boolean
-        Try
-            Using client = New WebClient()
-                Using stream = client.OpenRead("http://www.google.com")
-                    Return True
-                End Using
-            End Using
-        Catch
-            Return False
-        End Try
+        If My.Computer.Network.IsAvailable Then
+            If My.Computer.Network.Ping("google.com") Then
+                Return True
+            End If
+        End If
+        Return False
     End Function
 
     Private Sub PowerModeChanged(sender As Object, e As PowerModeChangedEventArgs)
