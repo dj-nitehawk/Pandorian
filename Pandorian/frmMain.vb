@@ -978,8 +978,10 @@ Public Class frmMain
             tmiBlockSong.Enabled = btnBlock.Enabled
             If frmLockScreen.Visible Then
                 tmiExit.Enabled = False
+                tmiLockScreen.Enabled = False
             Else
                 tmiExit.Enabled = True
+                tmiLockScreen.Enabled = True
             End If
         End If
     End Sub
@@ -1006,6 +1008,10 @@ Public Class frmMain
 
     Private Sub tmiSleepComputer_Click(sender As Object, e As EventArgs) Handles tmiSleepComputer.Click
         handleHotKeyEvent(7)
+    End Sub
+
+    Private Sub tmiLockScreen_Click(sender As Object, e As EventArgs) Handles tmiLockScreen.Click
+        handleHotKeyEvent(9)
     End Sub
 
     Private Sub tmiExit_Click(sender As Object, e As EventArgs) Handles tmiExit.Click
@@ -1096,4 +1102,5 @@ Public Class frmMain
 
     End Sub
 
+ 
 End Class

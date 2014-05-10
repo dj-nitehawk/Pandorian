@@ -24,6 +24,10 @@ Public NotInheritable Class frmLockScreen
         End If
     End Sub
 
+    Private Sub frmLockScreen_Enter(sender As Object, e As EventArgs) Handles Me.Enter
+        tbPassword.Focus()
+    End Sub
+
     Private Sub frmLockScreen_HandleCreated(sender As Object, e As EventArgs) Handles Me.HandleCreated
         KeyboardJammer.Jam()
     End Sub
@@ -42,8 +46,11 @@ Public NotInheritable Class frmLockScreen
         UpdateInfo()
     End Sub
 
-    Private Sub frmLockScreen_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+    Private Sub frmLockScreen_Load(sender As Object, e As EventArgs) Handles Me.Load
         tbPassword.Focus()
+        lblAlbum.UseMnemonic = True
+        lblArtist.UseMnemonic = True
+        lblTitle.UseMnemonic = True
     End Sub
 
     Private Sub UpdateInfo()
@@ -55,4 +62,5 @@ Public NotInheritable Class frmLockScreen
             CoverImage.Image = frmMain.SongCoverImage.Image
         End If
     End Sub
+
 End Class

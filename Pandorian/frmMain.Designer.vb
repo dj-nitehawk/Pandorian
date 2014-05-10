@@ -93,6 +93,8 @@ Partial Class frmMain
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Spinner = New System.Windows.Forms.PictureBox()
+        Me.tmiLockScreen = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
@@ -368,9 +370,9 @@ Partial Class frmMain
         '
         'TrayMenu
         '
-        Me.TrayMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tmiStationTitle, Me.tmiSongTitle, Me.tmiArtistTitle, Me.ToolStripSeparator3, Me.tmiLikeCurrentSong, Me.tmiDislikeCurrentSong, Me.ToolStripSeparator4, Me.tmiPlayPause, Me.tmiSkipSong, Me.ToolStripSeparator5, Me.tmiBlockSong, Me.ToolStripSeparator6, Me.tmiSleepComputer, Me.tmiExit})
+        Me.TrayMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tmiStationTitle, Me.tmiSongTitle, Me.tmiArtistTitle, Me.ToolStripSeparator3, Me.tmiLikeCurrentSong, Me.tmiDislikeCurrentSong, Me.ToolStripSeparator4, Me.tmiPlayPause, Me.tmiSkipSong, Me.ToolStripSeparator5, Me.tmiBlockSong, Me.ToolStripSeparator6, Me.tmiLockScreen, Me.tmiSleepComputer, Me.ToolStripSeparator7, Me.tmiExit})
         Me.TrayMenu.Name = "TrayMenu"
-        Me.TrayMenu.Size = New System.Drawing.Size(160, 248)
+        Me.TrayMenu.Size = New System.Drawing.Size(160, 298)
         '
         'tmiStationTitle
         '
@@ -696,6 +698,17 @@ Partial Class frmMain
         Me.Spinner.TabIndex = 17
         Me.Spinner.TabStop = False
         '
+        'tmiLockScreen
+        '
+        Me.tmiLockScreen.Name = "tmiLockScreen"
+        Me.tmiLockScreen.Size = New System.Drawing.Size(159, 22)
+        Me.tmiLockScreen.Text = "Lock Screen"
+        '
+        'ToolStripSeparator7
+        '
+        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
+        Me.ToolStripSeparator7.Size = New System.Drawing.Size(156, 6)
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -806,5 +819,7 @@ Partial Class frmMain
     Friend WithEvents Spinner As System.Windows.Forms.PictureBox
     Friend WithEvents tbHKLockNow As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents tmiLockScreen As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator7 As System.Windows.Forms.ToolStripSeparator
 
 End Class
