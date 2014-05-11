@@ -23,7 +23,7 @@ Partial Class frmLockScreen
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.timer = New System.Windows.Forms.Timer(Me.components)
+        Me.lockTimer = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.CoverImage = New System.Windows.Forms.PictureBox()
         Me.tbPassword = New System.Windows.Forms.TextBox()
@@ -36,10 +36,10 @@ Partial Class frmLockScreen
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
-        'timer
+        'lockTimer
         '
-        Me.timer.Enabled = True
-        Me.timer.Interval = 300
+        Me.lockTimer.Enabled = True
+        Me.lockTimer.Interval = 500
         '
         'TableLayoutPanel1
         '
@@ -60,7 +60,7 @@ Partial Class frmLockScreen
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1002, 746)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(994, 738)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'CoverImage
@@ -68,7 +68,7 @@ Partial Class frmLockScreen
         Me.CoverImage.BackColor = System.Drawing.Color.Black
         Me.CoverImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.CoverImage.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.CoverImage.Location = New System.Drawing.Point(254, 126)
+        Me.CoverImage.Location = New System.Drawing.Point(250, 122)
         Me.CoverImage.MaximumSize = New System.Drawing.Size(500, 500)
         Me.CoverImage.MinimumSize = New System.Drawing.Size(500, 500)
         Me.CoverImage.Name = "CoverImage"
@@ -81,7 +81,7 @@ Partial Class frmLockScreen
         '
         Me.tbPassword.AcceptsReturn = True
         Me.tbPassword.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.tbPassword.Location = New System.Drawing.Point(401, 648)
+        Me.tbPassword.Location = New System.Drawing.Point(397, 644)
         Me.tbPassword.Margin = New System.Windows.Forms.Padding(3, 25, 3, 3)
         Me.tbPassword.MaxLength = 100
         Me.tbPassword.Name = "tbPassword"
@@ -97,7 +97,7 @@ Partial Class frmLockScreen
         Me.Panel1.Controls.Add(Me.lblAlbum)
         Me.Panel1.Controls.Add(Me.lblArtist)
         Me.Panel1.Controls.Add(Me.lblTitle)
-        Me.Panel1.Location = New System.Drawing.Point(254, 50)
+        Me.Panel1.Location = New System.Drawing.Point(250, 46)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(494, 70)
         Me.Panel1.TabIndex = 5
@@ -140,7 +140,7 @@ Partial Class frmLockScreen
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
-        Me.ClientSize = New System.Drawing.Size(1002, 746)
+        Me.ClientSize = New System.Drawing.Size(994, 738)
         Me.ControlBox = False
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -160,7 +160,7 @@ Partial Class frmLockScreen
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents timer As System.Windows.Forms.Timer
+    Friend WithEvents lockTimer As System.Windows.Forms.Timer
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents CoverImage As System.Windows.Forms.PictureBox
     Friend WithEvents tbPassword As System.Windows.Forms.TextBox

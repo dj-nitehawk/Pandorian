@@ -4,6 +4,10 @@ Imports System.Runtime.InteropServices
 Public NotInheritable Class frmLockScreen
     Private CurrentToken As String
 
+    Private Sub frmLockScreen_Activated(sender As Object, e As EventArgs) Handles Me.Activated
+        Windows.Forms.Cursor.Hide()
+    End Sub
+
     Private Sub frmLockScreen_Deactivate(sender As Object, e As EventArgs) Handles Me.Deactivate
         Me.TopMost = True
     End Sub
@@ -19,9 +23,13 @@ Public NotInheritable Class frmLockScreen
     End Sub
 
     Private Sub tbPassword_TextChanged(sender As Object, e As EventArgs) Handles tbPassword.TextChanged
-        If tbPassword.Text = Decrypt(My.Settings.lockScreenPassword) Then
-            Me.Close()
+        If Not String.IsNullOrEmpty(My.Settings.unlockPassword) Then
+            If Not getMD5Hash(tbPassword.Text) = Decrypt(My.Settings.unlockPassword) Then
+                Exit Sub
+            End If
         End If
+        Windows.Forms.Cursor.Show()
+        Me.Close()
     End Sub
 
     Private Sub frmLockScreen_Enter(sender As Object, e As EventArgs) Handles Me.Enter
@@ -36,14 +44,17 @@ Public NotInheritable Class frmLockScreen
         KeyboardJammer.UnJam()
     End Sub
 
-    Private Sub timer_Tick(sender As Object, e As EventArgs) Handles timer.Tick
-        timer.Enabled = False
-        For Each p In Process.GetProcessesByName("taskmgr")
-            p.Kill()
-        Next
-        timer.Enabled = True
-        Me.TopMost = True
-        UpdateInfo()
+    Private Sub timer_Tick(sender As Object, e As EventArgs) Handles lockTimer.Tick
+        If Me.Visible Then
+            For Each p In Process.GetProcessesByName("taskmgr")
+                p.Kill()
+            Next
+            Me.TopMost = True
+            If Not tbPassword.Focused Then
+                tbPassword.Focus()
+            End If
+            UpdateInfo()
+        End If
     End Sub
 
     Private Sub frmLockScreen_Load(sender As Object, e As EventArgs) Handles Me.Load

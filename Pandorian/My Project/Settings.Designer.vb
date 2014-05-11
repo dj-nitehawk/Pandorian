@@ -320,18 +320,6 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property lockScreenPassword() As String
-            Get
-                Return CType(Me("lockScreenPassword"),String)
-            End Get
-            Set
-                Me("lockScreenPassword") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("88")>  _
         Public Property hkLock() As Integer
             Get
@@ -339,6 +327,18 @@ Namespace My
             End Get
             Set
                 Me("hkLock") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property unlockPassword() As String
+            Get
+                Return CType(Me("unlockPassword"),String)
+            End Get
+            Set
+                Me("unlockPassword") = value
             End Set
         End Property
     End Class

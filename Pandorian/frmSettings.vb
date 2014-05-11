@@ -24,7 +24,9 @@
             My.Settings.pandoraPassword = Encrypt(pnPassword.Text)
             My.Settings.pandoraOne = chkPandoraOne.Checked
             My.Settings.audioQuality = ddQuality.SelectedValue
-            My.Settings.lockScreenPassword = Encrypt(unlockCode.Text)
+            If Not String.IsNullOrEmpty(unlockCode.Text) And Not unlockCode.Text = "secret" Then
+                My.Settings.unlockPassword = Encrypt(getMD5Hash(unlockCode.Text))
+            End If
             My.Settings.Save()
 
             Me.Hide()
@@ -56,7 +58,9 @@
         pnPassword.Text = Decrypt(My.Settings.pandoraPassword)
         chkPandoraOne.Checked = My.Settings.pandoraOne
         chkNoProxy.Checked = My.Settings.noProxy
-        unlockCode.Text = Decrypt(My.Settings.lockScreenPassword)
+        If Not String.IsNullOrEmpty(My.Settings.unlockPassword) Then
+            unlockCode.Text = "secret"
+        End If
 
         PopulateQualityList(My.Settings.pandoraOne)
 

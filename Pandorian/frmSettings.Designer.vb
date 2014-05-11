@@ -219,9 +219,9 @@ Partial Class frmSettings
         Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(11, 256)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(69, 13)
+        Me.Label1.Size = New System.Drawing.Size(90, 13)
         Me.Label1.TabIndex = 13
-        Me.Label1.Text = "Unlock Code"
+        Me.Label1.Text = "Unlock Password"
         '
         'unlockCode
         '

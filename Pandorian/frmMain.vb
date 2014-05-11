@@ -62,7 +62,12 @@ Public Class frmMain
                 End If
             Case 9
                 If Not frmLockScreen.Visible Then
-                    frmLockScreen.Show()
+                    If Not String.IsNullOrEmpty(My.Settings.unlockPassword) Then
+                        frmLockScreen.Show()
+                    Else
+                        MsgBox("You have not set an unlock password in Pandorian settings." + vbCrLf +
+                               "Right-click on the album cover image and select 'Show Settings'", MsgBoxStyle.Information)
+                    End If
                 End If
         End Select
     End Sub
@@ -951,6 +956,12 @@ Public Class frmMain
         DeInitBass()
     End Sub
 
+    Private Sub TrayMenu_Closing(sender As Object, e As ToolStripDropDownClosingEventArgs) Handles TrayMenu.Closing
+        If frmLockScreen.Visible Then
+            Windows.Forms.Cursor.Hide()
+        End If
+    End Sub
+
     Private Sub TrayMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TrayMenu.Opening
         If Not IsNothing(Pandora) Then
             If Not IsNothing(Pandora.CurrentSong) And Not IsNothing(Pandora.CurrentStation) Then
@@ -982,6 +993,9 @@ Public Class frmMain
             Else
                 tmiExit.Enabled = True
                 tmiLockScreen.Enabled = True
+            End If
+            If frmLockScreen.Visible Then
+                Windows.Forms.Cursor.Show()
             End If
         End If
     End Sub
