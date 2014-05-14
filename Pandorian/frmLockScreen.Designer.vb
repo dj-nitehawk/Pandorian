@@ -31,6 +31,8 @@ Partial Class frmLockScreen
         Me.lblAlbum = New System.Windows.Forms.Label()
         Me.lblArtist = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
+        Me.lblTimeNow = New System.Windows.Forms.Label()
+        Me.lblDateNow = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.CoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -45,22 +47,24 @@ Partial Class frmLockScreen
         '
         Me.TableLayoutPanel1.ColumnCount = 3
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 500.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.CoverImage, 1, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.tbPassword, 1, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel1, 1, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblTimeNow, 1, 3)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblDateNow, 1, 4)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 3
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 500.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(994, 738)
+        Me.TableLayoutPanel1.RowCount = 6
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(986, 730)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'CoverImage
@@ -68,12 +72,12 @@ Partial Class frmLockScreen
         Me.CoverImage.BackColor = System.Drawing.Color.Black
         Me.CoverImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.CoverImage.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.CoverImage.Location = New System.Drawing.Point(250, 122)
+        Me.CoverImage.Location = New System.Drawing.Point(243, 91)
         Me.CoverImage.MaximumSize = New System.Drawing.Size(500, 500)
         Me.CoverImage.MinimumSize = New System.Drawing.Size(500, 500)
         Me.CoverImage.Name = "CoverImage"
         Me.CoverImage.Size = New System.Drawing.Size(500, 500)
-        Me.CoverImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.CoverImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.CoverImage.TabIndex = 0
         Me.CoverImage.TabStop = False
         '
@@ -81,8 +85,8 @@ Partial Class frmLockScreen
         '
         Me.tbPassword.AcceptsReturn = True
         Me.tbPassword.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.tbPassword.Location = New System.Drawing.Point(397, 644)
-        Me.tbPassword.Margin = New System.Windows.Forms.Padding(3, 25, 3, 3)
+        Me.tbPassword.Location = New System.Drawing.Point(393, 614)
+        Me.tbPassword.Margin = New System.Windows.Forms.Padding(3, 20, 3, 10)
         Me.tbPassword.MaxLength = 100
         Me.tbPassword.Name = "tbPassword"
         Me.tbPassword.ShortcutsEnabled = False
@@ -97,9 +101,9 @@ Partial Class frmLockScreen
         Me.Panel1.Controls.Add(Me.lblAlbum)
         Me.Panel1.Controls.Add(Me.lblArtist)
         Me.Panel1.Controls.Add(Me.lblTitle)
-        Me.Panel1.Location = New System.Drawing.Point(250, 46)
+        Me.Panel1.Location = New System.Drawing.Point(246, 20)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(494, 70)
+        Me.Panel1.Size = New System.Drawing.Size(494, 65)
         Me.Panel1.TabIndex = 5
         '
         'lblAlbum
@@ -110,7 +114,6 @@ Partial Class frmLockScreen
         Me.lblAlbum.Name = "lblAlbum"
         Me.lblAlbum.Size = New System.Drawing.Size(488, 17)
         Me.lblAlbum.TabIndex = 4
-        Me.lblAlbum.Text = "Album Name"
         Me.lblAlbum.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblArtist
@@ -121,7 +124,6 @@ Partial Class frmLockScreen
         Me.lblArtist.Name = "lblArtist"
         Me.lblArtist.Size = New System.Drawing.Size(488, 17)
         Me.lblArtist.TabIndex = 3
-        Me.lblArtist.Text = "Artist Name"
         Me.lblArtist.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblTitle
@@ -132,15 +134,38 @@ Partial Class frmLockScreen
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.Size = New System.Drawing.Size(488, 17)
         Me.lblTitle.TabIndex = 2
-        Me.lblTitle.Text = "Song Title"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'lblTimeNow
+        '
+        Me.lblTimeNow.AutoSize = True
+        Me.lblTimeNow.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblTimeNow.Font = New System.Drawing.Font("Calibri", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTimeNow.ForeColor = System.Drawing.Color.White
+        Me.lblTimeNow.Location = New System.Drawing.Point(243, 644)
+        Me.lblTimeNow.Name = "lblTimeNow"
+        Me.lblTimeNow.Size = New System.Drawing.Size(500, 27)
+        Me.lblTimeNow.TabIndex = 6
+        Me.lblTimeNow.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        '
+        'lblDateNow
+        '
+        Me.lblDateNow.AutoSize = True
+        Me.lblDateNow.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblDateNow.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDateNow.ForeColor = System.Drawing.Color.White
+        Me.lblDateNow.Location = New System.Drawing.Point(243, 671)
+        Me.lblDateNow.Name = "lblDateNow"
+        Me.lblDateNow.Size = New System.Drawing.Size(500, 20)
+        Me.lblDateNow.TabIndex = 7
+        Me.lblDateNow.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'frmLockScreen
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
-        Me.ClientSize = New System.Drawing.Size(994, 738)
+        Me.ClientSize = New System.Drawing.Size(986, 730)
         Me.ControlBox = False
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -168,5 +193,7 @@ Partial Class frmLockScreen
     Friend WithEvents lblAlbum As System.Windows.Forms.Label
     Friend WithEvents lblTitle As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
+    Friend WithEvents lblTimeNow As System.Windows.Forms.Label
+    Friend WithEvents lblDateNow As System.Windows.Forms.Label
 
 End Class

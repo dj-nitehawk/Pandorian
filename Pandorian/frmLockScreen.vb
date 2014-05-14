@@ -4,10 +4,6 @@ Imports System.Runtime.InteropServices
 Public NotInheritable Class frmLockScreen
     Private CurrentToken As String
 
-    Private Sub frmLockScreen_Activated(sender As Object, e As EventArgs) Handles Me.Activated
-        Windows.Forms.Cursor.Hide()
-    End Sub
-
     Private Sub frmLockScreen_Deactivate(sender As Object, e As EventArgs) Handles Me.Deactivate
         Me.TopMost = True
     End Sub
@@ -38,6 +34,7 @@ Public NotInheritable Class frmLockScreen
 
     Private Sub frmLockScreen_HandleCreated(sender As Object, e As EventArgs) Handles Me.HandleCreated
         KeyboardJammer.Jam()
+        Windows.Forms.Cursor.Hide()
     End Sub
 
     Private Sub frmLockScreen_HandleDestroyed(sender As Object, e As EventArgs) Handles Me.HandleDestroyed
@@ -50,6 +47,7 @@ Public NotInheritable Class frmLockScreen
                 p.Kill()
             Next
             Me.TopMost = True
+            Me.Activate()
             If Not tbPassword.Focused Then
                 tbPassword.Focus()
             End If
@@ -72,6 +70,8 @@ Public NotInheritable Class frmLockScreen
             lblAlbum.Text = frmMain.lblAlbumName.Text
             CoverImage.Image = frmMain.SongCoverImage.Image
         End If
+        lblTimeNow.Text = Now.ToString("t")
+        lblDateNow.Text = Now.DayOfWeek.ToString + ", " + MonthName(Now.Month) + " " + Now.Day.ToString + " " + Now.Year.ToString
     End Sub
 
 End Class
