@@ -187,6 +187,17 @@ Public Class frmMain
             End If
         Next
     End Sub
+
+    Private Sub SaveLastStationIDAndSong()
+        If Not IsNothing(Pandora) Then
+            If Not IsNothing(Pandora.CurrentStation) And Not IsNothing(Pandora.CurrentSong) Then
+                My.Settings.lastStationID = Pandora.CurrentStation.Id
+                My.Settings.lastSongJSON = Pandora.CurrentSong.ToJSON
+                My.Settings.Save()
+            End If
+        End If
+    End Sub
+
     Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/ReplaySong/PowerModeChanged)
         Dim Song As New Data.PandoraSong
         If IsNothing(Pandora.CurrentSong) Then
@@ -203,10 +214,7 @@ Public Class frmMain
         Timer.Enabled = True
         SongToken = Pandora.CurrentSong.Token
         ddStations.Enabled = True
-        If Not IsNothing(Pandora.CurrentStation) Then
-            My.Settings.lastStationID = Pandora.CurrentStation.Id
-            My.Settings.Save()
-        End If
+        SaveLastStationIDAndSong()
         If Pandora.CanSkip Then
             btnSkip.Enabled = True
         Else
@@ -276,7 +284,6 @@ Public Class frmMain
     End Sub
 
     Private Sub SaveSkipHistory()
-        LogASkipIfCurrentSongNotElapsed()
         If Not IsNothing(Pandora) Then
             My.Settings.stationSkipHistory = Pandora.SkipHistory.GetStationSkipHisoryJSON
             My.Settings.globalSkipHistory = Pandora.SkipHistory.GetGlobalSkipHistoryJSON
@@ -565,6 +572,16 @@ Public Class frmMain
                     Application.DoEvents()
 
                     InitBass()
+
+                    'restore last played song
+                    Pandora.CurrentSong = New Data.PandoraSong().FromJASON(My.Settings.lastSongJSON)
+
+                    'check if we need should play the last saved song or nullify it
+                    If Not IsNothing(Pandora.CurrentSong) Then
+                        If Pandora.CurrentSong.DurationElapsed Then
+                            Pandora.CurrentSong = Nothing
+                        End If
+                    End If
 
                     Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
                 End If
@@ -1118,15 +1135,4 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub LogASkipIfCurrentSongNotElapsed()
-        If Not IsNothing(Pandora) Then
-            If Not IsNothing(Pandora.CurrentSong) And Not IsNothing(Pandora.CurrentStation) Then
-                If Not Pandora.CurrentSong.DurationElapsed Then
-                    If Pandora.CanSkip Then
-                        Pandora.SkipHistory.Skip(Pandora.CurrentStation)
-                    End If
-                End If
-            End If
-        End If
-    End Sub
 End Class

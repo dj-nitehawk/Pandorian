@@ -267,5 +267,23 @@ Namespace Data
         Public Sub DebugCorruptAudioUrl(quality)
             AudioUrlMap(quality).Url = "http://notvalid.com/song.mp3"
         End Sub
+
+        Public Function ToJSON() As String
+            Try
+                Return JsonConvert.SerializeObject(Me, Formatting.None)
+            Catch ex As Exception
+                Return ""
+            End Try
+        End Function
+
+        Public Function FromJASON(JSONStringToCreateSongFrom As String) As PandoraSong
+            Try
+                JsonConvert.PopulateObject(JSONStringToCreateSongFrom, Me)
+                Return Me
+            Catch ex As Exception
+                Return Nothing
+            End Try
+        End Function
+
     End Class
 End Namespace
