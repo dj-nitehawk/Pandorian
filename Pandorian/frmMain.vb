@@ -276,6 +276,7 @@ Public Class frmMain
     End Sub
 
     Private Sub SaveSkipHistory()
+        LogASkipIfCurrentSongNotElapsed()
         If Not IsNothing(Pandora) Then
             My.Settings.stationSkipHistory = Pandora.SkipHistory.GetStationSkipHisoryJSON
             My.Settings.globalSkipHistory = Pandora.SkipHistory.GetGlobalSkipHistoryJSON
@@ -954,6 +955,7 @@ Public Class frmMain
             ResumePlaying = True
         End If
         DeInitBass()
+        SaveSkipHistory() 'in case power is lost during sleep
     End Sub
 
     Private Sub TrayMenu_Closing(sender As Object, e As ToolStripDropDownClosingEventArgs) Handles TrayMenu.Closing
@@ -1116,5 +1118,15 @@ Public Class frmMain
 
     End Sub
 
- 
+    Private Sub LogASkipIfCurrentSongNotElapsed()
+        If Not IsNothing(Pandora) Then
+            If Not IsNothing(Pandora.CurrentSong) And Not IsNothing(Pandora.CurrentStation) Then
+                If Not Pandora.CurrentSong.DurationElapsed Then
+                    If Pandora.CanSkip Then
+                        Pandora.SkipHistory.Skip(Pandora.CurrentStation)
+                    End If
+                End If
+            End If
+        End If
+    End Sub
 End Class
