@@ -19,6 +19,7 @@ Public Class frmMain
     Dim BASSReady As Boolean = False
     Dim ResumePlaying As Boolean = True
     Dim NagShown As Boolean = False
+    Dim VolLastChangedOn As Date
     Public Property SongToken As String
 
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
@@ -69,6 +70,24 @@ Public Class frmMain
                                "Right-click on the album cover image and select 'Show Settings'", MsgBoxStyle.Information)
                     End If
                 End If
+            Case 10
+                volSlider.Visible = True
+                Application.DoEvents()
+                VolLastChangedOn = Now
+                Try
+                    volSlider.Value = volSlider.Value - 10
+                Catch ex As Exception
+                    'do nothing
+                End Try
+            Case 11
+                volSlider.Visible = True
+                Application.DoEvents()
+                VolLastChangedOn = Now
+                Try
+                    volSlider.Value = volSlider.Value + 10
+                Catch ex As Exception
+                    'do nothing
+                End Try
         End Select
     End Sub
 
@@ -99,6 +118,10 @@ Public Class frmMain
         tbHKSleepNow.Tag = My.Settings.hkSleep
         tbHKLockNow.Text = [Enum].GetName(GetType(Keys), My.Settings.hkLock)
         tbHKLockNow.Tag = My.Settings.hkLock
+        tbHKVolDown.Text = [Enum].GetName(GetType(Keys), My.Settings.hkVolDown)
+        tbHKVolDown.Tag = My.Settings.hkVolDown
+        tbHKVolUp.Text = [Enum].GetName(GetType(Keys), My.Settings.hkVolUp)
+        tbHKVolUp.Tag = My.Settings.hkVolUp
 
         Hotkeys.RegisterHotKey(Me, 1, My.Settings.hkPlayPause, My.Settings.hkModifier) 'play/pause
         Hotkeys.RegisterHotKey(Me, 2, My.Settings.hkLike, My.Settings.hkModifier) 'like
@@ -109,10 +132,12 @@ Public Class frmMain
         Hotkeys.RegisterHotKey(Me, 7, My.Settings.hkSleep, My.Settings.hkModifier) 'sleep
         Hotkeys.RegisterHotKey(Me, 8, My.Settings.hkGlobalMenu, My.Settings.hkModifier) 'show tray menu
         Hotkeys.RegisterHotKey(Me, 9, My.Settings.hkLock, My.Settings.hkModifier) 'show lock screen
+        Hotkeys.RegisterHotKey(Me, 10, My.Settings.hkVolDown, My.Settings.hkModifier) 'vol down
+        Hotkeys.RegisterHotKey(Me, 11, My.Settings.hkVolUp, My.Settings.hkModifier) 'vol up
     End Sub
     Private Sub unRegisterHotkeys()
         Dim i As Integer = 1
-        Do While i <= 9
+        Do While i <= 11
             Hotkeys.unregisterHotkeys(Me, i)
             i = i + 1
         Loop
@@ -370,6 +395,7 @@ Public Class frmMain
                 IntPtr.Zero)
         If Not Stream = 0 Then
             Bass.BASS_ChannelSetSync(Stream, BASSSync.BASS_SYNC_END, 0, Sync, IntPtr.Zero)
+            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, volSlider.Value / 100)
             ApplyReplayGain()
             If ResumePlaying Then
                 Bass.BASS_ChannelPlay(Stream, False)
@@ -544,7 +570,8 @@ Public Class frmMain
     End Sub
     Private Sub frmMain_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Application.DoEvents()
-        Execute(Sub() RunNow(), "frmMain_Shown")
+        'Execute(Sub() RunNow(), "frmMain_Shown")
+        RunNow()
     End Sub
     Sub RunNow()
         If Not HasSettings() Then
@@ -618,6 +645,11 @@ Public Class frmMain
     Private Sub Timer_Tick(sender As Object, e As EventArgs) Handles Timer.Tick
         UpdatePlayPosition()
         SleepCheck()
+        If volSlider.Visible Then
+            If VolLastChangedOn.AddSeconds(4) <= Now Then
+                volSlider.Hide()
+            End If
+        End If
     End Sub
     Function HasToResumeLastSong() As Boolean
 
@@ -1060,7 +1092,9 @@ Public Class frmMain
         tbHKGlobalMenu.Enter,
         tbHKSleepNow.Enter,
         tbHKBlockSong.Enter,
-        tbHKLockNow.Enter
+        tbHKLockNow.Enter,
+        tbHKVolDown.Enter,
+        tbHKVolUp.Enter
 
         Dim tb As TextBox = DirectCast(sender, TextBox)
         tb.Clear()
@@ -1090,7 +1124,9 @@ Public Class frmMain
         tbHKGlobalMenu.KeyUp,
         tbHKSleepNow.KeyUp,
         tbHKBlockSong.KeyUp,
-        tbHKLockNow.KeyUp
+        tbHKLockNow.KeyUp,
+        tbHKVolDown.KeyUp,
+        tbHKVolUp.KeyUp
 
         Dim tb As TextBox = DirectCast(sender, TextBox)
         tb.Tag = e.KeyData
@@ -1109,7 +1145,7 @@ Public Class frmMain
             End If
         Next
 
-        If HKList.Count < 9 Then
+        If HKList.Count < 11 Then
             MsgBox("You cannot use the same key for more than one function!", MsgBoxStyle.Exclamation)
             Exit Sub
         End If
@@ -1125,9 +1161,11 @@ Public Class frmMain
             .hkSkip = tbHKSkipSong.Tag
             .hkSleep = tbHKSleepNow.Tag
             .hkLock = tbHKLockNow.Tag
+            .hkVolDown = tbHKVolDown.Tag
+            .hkVolUp = tbHKVolUp.Tag
         End With
         My.Settings.Save()
-
+  
         pnlHotKeys.Visible = False
 
         MsgBox("HotKeys saved. Restart app to use new configuration.", MsgBoxStyle.Information)
@@ -1135,4 +1173,17 @@ Public Class frmMain
 
     End Sub
 
+    Private Sub prgBar_Click(sender As Object, e As EventArgs) Handles prgBar.Click
+        volSlider.Visible = True
+        VolLastChangedOn = Now
+    End Sub
+
+    Private Sub volSlider_ValueChanged(sender As Object, e As EventArgs) Handles volSlider.ValueChanged
+        If volSlider.Value >= 0 <= 100 Then
+            If BASSReady Then
+                Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, volSlider.Value / 100)
+            End If
+        End If
+        VolLastChangedOn = Now
+    End Sub
 End Class

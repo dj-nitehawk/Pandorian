@@ -353,6 +353,30 @@ Namespace My
                 Me("lastSongJSON") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("40")>  _
+        Public Property hkVolDown() As Integer
+            Get
+                Return CType(Me("hkVolDown"),Integer)
+            End Get
+            Set
+                Me("hkVolDown") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("38")>  _
+        Public Property hkVolUp() As Integer
+            Get
+                Return CType(Me("hkVolUp"),Integer)
+            End Get
+            Set
+                Me("hkVolUp") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

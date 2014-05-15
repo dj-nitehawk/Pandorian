@@ -67,9 +67,14 @@ Partial Class frmMain
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.tmiBlockSong = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tmiLockScreen = New System.Windows.Forms.ToolStripMenuItem()
         Me.tmiSleepComputer = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.tmiExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlHotKeys = New System.Windows.Forms.Panel()
+        Me.tbHKVolUp = New System.Windows.Forms.TextBox()
+        Me.tbHKVolDown = New System.Windows.Forms.TextBox()
+        Me.Label13 = New System.Windows.Forms.Label()
         Me.tbHKLockNow = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.tbHKSleepNow = New System.Windows.Forms.TextBox()
@@ -93,14 +98,14 @@ Partial Class frmMain
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Spinner = New System.Windows.Forms.PictureBox()
-        Me.tmiLockScreen = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
+        Me.volSlider = New System.Windows.Forms.TrackBar()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
         Me.TrayMenu.SuspendLayout()
         Me.pnlHotKeys.SuspendLayout()
         CType(Me.Spinner, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.volSlider, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ddStations
@@ -118,6 +123,7 @@ Partial Class frmMain
         Me.ddStations.Name = "ddStations"
         Me.ddStations.Size = New System.Drawing.Size(300, 28)
         Me.ddStations.TabIndex = 1
+        Me.ddStations.TabStop = False
         '
         'lblSongName
         '
@@ -372,7 +378,7 @@ Partial Class frmMain
         '
         Me.TrayMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tmiStationTitle, Me.tmiSongTitle, Me.tmiArtistTitle, Me.ToolStripSeparator3, Me.tmiLikeCurrentSong, Me.tmiDislikeCurrentSong, Me.ToolStripSeparator4, Me.tmiPlayPause, Me.tmiSkipSong, Me.ToolStripSeparator5, Me.tmiBlockSong, Me.ToolStripSeparator6, Me.tmiLockScreen, Me.tmiSleepComputer, Me.ToolStripSeparator7, Me.tmiExit})
         Me.TrayMenu.Name = "TrayMenu"
-        Me.TrayMenu.Size = New System.Drawing.Size(160, 298)
+        Me.TrayMenu.Size = New System.Drawing.Size(160, 276)
         '
         'tmiStationTitle
         '
@@ -451,12 +457,23 @@ Partial Class frmMain
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
         Me.ToolStripSeparator6.Size = New System.Drawing.Size(156, 6)
         '
+        'tmiLockScreen
+        '
+        Me.tmiLockScreen.Name = "tmiLockScreen"
+        Me.tmiLockScreen.Size = New System.Drawing.Size(159, 22)
+        Me.tmiLockScreen.Text = "Lock Screen"
+        '
         'tmiSleepComputer
         '
         Me.tmiSleepComputer.Name = "tmiSleepComputer"
         Me.tmiSleepComputer.ShortcutKeyDisplayString = ""
         Me.tmiSleepComputer.Size = New System.Drawing.Size(159, 22)
         Me.tmiSleepComputer.Text = "Sleep Computer"
+        '
+        'ToolStripSeparator7
+        '
+        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
+        Me.ToolStripSeparator7.Size = New System.Drawing.Size(156, 6)
         '
         'tmiExit
         '
@@ -467,6 +484,9 @@ Partial Class frmMain
         'pnlHotKeys
         '
         Me.pnlHotKeys.BackColor = System.Drawing.Color.SlateGray
+        Me.pnlHotKeys.Controls.Add(Me.tbHKVolUp)
+        Me.pnlHotKeys.Controls.Add(Me.tbHKVolDown)
+        Me.pnlHotKeys.Controls.Add(Me.Label13)
         Me.pnlHotKeys.Controls.Add(Me.tbHKLockNow)
         Me.pnlHotKeys.Controls.Add(Me.Label12)
         Me.pnlHotKeys.Controls.Add(Me.tbHKSleepNow)
@@ -495,18 +515,43 @@ Partial Class frmMain
         Me.pnlHotKeys.TabIndex = 16
         Me.pnlHotKeys.Visible = False
         '
+        'tbHKVolUp
+        '
+        Me.tbHKVolUp.Location = New System.Drawing.Point(199, 158)
+        Me.tbHKVolUp.Name = "tbHKVolUp"
+        Me.tbHKVolUp.Size = New System.Drawing.Size(50, 20)
+        Me.tbHKVolUp.TabIndex = 31
+        Me.tbHKVolUp.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'tbHKVolDown
+        '
+        Me.tbHKVolDown.Location = New System.Drawing.Point(148, 158)
+        Me.tbHKVolDown.Name = "tbHKVolDown"
+        Me.tbHKVolDown.Size = New System.Drawing.Size(50, 20)
+        Me.tbHKVolDown.TabIndex = 30
+        Me.tbHKVolDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(56, 163)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(92, 13)
+        Me.Label13.TabIndex = 29
+        Me.Label13.Text = "Volume Down/Up"
+        '
         'tbHKLockNow
         '
-        Me.tbHKLockNow.Location = New System.Drawing.Point(160, 240)
+        Me.tbHKLockNow.Location = New System.Drawing.Point(148, 242)
         Me.tbHKLockNow.Name = "tbHKLockNow"
-        Me.tbHKLockNow.Size = New System.Drawing.Size(72, 20)
+        Me.tbHKLockNow.Size = New System.Drawing.Size(101, 20)
         Me.tbHKLockNow.TabIndex = 28
         Me.tbHKLockNow.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(92, 243)
+        Me.Label12.Location = New System.Drawing.Point(80, 245)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(68, 13)
         Me.Label12.TabIndex = 27
@@ -514,65 +559,65 @@ Partial Class frmMain
         '
         'tbHKSleepNow
         '
-        Me.tbHKSleepNow.Location = New System.Drawing.Point(160, 217)
+        Me.tbHKSleepNow.Location = New System.Drawing.Point(148, 221)
         Me.tbHKSleepNow.Name = "tbHKSleepNow"
-        Me.tbHKSleepNow.Size = New System.Drawing.Size(72, 20)
+        Me.tbHKSleepNow.Size = New System.Drawing.Size(101, 20)
         Me.tbHKSleepNow.TabIndex = 26
         Me.tbHKSleepNow.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'tbHKGlobalMenu
         '
-        Me.tbHKGlobalMenu.Location = New System.Drawing.Point(160, 194)
+        Me.tbHKGlobalMenu.Location = New System.Drawing.Point(148, 200)
         Me.tbHKGlobalMenu.Name = "tbHKGlobalMenu"
-        Me.tbHKGlobalMenu.Size = New System.Drawing.Size(72, 20)
+        Me.tbHKGlobalMenu.Size = New System.Drawing.Size(101, 20)
         Me.tbHKGlobalMenu.TabIndex = 25
         Me.tbHKGlobalMenu.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'tbHKShowHide
         '
-        Me.tbHKShowHide.Location = New System.Drawing.Point(160, 171)
+        Me.tbHKShowHide.Location = New System.Drawing.Point(148, 179)
         Me.tbHKShowHide.Name = "tbHKShowHide"
-        Me.tbHKShowHide.Size = New System.Drawing.Size(72, 20)
+        Me.tbHKShowHide.Size = New System.Drawing.Size(101, 20)
         Me.tbHKShowHide.TabIndex = 24
         Me.tbHKShowHide.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'tbHKBlockSong
         '
-        Me.tbHKBlockSong.Location = New System.Drawing.Point(160, 148)
+        Me.tbHKBlockSong.Location = New System.Drawing.Point(148, 137)
         Me.tbHKBlockSong.Name = "tbHKBlockSong"
-        Me.tbHKBlockSong.Size = New System.Drawing.Size(72, 20)
+        Me.tbHKBlockSong.Size = New System.Drawing.Size(101, 20)
         Me.tbHKBlockSong.TabIndex = 23
         Me.tbHKBlockSong.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'tbHKSkipSong
         '
-        Me.tbHKSkipSong.Location = New System.Drawing.Point(160, 125)
+        Me.tbHKSkipSong.Location = New System.Drawing.Point(148, 116)
         Me.tbHKSkipSong.Name = "tbHKSkipSong"
-        Me.tbHKSkipSong.Size = New System.Drawing.Size(72, 20)
+        Me.tbHKSkipSong.Size = New System.Drawing.Size(101, 20)
         Me.tbHKSkipSong.TabIndex = 22
         Me.tbHKSkipSong.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'tbHKDislikeSong
         '
-        Me.tbHKDislikeSong.Location = New System.Drawing.Point(160, 103)
+        Me.tbHKDislikeSong.Location = New System.Drawing.Point(148, 95)
         Me.tbHKDislikeSong.Name = "tbHKDislikeSong"
-        Me.tbHKDislikeSong.Size = New System.Drawing.Size(72, 20)
+        Me.tbHKDislikeSong.Size = New System.Drawing.Size(101, 20)
         Me.tbHKDislikeSong.TabIndex = 21
         Me.tbHKDislikeSong.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'tbHKLikeSong
         '
-        Me.tbHKLikeSong.Location = New System.Drawing.Point(160, 80)
+        Me.tbHKLikeSong.Location = New System.Drawing.Point(148, 74)
         Me.tbHKLikeSong.Name = "tbHKLikeSong"
-        Me.tbHKLikeSong.Size = New System.Drawing.Size(72, 20)
+        Me.tbHKLikeSong.Size = New System.Drawing.Size(101, 20)
         Me.tbHKLikeSong.TabIndex = 20
         Me.tbHKLikeSong.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'tbHKPlayPause
         '
-        Me.tbHKPlayPause.Location = New System.Drawing.Point(160, 57)
+        Me.tbHKPlayPause.Location = New System.Drawing.Point(148, 53)
         Me.tbHKPlayPause.Name = "tbHKPlayPause"
-        Me.tbHKPlayPause.Size = New System.Drawing.Size(72, 20)
+        Me.tbHKPlayPause.Size = New System.Drawing.Size(101, 20)
         Me.tbHKPlayPause.TabIndex = 19
         Me.tbHKPlayPause.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -580,7 +625,7 @@ Partial Class frmMain
         '
         Me.btnSaveHotkeys.BackColor = System.Drawing.SystemColors.Control
         Me.btnSaveHotkeys.ForeColor = System.Drawing.Color.Black
-        Me.btnSaveHotkeys.Location = New System.Drawing.Point(113, 268)
+        Me.btnSaveHotkeys.Location = New System.Drawing.Point(113, 269)
         Me.btnSaveHotkeys.Name = "btnSaveHotkeys"
         Me.btnSaveHotkeys.Size = New System.Drawing.Size(75, 23)
         Me.btnSaveHotkeys.TabIndex = 18
@@ -590,7 +635,7 @@ Partial Class frmMain
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(53, 220)
+        Me.Label11.Location = New System.Drawing.Point(41, 224)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(107, 13)
         Me.Label11.TabIndex = 17
@@ -599,7 +644,7 @@ Partial Class frmMain
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(36, 197)
+        Me.Label10.Location = New System.Drawing.Point(24, 203)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(124, 13)
         Me.Label10.TabIndex = 16
@@ -608,7 +653,7 @@ Partial Class frmMain
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(48, 174)
+        Me.Label9.Location = New System.Drawing.Point(36, 182)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(112, 13)
         Me.Label9.TabIndex = 15
@@ -617,7 +662,7 @@ Partial Class frmMain
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(97, 151)
+        Me.Label8.Location = New System.Drawing.Point(85, 140)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(62, 13)
         Me.Label8.TabIndex = 14
@@ -626,7 +671,7 @@ Partial Class frmMain
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(103, 128)
+        Me.Label7.Location = New System.Drawing.Point(91, 119)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(56, 13)
         Me.Label7.TabIndex = 13
@@ -635,7 +680,7 @@ Partial Class frmMain
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(93, 105)
+        Me.Label6.Location = New System.Drawing.Point(81, 97)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(66, 13)
         Me.Label6.TabIndex = 12
@@ -644,7 +689,7 @@ Partial Class frmMain
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(104, 82)
+        Me.Label5.Location = New System.Drawing.Point(92, 76)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(55, 13)
         Me.Label5.TabIndex = 11
@@ -653,7 +698,7 @@ Partial Class frmMain
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(97, 59)
+        Me.Label4.Location = New System.Drawing.Point(85, 55)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(62, 13)
         Me.Label4.TabIndex = 10
@@ -663,15 +708,15 @@ Partial Class frmMain
         '
         Me.cbModKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbModKey.FormattingEnabled = True
-        Me.cbModKey.Location = New System.Drawing.Point(160, 33)
+        Me.cbModKey.Location = New System.Drawing.Point(148, 31)
         Me.cbModKey.Name = "cbModKey"
-        Me.cbModKey.Size = New System.Drawing.Size(72, 21)
+        Me.cbModKey.Size = New System.Drawing.Size(101, 21)
         Me.cbModKey.TabIndex = 9
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(91, 37)
+        Me.Label3.Location = New System.Drawing.Point(79, 35)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(65, 13)
         Me.Label3.TabIndex = 8
@@ -691,23 +736,27 @@ Partial Class frmMain
         '
         Me.Spinner.BackColor = System.Drawing.Color.Black
         Me.Spinner.Image = Global.Pandorian.My.Resources.Resources.spinner
-        Me.Spinner.Location = New System.Drawing.Point(-6, -6)
+        Me.Spinner.Location = New System.Drawing.Point(-6, -5)
         Me.Spinner.Name = "Spinner"
         Me.Spinner.Size = New System.Drawing.Size(329, 476)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.Spinner.TabIndex = 17
         Me.Spinner.TabStop = False
         '
-        'tmiLockScreen
+        'volSlider
         '
-        Me.tmiLockScreen.Name = "tmiLockScreen"
-        Me.tmiLockScreen.Size = New System.Drawing.Size(159, 22)
-        Me.tmiLockScreen.Text = "Lock Screen"
-        '
-        'ToolStripSeparator7
-        '
-        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
-        Me.ToolStripSeparator7.Size = New System.Drawing.Size(156, 6)
+        Me.volSlider.AutoSize = False
+        Me.volSlider.LargeChange = 10
+        Me.volSlider.Location = New System.Drawing.Point(2, 347)
+        Me.volSlider.Maximum = 100
+        Me.volSlider.Name = "volSlider"
+        Me.volSlider.Size = New System.Drawing.Size(315, 25)
+        Me.volSlider.SmallChange = 5
+        Me.volSlider.TabIndex = 18
+        Me.volSlider.TabStop = False
+        Me.volSlider.TickStyle = System.Windows.Forms.TickStyle.None
+        Me.volSlider.Value = 100
+        Me.volSlider.Visible = False
         '
         'frmMain
         '
@@ -716,6 +765,8 @@ Partial Class frmMain
         Me.BackColor = System.Drawing.Color.Black
         Me.ClientSize = New System.Drawing.Size(317, 461)
         Me.Controls.Add(Me.Spinner)
+        Me.Controls.Add(Me.lblSongName)
+        Me.Controls.Add(Me.volSlider)
         Me.Controls.Add(Me.pnlHotKeys)
         Me.Controls.Add(Me.pnlSleepTimer)
         Me.Controls.Add(Me.prgDownload)
@@ -727,7 +778,6 @@ Partial Class frmMain
         Me.Controls.Add(Me.btnLike)
         Me.Controls.Add(Me.lblAlbumName)
         Me.Controls.Add(Me.lblArtistName)
-        Me.Controls.Add(Me.lblSongName)
         Me.Controls.Add(Me.SongCoverImage)
         Me.Controls.Add(Me.ddStations)
         Me.ForeColor = System.Drawing.Color.White
@@ -746,6 +796,7 @@ Partial Class frmMain
         Me.pnlHotKeys.ResumeLayout(False)
         Me.pnlHotKeys.PerformLayout()
         CType(Me.Spinner, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.volSlider, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -821,5 +872,9 @@ Partial Class frmMain
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents tmiLockScreen As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator7 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents volSlider As System.Windows.Forms.TrackBar
+    Friend WithEvents tbHKVolUp As System.Windows.Forms.TextBox
+    Friend WithEvents tbHKVolDown As System.Windows.Forms.TextBox
+    Friend WithEvents Label13 As System.Windows.Forms.Label
 
 End Class
