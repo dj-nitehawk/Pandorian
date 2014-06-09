@@ -13,6 +13,7 @@ Public Class frmMain
     Dim Sync As SYNCPROC = New SYNCPROC(AddressOf SongEnded)
     Dim StationCurrentSongBuffer As New Dictionary(Of String, Data.PandoraSong)
     Dim Downloader As WebClient
+    Dim TargeFile As String
     Dim IsActiveForm As Boolean
     Dim SleepAt As Date
     Dim SleepNow As Boolean
@@ -490,12 +491,7 @@ Public Class frmMain
             End If
 
             If IO.Directory.Exists(My.Settings.downloadLocation) Then
-                Dim TargeFile As String =
-                    My.Settings.downloadLocation +
-                    "\" +
-                    ValidFileName(Pandora.CurrentSong.Artist) + " - " +
-                    ValidFileName(Pandora.CurrentSong.Title) +
-                    ".mp3"
+                TargeFile = My.Settings.downloadLocation +"\" +ValidFileName(Pandora.CurrentSong.Artist) + " - " +ValidFileName(Pandora.CurrentSong.Title) +".mp3"
 
                 If Not System.IO.File.Exists(TargeFile) Then
                     Downloader = New WebClient
@@ -523,6 +519,7 @@ Public Class frmMain
         prgDownload.Visible = False
         prgDownload.Value = 0
         If Not IsNothing(e.Error) Then
+            IO.File.Delete(TargeFile)
             MsgBox(e.Error.Message, MsgBoxStyle.Critical)
         End If
     End Sub
