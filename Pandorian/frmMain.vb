@@ -1106,7 +1106,9 @@ Public Class frmMain
         tbHKGlobalMenu.Leave,
         tbHKSleepNow.Leave,
         tbHKBlockSong.Leave,
-        tbHKLockNow.Leave
+        tbHKLockNow.Leave,
+        tbHKVolDown.Leave,
+        tbHKVolUp.Leave
 
         Dim tb As TextBox = DirectCast(sender, TextBox)
         tb.Text = [Enum].GetName(GetType(Keys), tb.Tag)
