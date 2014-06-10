@@ -23,8 +23,9 @@ Public NotInheritable Class frmLockScreen
                 Exit Sub
             End If
         End If
+        tbPassword.Text = ""
         Windows.Forms.Cursor.Show()
-        Me.Close()
+        Me.Hide()
     End Sub
 
     Private Sub frmLockScreen_Enter(sender As Object, e As EventArgs) Handles Me.Enter
@@ -62,14 +63,4 @@ Public NotInheritable Class frmLockScreen
         lblTitle.UseMnemonic = False
     End Sub
 
-    Public Sub UpdateInfo()
-        lblTitle.Text = frmMain.lblSongName.Text
-        lblArtist.Text = frmMain.lblArtistName.Text
-        lblAlbum.Text = frmMain.lblAlbumName.Text
-        CoverImage.Image = frmMain.SongCoverImage.Image
-    End Sub
-
-    Private Sub frmLockScreen_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        UpdateInfo()
-    End Sub
 End Class

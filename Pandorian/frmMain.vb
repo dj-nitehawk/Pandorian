@@ -21,7 +21,6 @@ Public Class frmMain
     Dim ResumePlaying As Boolean = True
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
-    Public Property SongToken As String
 
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
         If m.Msg = Hotkeys.WM_HOTKEY Then
@@ -238,7 +237,6 @@ Public Class frmMain
             SongCoverImage.Image = GetCoverViaProxy(Song.AlbumArtLargeURL)
         End If
         Timer.Enabled = True
-        SongToken = Pandora.CurrentSong.Token
         ddStations.Enabled = True
         SaveLastStationIDAndSong()
         If Pandora.CanSkip Then
@@ -289,8 +287,12 @@ Public Class frmMain
             lblArtistName.Text = Song.Artist
             lblAlbumName.Text = Song.Album
         End If
-        frmLockScreen.UpdateInfo()
         Spinner.Visible = False
+
+        frmLockScreen.lblTitle.Text = lblSongName.Text
+        frmLockScreen.lblArtist.Text = lblArtistName.Text
+        frmLockScreen.lblAlbum.Text = lblAlbumName.Text
+        frmLockScreen.CoverImage.Image = SongCoverImage.Image
     End Sub
     Sub PlayNextSong(Skip As Boolean)
         Spinner.Visible = True
