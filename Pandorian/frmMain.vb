@@ -288,11 +288,6 @@ Public Class frmMain
             lblAlbumName.Text = Song.Album
         End If
         Spinner.Visible = False
-
-        frmLockScreen.lblTitle.Text = lblSongName.Text
-        frmLockScreen.lblArtist.Text = lblArtistName.Text
-        frmLockScreen.lblAlbum.Text = lblAlbumName.Text
-        frmLockScreen.CoverImage.Image = SongCoverImage.Image
     End Sub
     Sub PlayNextSong(Skip As Boolean)
         Spinner.Visible = True

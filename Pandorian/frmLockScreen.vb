@@ -1,7 +1,5 @@
-﻿Imports Microsoft.Win32
-Imports System.Runtime.InteropServices
-
-Public NotInheritable Class frmLockScreen
+﻿
+Public Class frmLockScreen
 
     Private Sub frmLockScreen_Deactivate(sender As Object, e As EventArgs) Handles Me.Deactivate
         Me.TopMost = True
@@ -24,7 +22,6 @@ Public NotInheritable Class frmLockScreen
             End If
         End If
         tbPassword.Text = ""
-        Windows.Forms.Cursor.Show()
         Me.Hide()
     End Sub
 
@@ -32,27 +29,29 @@ Public NotInheritable Class frmLockScreen
         tbPassword.Focus()
     End Sub
 
-    Private Sub frmLockScreen_HandleCreated(sender As Object, e As EventArgs) Handles Me.HandleCreated
-        KeyboardJammer.Jam()
-        Windows.Forms.Cursor.Hide()
-    End Sub
-
-    Private Sub frmLockScreen_HandleDestroyed(sender As Object, e As EventArgs) Handles Me.HandleDestroyed
-        KeyboardJammer.UnJam()
-    End Sub
-
     Private Sub timer_Tick(sender As Object, e As EventArgs) Handles lockTimer.Tick
         If Me.Visible Then
             For Each p In Process.GetProcessesByName("taskmgr")
                 p.Kill()
             Next
+
             Me.TopMost = True
             Me.Activate()
+
             If Not tbPassword.Focused Then
                 tbPassword.Focus()
             End If
+
             lblTimeNow.Text = Now.ToString("t")
             lblDateNow.Text = Now.DayOfWeek.ToString + ", " + MonthName(Now.Month) + " " + Now.Day.ToString + " " + Now.Year.ToString
+
+            If Not lblTitle.Text = frmMain.lblSongName.Text Then
+                lblTitle.Text = frmMain.lblSongName.Text
+                lblArtist.Text = frmMain.lblArtistName.Text
+                lblAlbum.Text = frmMain.lblAlbumName.Text
+                CoverImage.Image = frmMain.SongCoverImage.Image
+            End If
+
         End If
     End Sub
 
@@ -61,6 +60,19 @@ Public NotInheritable Class frmLockScreen
         lblAlbum.UseMnemonic = False
         lblArtist.UseMnemonic = False
         lblTitle.UseMnemonic = False
+    End Sub
+
+    Private Sub frmLockScreen_VisibleChanged(sender As Object, e As EventArgs) Handles Me.VisibleChanged
+        Select Case Me.Visible
+            Case True
+                lockTimer.Enabled = True
+                KeyboardJammer.Jam()
+                Windows.Forms.Cursor.Hide()
+            Case False
+                lockTimer.Enabled = False
+                KeyboardJammer.UnJam()
+                Windows.Forms.Cursor.Show()
+        End Select
     End Sub
 
 End Class
