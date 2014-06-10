@@ -2,7 +2,6 @@
 Imports System.Runtime.InteropServices
 
 Public NotInheritable Class frmLockScreen
-    Private CurrentToken As String
 
     Private Sub frmLockScreen_Deactivate(sender As Object, e As EventArgs) Handles Me.Deactivate
         Me.TopMost = True
@@ -51,7 +50,8 @@ Public NotInheritable Class frmLockScreen
             If Not tbPassword.Focused Then
                 tbPassword.Focus()
             End If
-            UpdateInfo()
+            lblTimeNow.Text = Now.ToString("t")
+            lblDateNow.Text = Now.DayOfWeek.ToString + ", " + MonthName(Now.Month) + " " + Now.Day.ToString + " " + Now.Year.ToString
         End If
     End Sub
 
@@ -62,16 +62,11 @@ Public NotInheritable Class frmLockScreen
         lblTitle.UseMnemonic = False
     End Sub
 
-    Private Sub UpdateInfo()
-        If Not CurrentToken = frmMain.SongToken Then
-            CurrentToken = frmMain.SongToken
-            lblTitle.Text = frmMain.lblSongName.Text
-            lblArtist.Text = frmMain.lblArtistName.Text
-            lblAlbum.Text = frmMain.lblAlbumName.Text
-            CoverImage.Image = frmMain.SongCoverImage.Image
-        End If
-        lblTimeNow.Text = Now.ToString("t")
-        lblDateNow.Text = Now.DayOfWeek.ToString + ", " + MonthName(Now.Month) + " " + Now.Day.ToString + " " + Now.Year.ToString
+    Public Sub UpdateInfo()
+        lblTitle.Text = frmMain.lblSongName.Text
+        lblArtist.Text = frmMain.lblArtistName.Text
+        lblAlbum.Text = frmMain.lblAlbumName.Text
+        CoverImage.Image = frmMain.SongCoverImage.Image
     End Sub
 
 End Class

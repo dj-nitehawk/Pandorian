@@ -289,6 +289,7 @@ Public Class frmMain
             lblArtistName.Text = Song.Artist
             lblAlbumName.Text = Song.Album
         End If
+        frmLockScreen.UpdateInfo()
         Spinner.Visible = False
     End Sub
     Sub PlayNextSong(Skip As Boolean)
