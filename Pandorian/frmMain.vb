@@ -405,7 +405,7 @@ Public Class frmMain
             ShareTheLove()
         Else
             If Bass.BASS_ErrorGetCode = BASSError.BASS_ERROR_FILEOPEN Then
-                Throw New PandoraException(ErrorCodeEnum.AUTH_INVALID_TOKEN, "Audio URL has probably expired...")
+                Throw New PandoraException(ErrorCodeEnum.SONG_URL_NOT_VALID, "Audio URL has probably expired...")
             Else
                 MsgBox("Couldn't open stream: " + Bass.BASS_ErrorGetCode().ToString + vbCr +
                        "Try restarting the app...", MsgBoxStyle.Critical)
@@ -458,20 +458,12 @@ Public Class frmMain
         End If
     End Function
 
-    Private Sub ShowLockScreen()
-        frmLockScreen.Show()
-    End Sub
-
     Private Sub frmMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
 
         If System.Diagnostics.Debugger.IsAttached Then
             If e.Control And e.Alt And e.KeyCode = Keys.E Then
                 DebugExpireSessionNow()
             End If
-        End If
-
-        If e.Control And e.KeyCode = Keys.L Then
-            ShowLockScreen()
         End If
 
         If e.Control And e.KeyCode = Keys.D And
@@ -689,6 +681,7 @@ Public Class frmMain
             Select Case pex.ErrorCode
                 Case ErrorCodeEnum.AUTH_INVALID_TOKEN
                     Try
+                        Debug.WriteLine("Session expired. Loggin in again...")
                         ReLoginToPandora()
                     Catch ex As Exception
                         MsgBox("Pandora session has expired." + vbCrLf + vbCrLf +
@@ -696,6 +689,10 @@ Public Class frmMain
                                "Try restarting Pandorian...", MsgBoxStyle.Exclamation)
                         AfterErrorActions()
                     End Try
+                Case ErrorCodeEnum.SONG_URL_NOT_VALID
+                    Debug.WriteLine("Song URL expired. Loading more songs...")
+                    Execute(Sub() Pandora.LoadSongs(), "SongExpired.LoadSongs")
+                    Execute(Sub() PlayNextSong(False), "SongExpired.PlayNextSong")
                 Case Else
                     ReportError(pex, Caller)
                     AfterErrorActions()

@@ -20,7 +20,8 @@ Public Enum ErrorCodeEnum
 	LICENSE_RESTRICTION = 12
     INSUFFICIENT_CONNECTIVITY = 13
     PLAYLIST_EMPTY_FOR_STATION = 14 ' custom error for when no songs returned by api
-	READONLY_MODE = 1000
+    SONG_URL_NOT_VALID = 15 ' custom error for expired song urls
+    READONLY_MODE = 1000
 	AUTH_INVALID_TOKEN = 1001
 	AUTH_INVALID_USERNAME_PASSWORD = 1002
     LISTENER_NOT_AUTHORIZED = 1003 'generally means a pandora one subscription expired

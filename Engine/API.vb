@@ -195,7 +195,7 @@ Public Class API
 
         ' load 4 more songs if playlist empty
         If playlist(CurrentStation.Id).Count = 0 Then
-            LoadMoreSongs()
+            LoadSongs()
         End If
 
         If Not playlist(CurrentStation.Id).Count = 0 Then
@@ -237,12 +237,15 @@ Public Class API
         playlist.Clear()
     End Sub
 
-    Protected Sub LoadMoreSongs()
+    Public Sub LoadSongs()
         Dim newSongs As New List(Of PandoraSong)()
 
         newSongs = pandora.GetSongs(Session, CurrentStation, Proxy)
 
-        ' add our new songs to the appropriate station playlist
+        ' empty out old songs
+        playlist(CurrentStation.Id).Clear()
+
+        ' add new songs to the appropriate station playlist
         For Each s As PandoraSong In newSongs
             If s.Token Is Nothing Then
                 Continue For
