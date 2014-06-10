@@ -193,14 +193,16 @@ Public Class API
             playlist.Add(CurrentStation.Id, New Queue(Of PandoraSong))
         End If
 
-        ' grab the next song in our queue. songs become invalid after an 
-        ' unspecified number of hours.
-        Do
-            If playlist(CurrentStation.Id).Count < 2 Then
-                LoadMoreSongs()
-            End If
+        ' load 4 more songs if playlist empty
+        If playlist(CurrentStation.Id).Count = 0 Then
+            LoadMoreSongs()
+        End If
+
+        If Not playlist(CurrentStation.Id).Count = 0 Then
             CurrentSong = playlist(CurrentStation.Id).Dequeue()
-        Loop While Not pandora.IsValid(CurrentSong, Proxy)
+        Else
+            Throw New PandoraException(ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION, "API didn't return any songs for this station.")
+        End If
 
         Return CurrentSong
     End Function
@@ -241,12 +243,12 @@ Public Class API
         newSongs = pandora.GetSongs(Session, CurrentStation, Proxy)
 
         ' add our new songs to the appropriate station playlist
-        For Each currSong As PandoraSong In newSongs
-            If currSong.Token Is Nothing Then
+        For Each s As PandoraSong In newSongs
+            If s.Token Is Nothing Then
                 Continue For
             End If
-            CheckForStationTags(currSong)
-            playlist(CurrentStation.Id).Enqueue(currSong)
+            CheckForStationTags(s)
+            playlist(CurrentStation.Id).Enqueue(s)
         Next
     End Sub
 

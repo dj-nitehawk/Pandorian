@@ -184,7 +184,7 @@ Public Class frmMain
             If ex.ErrorCode = ErrorCodeEnum.LISTENER_NOT_AUTHORIZED Then
                 MsgBox(ex.Message, MsgBoxStyle.Exclamation)
             Else
-                MsgBox(ex.Message + ". Please check your internet/proxy settings.", MsgBoxStyle.Critical)
+                MsgBox(ex.Message + ". Please check your internet/proxy settings and try again." + vbCrLf + vbCr + "Error Code: " + ex.ErrorCode.ToString, MsgBoxStyle.Critical)
             End If
             Return False
         End Try
