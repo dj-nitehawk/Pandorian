@@ -69,4 +69,7 @@ Public NotInheritable Class frmLockScreen
         CoverImage.Image = frmMain.SongCoverImage.Image
     End Sub
 
+    Private Sub frmLockScreen_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        UpdateInfo()
+    End Sub
 End Class
