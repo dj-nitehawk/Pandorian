@@ -253,6 +253,8 @@ Public Class API
             CheckForStationTags(s)
             playlist(CurrentStation.Id).Enqueue(s)
         Next
+
+        Diagnostics.Debug.WriteLine("Got " + playlist(CurrentStation.Id).Count.ToString + " songs from pandora api...")
     End Sub
 
     Protected Sub CheckForStationTags(song As PandoraSong)

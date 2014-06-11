@@ -692,7 +692,7 @@ Public Class frmMain
                 Case ErrorCodeEnum.SONG_URL_NOT_VALID
                     Debug.WriteLine("Song URL expired. Loading more songs...")
                     Execute(Sub() Pandora.LoadSongs(), "SongExpired.LoadSongs")
-                    Execute(Sub() PlayNextSong(False), "SongExpired.PlayNextSong")
+                    Execute(Logic, "SongExpired.PlayCurrentSong")
                 Case Else
                     ReportError(pex, Caller)
                     AfterErrorActions()
