@@ -99,6 +99,9 @@ Partial Class frmMain
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Spinner = New System.Windows.Forms.PictureBox()
         Me.volSlider = New System.Windows.Forms.TrackBar()
+        Me.miSendFeedback = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
@@ -245,9 +248,9 @@ Partial Class frmMain
         '
         'MenuStrip
         '
-        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miManageStation, Me.ToolStripSeparator1, Me.miShowSettings, Me.miShowHotkeys, Me.miSleepTimer, Me.miUpdate, Me.ToolStripSeparator2, Me.miVersion})
+        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miManageStation, Me.ToolStripSeparator1, Me.miSleepTimer, Me.ToolStripSeparator8, Me.miShowSettings, Me.miShowHotkeys, Me.ToolStripSeparator9, Me.miSendFeedback, Me.miUpdate, Me.ToolStripSeparator2, Me.miVersion})
         Me.MenuStrip.Name = "MenuStrip"
-        Me.MenuStrip.Size = New System.Drawing.Size(193, 148)
+        Me.MenuStrip.Size = New System.Drawing.Size(193, 204)
         '
         'miManageStation
         '
@@ -758,6 +761,22 @@ Partial Class frmMain
         Me.volSlider.Value = 100
         Me.volSlider.Visible = False
         '
+        'miSendFeedback
+        '
+        Me.miSendFeedback.Name = "miSendFeedback"
+        Me.miSendFeedback.Size = New System.Drawing.Size(192, 22)
+        Me.miSendFeedback.Text = "Send Feedback"
+        '
+        'ToolStripSeparator8
+        '
+        Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
+        Me.ToolStripSeparator8.Size = New System.Drawing.Size(189, 6)
+        '
+        'ToolStripSeparator9
+        '
+        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
+        Me.ToolStripSeparator9.Size = New System.Drawing.Size(189, 6)
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -876,5 +895,8 @@ Partial Class frmMain
     Friend WithEvents tbHKVolUp As System.Windows.Forms.TextBox
     Friend WithEvents tbHKVolDown As System.Windows.Forms.TextBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ToolStripSeparator9 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents miSendFeedback As System.Windows.Forms.ToolStripMenuItem
 
 End Class

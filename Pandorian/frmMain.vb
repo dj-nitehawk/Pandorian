@@ -717,6 +717,9 @@ Public Class frmMain
         Pandora.Session.DebugCorruptAuthToken()
         Pandora.Session.User.DebugCorruptAuthToken()
         Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(My.Settings.audioQuality)
+        For Each s In Pandora.CurrentStation.PlayList
+            s.DebugCorruptAudioUrl(My.Settings.audioQuality)
+        Next
     End Sub
 
     Private ErrCount As Integer = 0
@@ -746,6 +749,7 @@ Public Class frmMain
                     ErrCount = 1
                     Debug.WriteLine("Song URL expired. Loading more songs...")
                     Pandora.CurrentStation.CurrentSong = Nothing
+                    Pandora.CurrentStation.PlayList.Clear()
                     Execute(Sub() Pandora.CurrentStation.LoadSongs(), "SongExpired.LoadSongs")
                     Execute(Logic, "SongExpired.PlayCurrentSong")
                 Case ErrorCodeEnum.LICENSE_RESTRICTION
@@ -893,6 +897,10 @@ Public Class frmMain
 
     Private Sub miUpdate_Click(sender As Object, e As EventArgs) Handles miUpdate.Click
         Process.Start("http://pandorian.djnitehawk.com/?utm_source=pandorian.app&utm_medium=direct.link&utm_campaign=visit.website")
+    End Sub
+
+    Private Sub miSendFeedback_Click(sender As Object, e As EventArgs) Handles miSendFeedback.Click
+        Process.Start("https://github.com/dj-nitehawk/Pandorian/issues/new")
     End Sub
     Private Sub MenuStrip_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MenuStrip.Opening
         Try
