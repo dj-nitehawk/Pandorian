@@ -581,6 +581,7 @@ Public Class frmMain
                 End Using
                 Exit Sub
             Catch e As Exception
+                File.Delete("api.dat")
                 ReportError(e, "RestorePandoraObject")
             End Try
         End If
