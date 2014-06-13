@@ -10,119 +10,90 @@ Imports Pandorian.Engine.Requests
 Imports Pandorian.Engine.Data
 Imports Pandorian.Engine.Encryption
 
-''' <summary>
-''' Low level class providing direct access to the Pandora API. 
-''' </summary>
+<Serializable()>
 Public Class PandoraIO
 
     Property PartnerCredintials As Data.PandoraPartner
+    Property Session As PandoraSession
+    Property Proxy As WebProxy
+
     Private baseUrl As String
-    Friend Shared crypter As BlowfishCipher
+    Private Crypter As BlowfishCipher
 
     Public Sub New(AccountType As AccountType)
         PartnerCredintials = New PandoraPartner(AccountType)
         baseUrl = PartnerCredintials.API_URL + "/services/json/?"
-        crypter = New BlowfishCipher(PartnerCredintials)
+        Crypter = New BlowfishCipher(PartnerCredintials)
     End Sub
 
-    ''' <summary>
-    ''' Initiates a Pandora session.
-    ''' </summary>
-    ''' <param name="proxy">If not null, this proxy will be used to connect to the Pandora servers.</param>
-    ''' <returns>A PandoraSession object that should be used with all other requests.</returns>
-	Public Function PartnerLogin(proxy As WebProxy) As PandoraSession
-        Return DirectCast(ExecuteRequest(New PartnerLoginRequest(PartnerCredintials), proxy), PandoraSession)
-	End Function
+    Public Function PartnerLogin() As PandoraSession
+        Dim session As PandoraSession = DirectCast(ExecuteRequest(New PartnerLoginRequest(PartnerCredintials)), PandoraSession)
+        session.Crypter = Crypter
+        Return session
+    End Function
 
-    ''' <summary>
-    ''' Given the username and password, attempts to log into the Pandora music service.
-    ''' </summary>
-    ''' <returns>If login is successful, returns a PandoraUser object. If invalid username or password
-    ''' null is returned.</returns>
-	Public Function UserLogin(session As PandoraSession, username As String, password As String, proxy As WebProxy) As PandoraUser
-		Try
-			Dim user As PandoraUser = DirectCast(ExecuteRequest(New UserLoginRequest(session, username, password), proxy), PandoraUser)
+    Public Function UserLogin(username As String, password As String) As PandoraUser
+        Try
+            Dim user As PandoraUser = DirectCast(ExecuteRequest(New UserLoginRequest(Session, username, password)), PandoraUser)
             user.PartnerCredentials = PartnerCredintials
-            session.User = user
+            Session.User = user
             user.Password = password
-			Return user
-		Catch e As PandoraException
-			If e.ErrorCode = ErrorCodeEnum.AUTH_INVALID_USERNAME_PASSWORD Then
-				Return Nothing
+            Return user
+        Catch e As PandoraException
+            If e.ErrorCode = ErrorCodeEnum.AUTH_INVALID_USERNAME_PASSWORD Then
+                Return Nothing
             End If
-			Throw
-		End Try
-	End Function
+            Throw
+        End Try
+    End Function
 
-    ''' <summary>
-    ''' Retrieves a list of stations for the current user.
-    ''' </summary>
-	Public Function GetStations(session As PandoraSession, proxy As WebProxy) As List(Of PandoraStation)
-		If session Is Nothing OrElse session.User Is Nothing Then
-			Throw New PandoraException("User must be logged in to make this request.")
-		End If
-
-        Dim response As GetStationListResponse = DirectCast(ExecuteRequest(New GetStationListRequest(session), proxy), GetStationListResponse)
-		Return response.Stations
-	End Function
-
-    ''' <summary>
-    ''' Retrieves a playlist for the given station.
-    ''' </summary>
-	Public Function GetSongs(session As PandoraSession, station As PandoraStation, proxy As WebProxy) As List(Of PandoraSong)
-		If session Is Nothing OrElse session.User Is Nothing Then
-			Throw New PandoraException("User must be logged in to make this request.")
-		End If
-
-		Dim response As GetPlaylistResponse = DirectCast(ExecuteRequest(New GetPlaylistRequest(session, station.Token), proxy), GetPlaylistResponse)
-		Return response.Songs
-
-	End Function
-
-    Public Function RateSong(session As PandoraSession, station As PandoraStation, song As PandoraSong, rating As PandoraRating, proxy As WebProxy) As PandoraSongFeedback
-        If session Is Nothing OrElse session.User Is Nothing Then
+    Public Function GetStations() As List(Of PandoraStation)
+        If Session Is Nothing OrElse Session.User Is Nothing Then
             Throw New PandoraException("User must be logged in to make this request.")
         End If
 
-        Dim feedbackObj As PandoraSongFeedback = DirectCast(ExecuteRequest(New AddFeedbackRequest(session, station.Token, song.Token, rating = PandoraRating.Love), proxy), PandoraSongFeedback)
+        Dim response As GetStationListResponse = DirectCast(ExecuteRequest(New GetStationListRequest(Session)), GetStationListResponse)
+
+        If Not response.Stations.Count = 0 Then
+            For Each s As PandoraStation In response.Stations
+                s.PandoraIO = Me
+            Next
+        End If
+
+        Return response.Stations
+    End Function
+
+    Public Function GetSongs(station As PandoraStation) As List(Of PandoraSong)
+        If Session Is Nothing OrElse Session.User Is Nothing Then
+            Throw New PandoraException("User must be logged in to make this request.")
+        End If
+
+        Dim response As GetPlaylistResponse = DirectCast(ExecuteRequest(New GetPlaylistRequest(Session, station.Token)), GetPlaylistResponse)
+        Return response.Songs
+
+    End Function
+
+    Public Function RateSong(station As PandoraStation, song As PandoraSong, rating As PandoraRating) As PandoraSongFeedback
+        If Session Is Nothing OrElse Session.User Is Nothing Then
+            Throw New PandoraException("User must be logged in to make this request.")
+        End If
+
+        Dim feedbackObj As PandoraSongFeedback = DirectCast(ExecuteRequest(New AddFeedbackRequest(Session, station.Token, song.Token, rating = PandoraRating.Love)), PandoraSongFeedback)
         song.Rating = rating
 
         Return feedbackObj
     End Function
 
-    Public Sub AddTiredSong(session As PandoraSession, song As PandoraSong, proxy As WebProxy)
-        If session Is Nothing OrElse session.User Is Nothing Then
+    Public Sub AddTiredSong(song As PandoraSong)
+        If Session Is Nothing OrElse Session.User Is Nothing Then
             Throw New PandoraException("User must be logged in to make this request.")
         End If
 
-        ExecuteRequest(New SleepSongRequest(session, song.Token), proxy)
+        ExecuteRequest(New SleepSongRequest(Session, song.Token))
         song.TemporarilyBanned = True
     End Sub
 
-
-	''' <summary>
-	''' Returns true if the given PandoraSong is still valid. Links will expire after an unspecified
-	''' number of hours.
-	''' </summary>
-	Public Function IsValid(song As PandoraSong, proxy As WebProxy) As Boolean
-		Try
-			Dim request As WebRequest = WebRequest.Create(song.AudioURL)
-			If proxy IsNot Nothing Then
-				request.Proxy = proxy
-			End If
-			request.Method = "HEAD"
-
-			Using response As WebResponse = request.GetResponse()
-				Dim bytes As Long = response.ContentLength
-			End Using
-
-			Return True
-		Catch generatedExceptionName As WebException
-			Return False
-		End Try
-	End Function
-
-	Private Function ExecuteRequest(request As PandoraRequest, proxy As WebProxy) As PandoraData
+    Private Function ExecuteRequest(request As PandoraRequest) As PandoraData
         Try
             Dim encoder As New ASCIIEncoding()
 
@@ -142,7 +113,7 @@ Public Class PandoraIO
             Dim settings As New JsonSerializerSettings()
             settings.NullValueHandling = NullValueHandling.Ignore
             Dim postStr As String = JsonConvert.SerializeObject(request, settings)
-            Dim postData As Byte() = encoder.GetBytes(If(request.IsEncrypted, crypter.EnCrypt(postStr), postStr))
+            Dim postData As Byte() = encoder.GetBytes(If(request.IsEncrypted, Crypter.EnCrypt(postStr), postStr))
 
             ' configure our connection
             ServicePointManager.Expect100Continue = False
@@ -150,8 +121,8 @@ Public Class PandoraIO
             webRequest.ContentType = "text/xml"
             webRequest.ContentLength = postData.Length
             webRequest.Method = "POST"
-            If proxy IsNot Nothing Then
-                webRequest.Proxy = proxy
+            If Proxy IsNot Nothing Then
+                webRequest.Proxy = Proxy
             End If
 
             ' send request to remote servers
@@ -181,7 +152,7 @@ Public Class PandoraIO
             End If
             Throw New PandoraException("Unexpected error communicating with server: " + ex.Message, ex)
         End Try
-	End Function
+    End Function
 End Class
 Public Enum PandoraRating
 	Love = 1

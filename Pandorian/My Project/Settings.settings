@@ -23,12 +23,6 @@
     <Setting Name="audioQuality" Type="System.String" Scope="User">
       <Value Profile="(Default)">mediumQuality</Value>
     </Setting>
-    <Setting Name="stationSkipHistory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">{}</Value>
-    </Setting>
-    <Setting Name="globalSkipHistory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[]</Value>
-    </Setting>
     <Setting Name="pandoraOne" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -72,9 +66,6 @@
       <Value Profile="(Default)">88</Value>
     </Setting>
     <Setting Name="unlockPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="lastSongJSON" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="hkVolDown" Type="System.Int32" Scope="User">

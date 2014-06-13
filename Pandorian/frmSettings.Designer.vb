@@ -43,6 +43,7 @@ Partial Class frmSettings
         Me.chkNoProxy = New System.Windows.Forms.CheckBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.unlockCode = New System.Windows.Forms.TextBox()
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lblProxyAddre
@@ -136,9 +137,9 @@ Partial Class frmSettings
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(64, 350)
+        Me.Button1.Location = New System.Drawing.Point(55, 352)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(155, 26)
+        Me.Button1.Size = New System.Drawing.Size(82, 26)
         Me.Button1.TabIndex = 13
         Me.Button1.Text = "Save Settings"
         Me.Button1.UseVisualStyleBackColor = True
@@ -233,12 +234,22 @@ Partial Class frmSettings
         Me.unlockCode.TabIndex = 11
         Me.unlockCode.UseSystemPasswordChar = True
         '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(149, 352)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(82, 26)
+        Me.Button2.TabIndex = 14
+        Me.Button2.Text = "Exit"
+        Me.Button2.UseVisualStyleBackColor = True
+        '
         'frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(284, 387)
         Me.ControlBox = False
+        Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.chkNoProxy)
         Me.Controls.Add(Me.chkPandoraOne)
@@ -289,4 +300,5 @@ Partial Class frmSettings
     Friend WithEvents chkNoProxy As System.Windows.Forms.CheckBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents unlockCode As System.Windows.Forms.TextBox
+    Friend WithEvents Button2 As System.Windows.Forms.Button
 End Class

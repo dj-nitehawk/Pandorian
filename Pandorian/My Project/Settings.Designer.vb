@@ -140,30 +140,6 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("{}")>  _
-        Public Property stationSkipHistory() As String
-            Get
-                Return CType(Me("stationSkipHistory"),String)
-            End Get
-            Set
-                Me("stationSkipHistory") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("[]")>  _
-        Public Property globalSkipHistory() As String
-            Get
-                Return CType(Me("globalSkipHistory"),String)
-            End Get
-            Set
-                Me("globalSkipHistory") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
         Public Property pandoraOne() As Boolean
             Get
@@ -339,18 +315,6 @@ Namespace My
             End Get
             Set
                 Me("unlockPassword") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property lastSongJSON() As String
-            Get
-                Return CType(Me("lastSongJSON"),String)
-            End Get
-            Set
-                Me("lastSongJSON") = value
             End Set
         End Property
         

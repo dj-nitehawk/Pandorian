@@ -28,6 +28,7 @@
                 My.Settings.unlockPassword = Encrypt(getMD5Hash(unlockCode.Text))
             End If
             My.Settings.Save()
+            frmMain.ClearSession()
 
             Me.Hide()
             frmMain.Show()
@@ -129,4 +130,8 @@
         tb.SelectAll()
     End Sub
 
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Me.Hide()
+        frmMain.Close()
+    End Sub
 End Class

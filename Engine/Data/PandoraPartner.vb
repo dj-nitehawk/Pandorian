@@ -1,5 +1,6 @@
 ﻿Namespace Data
 
+    <Serializable()>
     Public Class PandoraPartner
         Inherits PandoraData
 

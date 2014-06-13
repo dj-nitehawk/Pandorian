@@ -1,21 +1,25 @@
 Imports System.Collections.Generic
 Imports System.Text
 Imports Newtonsoft.Json
+Imports Pandorian.Engine.Encryption
 
 Namespace Data
+    <Serializable()>
+    <JsonObject(MemberSerialization.OptIn)>
+    Public Class PandoraSession
+        Inherits PandoraData
 
-	<JsonObject(MemberSerialization.OptIn)> _
-	Public Class PandoraSession
-		Inherits PandoraData
-		Public Property User() As PandoraUser
-			Get
-				Return m_User
-			End Get
-			Friend Set
-				m_User = Value
-			End Set
-		End Property
-		Private m_User As PandoraUser
+        Property Crypter As BlowfishCipher
+
+        Public Property User() As PandoraUser
+            Get
+                Return m_User
+            End Get
+            Friend Set(value As PandoraUser)
+                m_User = value
+            End Set
+        End Property
+        Private m_User As PandoraUser
 
         Private Function StripNonNumeric(Data As String) As String
             Dim RX As New RegularExpressions.Regex("\D")
@@ -25,7 +29,7 @@ Namespace Data
         Public ReadOnly Property ServerSyncTime() As Long
             Get
                 If _partnerSyncTime Is Nothing Then
-                    Dim decryptedTime As String = StripNonNumeric(PandoraIO.crypter.DeCrypt(EncryptedSyncTime))
+                    Dim decryptedTime As String = StripNonNumeric(Crypter.DeCrypt(EncryptedSyncTime))
                     Dim serverTime As Long
                     If Long.TryParse(decryptedTime, serverTime) Then
                         _partnerSyncTime = serverTime
@@ -47,7 +51,7 @@ Namespace Data
                 Return m_PartnerId
             End Get
             Friend Set(value As Integer)
-                m_PartnerId = Value
+                m_PartnerId = value
             End Set
         End Property
         Private m_PartnerId As Integer
@@ -69,7 +73,7 @@ Namespace Data
                 Return m_EncryptedSyncTime
             End Get
             Friend Set(value As String)
-                m_EncryptedSyncTime = Value
+                m_EncryptedSyncTime = value
             End Set
         End Property
         Private m_EncryptedSyncTime As String
@@ -106,6 +110,7 @@ Namespace Data
         Private _stationSkipLimit As Integer
 
         Private ClientStartTime As Long
+
         Public Sub New()
             ClientStartTime = TicksToUnixTimeStamp(DateTime.UtcNow.Ticks)
         End Sub
