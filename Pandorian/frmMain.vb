@@ -25,6 +25,7 @@ Public Class frmMain
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
 
+
     Public Sub ClearSession()
         Pandora.ClearSession(My.Settings.pandoraOne)
         SavePandoraObject()
@@ -240,8 +241,10 @@ Public Class frmMain
         SaveLastStationID()
         If Pandora.CanSkip(Pandora.CurrentStation) Then
             btnSkip.Enabled = True
+            btnSkip.BackColor = Control.DefaultBackColor
         Else
             btnSkip.Enabled = False
+            btnSkip.BackColor = Color.DarkGray
         End If
         Select Case Song.Rating
             Case PandoraRating.Hate
@@ -266,8 +269,10 @@ Public Class frmMain
         End If
         If Song.TemporarilyBanned Then
             btnBlock.Enabled = False
+            btnBlock.BackColor = Color.DarkGray
         Else
             btnBlock.Enabled = True
+            btnBlock.BackColor = Control.DefaultBackColor
         End If
         If Pandora.CurrentStation.CurrentSong.AudioDurationSecs < 60 Then
             lblSongName.Text = "This is a 42 sec blank audio track"
@@ -830,12 +835,15 @@ Public Class frmMain
 
     Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
         If btnSkip.Enabled And Pandora.CanSkip(Pandora.CurrentStation) Then
+            btnSkip.Enabled = False
+            btnSkip.BackColor = Color.DarkGray
             Execute(Sub() PlayNextSong(True), "btnSkip_Click")
         End If
     End Sub
     Private Sub btnBlock_Click(sender As Object, e As EventArgs) Handles btnBlock.Click
         If btnBlock.Enabled Then
             btnBlock.Enabled = False
+            btnBlock.BackColor = Color.DarkGray
             Execute(Sub() Pandora.TemporarilyBanSong(Pandora.CurrentStation.CurrentSong), "btnBlock_Click.TemporarilyBanSong")
             If Pandora.CanSkip(Pandora.CurrentStation) Then
                 Execute(Sub() PlayNextSong(True), "btnBlock_Click.PlayNextSong")
@@ -1243,4 +1251,23 @@ Public Class frmMain
         VolLastChangedOn = Now
     End Sub
 
+    Private Sub btnLike_MouseHover(sender As Object, e As EventArgs) Handles btnLike.MouseHover
+        tip.Show("Like Song", btnLike)
+    End Sub
+
+    Private Sub btnDislike_MouseHover(sender As Object, e As EventArgs) Handles btnDislike.MouseHover
+        tip.Show("Dislike Song", btnDislike)
+    End Sub
+
+    Private Sub btnPlayPause_MouseHover(sender As Object, e As EventArgs) Handles btnPlayPause.MouseHover
+        tip.Show("Play/Pause Song", btnPlayPause)
+    End Sub
+
+    Private Sub btnSkip_MouseHover(sender As Object, e As EventArgs) Handles btnSkip.MouseHover
+        tip.Show("Skip Song", btnSkip)
+    End Sub
+
+    Private Sub btnBlock_MouseHover(sender As Object, e As EventArgs) Handles btnBlock.MouseHover
+        tip.Show("Block Song For A Month", btnBlock)
+    End Sub
 End Class

@@ -103,6 +103,7 @@ Partial Class frmMain
         Me.Spinner = New System.Windows.Forms.PictureBox()
         Me.volSlider = New System.Windows.Forms.TrackBar()
         Me.tbLog = New System.Windows.Forms.TextBox()
+        Me.tip = New System.Windows.Forms.ToolTip(Me.components)
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
@@ -795,6 +796,11 @@ Partial Class frmMain
         Me.tbLog.Visible = False
         Me.tbLog.WordWrap = False
         '
+        'tip
+        '
+        Me.tip.BackColor = System.Drawing.Color.White
+        Me.tip.ForeColor = System.Drawing.Color.Black
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -919,5 +925,6 @@ Partial Class frmMain
     Friend WithEvents ToolStripSeparator9 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents miSendFeedback As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents tbLog As System.Windows.Forms.TextBox
+    Friend WithEvents tip As System.Windows.Forms.ToolTip
 
 End Class
