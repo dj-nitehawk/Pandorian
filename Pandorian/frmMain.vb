@@ -730,6 +730,8 @@ Public Class frmMain
     End Sub
 
     Sub SongEnded(ByVal handle As Integer, ByVal channel As Integer, ByVal data As Integer, ByVal user As IntPtr)
+        prgBar.Value = 0
+        Application.DoEvents()
         Execute(Sub() PlayNextSong(False), "SongEnded")
     End Sub
 
