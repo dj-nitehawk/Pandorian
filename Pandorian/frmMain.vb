@@ -27,8 +27,10 @@ Public Class frmMain
 
 
     Public Sub ClearSession()
-        Pandora.ClearSession(My.Settings.pandoraOne)
-        SavePandoraObject()
+        If Not IsNothing(Pandora) Then
+            Pandora.ClearSession(My.Settings.pandoraOne)
+            SavePandoraObject()
+        End If
     End Sub
 
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
