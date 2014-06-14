@@ -387,7 +387,7 @@ Public Class frmMain
                 IntPtr.Zero)
 
         If Not Stream = 0 Then
-            tbLog.AppendText("Loading song into BASS..." + vbCrLf)
+            tbLog.AppendText("Playing next song in playlist..." + vbCrLf)
             Bass.BASS_ChannelSetSync(Stream, BASSSync.BASS_SYNC_END, 0, Sync, IntPtr.Zero)
             Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, volSlider.Value / 100)
             ApplyReplayGain()
@@ -466,6 +466,8 @@ Public Class frmMain
                 tbLog.Visible = False
             Else
                 tbLog.Visible = True
+                tbLog.SelectionStart = tbLog.Text.Length
+                tbLog.ScrollToCaret()
             End If
         End If
 
@@ -558,6 +560,7 @@ Public Class frmMain
         End If
 
     End Sub
+
     Private Sub frmMain_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Application.DoEvents()
         Execute(Sub() RunNow(), "frmMain_Shown.RunNow")
@@ -638,7 +641,7 @@ Public Class frmMain
             If Not String.IsNullOrEmpty(Pandora.CurrentStation.Id) Then
 
                 ddStations.SelectedIndex = ddStations.FindStringExact(Pandora.CurrentStation.Name)
-                tbLog.AppendText("Selected the current station..." + vbCrLf)
+                tbLog.AppendText("Current station: " + Pandora.CurrentStation.Name + vbCrLf)
 
                 InitBass()
 
