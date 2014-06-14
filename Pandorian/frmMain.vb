@@ -169,18 +169,15 @@ Public Class frmMain
     Private Function LoginToPandora() As Boolean
         Try
             If Pandora.Login(Decrypt(My.Settings.pandoraUsername), Decrypt(My.Settings.pandoraPassword)) Then
-                Debug.WriteLine("Successfully logged in to pandora...")
+                tbLog.AppendText("Successfully logged in to pandora..." + vbCrLf)
                 Return True
             Else
                 MsgBox("Couldn't log in to Pandora. Check pandora a/c details.", MsgBoxStyle.Exclamation)
             End If
         Catch ex As PandoraException
             If ex.ErrorCode = ErrorCodeEnum.LISTENER_NOT_AUTHORIZED Then
+                tbLog.AppendText("Listner is not authorized..." + vbCrLf)
                 MsgBox(ex.Message, MsgBoxStyle.Exclamation)
-            ElseIf ex.Message.Contains("417") Then
-                MsgBox("A weird connection error occured. Please restart Pandorian...", MsgBoxStyle.Exclamation)
-                Pandora.ClearSession(My.Settings.pandoraOne)
-                Me.Close()
             Else
                 MsgBox(ex.Message + ". Please check your internet/proxy settings and try again." + vbCrLf + vbCr + "Error Code: " + ex.ErrorCode.ToString, MsgBoxStyle.Critical)
             End If
@@ -207,6 +204,7 @@ Public Class frmMain
             ddStations.ValueMember = "Value"
             ddStations.DisplayMember = "Key"
             ddStations.DataSource = New BindingSource(Stations, Nothing)
+            tbLog.AppendText("Loaded the stations list..." + vbCrLf)
         Else
             MsgBox("Sorry, no stations were found in your a/c." + vbCrLf + "Please visit pandora.com and create some stations.", MsgBoxStyle.Information)
         End If
@@ -228,6 +226,9 @@ Public Class frmMain
         Else
             Song = Pandora.CurrentStation.CurrentSong
         End If
+        If Pandora.CurrentStation.SongLoadingOccurred Then
+            tbLog.AppendText("GOT NEW SONGS FROM PANDORA..." + vbCrLf)
+        End If
         PlayCurrentSongWithBASS()
         ddStations.Enabled = True
         If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
@@ -244,30 +245,28 @@ Public Class frmMain
         End If
         Select Case Song.Rating
             Case PandoraRating.Hate
-                btnLike.Text = "Like"
                 btnLike.Enabled = True
-                btnDislike.Text = "(D)"
+                btnLike.BackColor = Control.DefaultBackColor
                 btnDislike.Enabled = False
+                btnDislike.BackColor = Color.LightSteelBlue
             Case PandoraRating.Love
-                btnLike.Text = "(L)"
                 btnLike.Enabled = False
-                btnDislike.Text = "Dislike"
+                btnLike.BackColor = Color.LightSteelBlue
                 btnDislike.Enabled = True
+                btnDislike.BackColor = Control.DefaultBackColor
             Case PandoraRating.Unrated
-                btnLike.Text = "Like"
-                btnDislike.Text = "Dislike"
                 btnLike.Enabled = True
+                btnLike.BackColor = Control.DefaultBackColor
                 btnDislike.Enabled = True
+                btnDislike.BackColor = Control.DefaultBackColor
         End Select
         btnPlayPause.Enabled = True
         If ResumePlaying Then
-            btnPlayPause.Text = "Pause"
+            btnPlayPause.BackgroundImage = My.Resources.paused
         End If
         If Song.TemporarilyBanned Then
-            btnBlock.Text = "(B)"
             btnBlock.Enabled = False
         Else
-            btnBlock.Text = "Block"
             btnBlock.Enabled = True
         End If
         If Pandora.CurrentStation.CurrentSong.AudioDurationSecs < 60 Then
@@ -289,9 +288,9 @@ Public Class frmMain
 
         SavePandoraObject()
 
-        Pandora.SkipHistory.PrintGlobalSkipCount()
-        Pandora.SkipHistory.PrintStationSkipCount(Pandora.CurrentStation)
-        Debug.WriteLine("..............................................")
+        tbLog.AppendText(Pandora.SkipHistory.PrintGlobalSkipCount() + vbCrLf)
+        tbLog.AppendText(Pandora.SkipHistory.PrintStationSkipCount(Pandora.CurrentStation) + vbCrLf)
+        tbLog.AppendText("......................................................................" + vbCrLf)
     End Sub
     Sub PlayNextSong(Skip As Boolean)
         Spinner.Visible = True
@@ -350,6 +349,7 @@ Public Class frmMain
             If Utils.HighWord(AddOn.Fx.BassFx.BASS_FX_GetVersion()) <> AddOn.Fx.BassFx.BASSFXVERSION Then
                 MsgBox("Wrong BassFx Version. Volume will be not normalize!", MsgBoxStyle.Exclamation)
             End If
+            tbLog.AppendText("Initialized BASS..." + vbCrLf)
         End If
     End Sub
 
@@ -362,6 +362,7 @@ Public Class frmMain
             Bass.BASS_Free()
             Marshal.FreeHGlobal(ProxyPtr)
             BASSReady = False
+            tbLog.AppendText("De-Initialized BASS..." + vbCrLf)
         End If
     End Sub
 
@@ -373,7 +374,7 @@ Public Class frmMain
         If Not Bass.BASS_FXSetParameters(VolFX, VolParm) Then
             MsgBox("Normalize Error: " + Bass.BASS_ErrorGetCode.ToString, MsgBoxStyle.Information)
         End If
-        'Debug.WriteLine("ReplayGain: " + Pandora.CurrentSong.TrackGain.ToString + " From 0 |" + " New Gain: " + VolParm.fVolume.ToString + " From 1")
+        tbLog.AppendText("ReplayGain: " + Pandora.CurrentStation.CurrentSong.TrackGain.ToString + " From 0 |" + " New Gain: " + VolParm.fVolume.ToString + " From 1" + vbCrLf)
     End Sub
     Private Sub PlayCurrentSongWithBASS()
         If Not Stream = 0 Then
@@ -389,6 +390,7 @@ Public Class frmMain
                 IntPtr.Zero)
 
         If Not Stream = 0 Then
+            tbLog.AppendText("Loading song into BASS..." + vbCrLf)
             Bass.BASS_ChannelSetSync(Stream, BASSSync.BASS_SYNC_END, 0, Sync, IntPtr.Zero)
             Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, volSlider.Value / 100)
             ApplyReplayGain()
@@ -459,6 +461,14 @@ Public Class frmMain
         If System.Diagnostics.Debugger.IsAttached Then
             If e.Control And e.Alt And e.KeyCode = Keys.E Then
                 DebugExpireSessionNow()
+            End If
+        End If
+
+        If e.Control And e.Alt And e.KeyCode = Keys.L Then
+            If tbLog.Visible Then
+                tbLog.Visible = False
+            Else
+                tbLog.Visible = True
             End If
         End If
 
@@ -562,8 +572,9 @@ Public Class frmMain
                 Try
                     Dim formatter As New BinaryFormatter()
                     formatter.Serialize(stream, Pandora)
-                    Debug.WriteLine("Saved the api object to disk...")
+                    tbLog.AppendText("Saved the api object to disk..." + vbCrLf)
                 Catch e As Exception
+                    tbLog.AppendText("Failed to save the api object to disk..." + vbCrLf)
                     ReportError(e, "SavePandoraObject")
                 End Try
             End Using
@@ -576,12 +587,13 @@ Public Class frmMain
                 Using stream As Stream = File.Open("api.dat", FileMode.Open, FileAccess.Read)
                     Dim formatter As New BinaryFormatter()
                     Pandora = DirectCast(formatter.Deserialize(stream), API)
-                    Debug.WriteLine("Restored the api object from disk...")
+                    tbLog.AppendText("Restored the api object from disk..." + vbCrLf)
                     ServicePointManager.Expect100Continue = False
                 End Using
                 Exit Sub
             Catch e As Exception
                 File.Delete("api.dat")
+                tbLog.AppendText("Failed to restore the api object from disk..." + vbCrLf)
                 ReportError(e, "RestorePandoraObject")
             End Try
         End If
@@ -629,6 +641,7 @@ Public Class frmMain
             If Not String.IsNullOrEmpty(Pandora.CurrentStation.Id) Then
 
                 ddStations.SelectedIndex = ddStations.FindStringExact(Pandora.CurrentStation.Name)
+                tbLog.AppendText("Selected the current station..." + vbCrLf)
 
                 InitBass()
 
@@ -668,9 +681,9 @@ Public Class frmMain
         If Not IsNothing(Pandora.CurrentStation.CurrentSong) Then
             If Pandora.CurrentStation.CurrentSong.DurationElapsed Then
                 Pandora.CurrentStation.CurrentSong = Nothing
-                Debug.WriteLine("No need to replay the last song...")
+                tbLog.AppendText("No need to replay the last song..." + vbCrLf)
             Else
-                Debug.WriteLine("Has to replay the last song...")
+                tbLog.AppendText("Has to replay the last song..." + vbCrLf)
             End If
         End If
 
@@ -680,17 +693,19 @@ Public Class frmMain
         Return Bass.BASS_ChannelIsActive(Stream)
     End Function
     Private Sub btnPlayPause_Click(sender As Object, e As EventArgs) Handles btnPlayPause.Click
+        
         If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
             Bass.BASS_ChannelPause(Stream)
-            btnPlayPause.Text = "Play"
+            btnPlayPause.BackgroundImage = My.Resources.play
         ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_PAUSED Then
             Bass.BASS_ChannelPlay(Stream, False)
-            btnPlayPause.Text = "Pause"
+            btnPlayPause.BackgroundImage = My.Resources.paused
         ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_STOPPED And ResumePlaying = False Then
             ResumePlaying = True
             Bass.BASS_ChannelPlay(Stream, False)
-            btnPlayPause.Text = "Pause"
+            btnPlayPause.BackgroundImage = My.Resources.paused
         Else
+            btnPlayPause.BackgroundImage = Nothing
             btnPlayPause.Text = ":-("
         End If
     End Sub
@@ -738,7 +753,7 @@ Public Class frmMain
             Select Case pex.ErrorCode
                 Case ErrorCodeEnum.AUTH_INVALID_TOKEN
                     Try
-                        Debug.WriteLine("Session expired. Loggin in again...")
+                        tbLog.AppendText("Session expired. Loggin in again..." + vbCrLf)
                         ReLoginToPandora()
                     Catch ex As Exception
                         MsgBox("Pandora session has expired." + vbCrLf + vbCrLf +
@@ -747,12 +762,10 @@ Public Class frmMain
                         AfterErrorActions()
                     End Try
                 Case ErrorCodeEnum.SONG_URL_NOT_VALID
-                    ErrCount = 1
-                    Debug.WriteLine("Song URL expired. Loading more songs...")
+                    tbLog.AppendText("Song URL expired. Will fetch new songs..." + vbCrLf)
                     Pandora.CurrentStation.CurrentSong = Nothing
                     Pandora.CurrentStation.PlayList.Clear()
-                    Execute(Sub() Pandora.CurrentStation.LoadSongs(), "SongExpired.LoadSongs")
-                    Execute(Logic, "SongExpired.PlayCurrentSong")
+                    Execute(Logic, "SongExpired.ReDoLogic")
                 Case ErrorCodeEnum.LICENSE_RESTRICTION
                     MsgBox("Looks like your country is not supported. Try using a proxy...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
@@ -787,6 +800,7 @@ Public Class frmMain
                           "Would you like to report this error?", MsgBoxStyle.YesNo + MsgBoxStyle.Critical, Title:="Whoops!")
 
         If resp = MsgBoxResult.Yes Then
+            msg = msg + vbCrLf + vbCrLf + tbLog.Text
             Clipboard.SetText(msg)
             MsgBox("Error details have been copied to the clipboard." + vbCrLf +
                    "You will now be taken to the Pandorian support page.", vbInformation)
@@ -821,7 +835,6 @@ Public Class frmMain
     End Sub
     Private Sub btnBlock_Click(sender As Object, e As EventArgs) Handles btnBlock.Click
         If btnBlock.Enabled Then
-            btnBlock.Text = "(B)"
             btnBlock.Enabled = False
             Execute(Sub() Pandora.TemporarilyBanSong(Pandora.CurrentStation.CurrentSong), "btnBlock_Click.TemporarilyBanSong")
             If Pandora.CanSkip(Pandora.CurrentStation) Then
@@ -839,19 +852,19 @@ Public Class frmMain
     End Function
     Private Sub btnLike_Click(sender As Object, e As EventArgs) Handles btnLike.Click
         If btnLike.Enabled Then
-            btnLike.Text = "(L)"
             btnLike.Enabled = False
-            btnDislike.Text = "Dislike"
+            btnLike.BackColor = Color.LightSteelBlue
             btnDislike.Enabled = True
+            btnDislike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Love), "btnLike_Click")
         End If
     End Sub
     Private Sub btnDislike_Click(sender As Object, e As EventArgs) Handles btnDislike.Click
         If btnDislike.Enabled Then
-            btnDislike.Text = "(D)"
             btnDislike.Enabled = False
-            btnLike.Text = "Like"
+            btnDislike.BackColor = Color.LightSteelBlue
             btnLike.Enabled = True
+            btnLike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Hate), "btnDislike_Click.RateSong")
             If Pandora.CanSkip(Pandora.CurrentStation) Then
                 Execute(Sub() PlayNextSong(True), "btnDislike_Click.PlayNextSong")
@@ -879,7 +892,7 @@ Public Class frmMain
         Try
             web.DownloadDataAsync(New Uri("http://s07.flagcounter.com/mini/f3Ey/bg_FFFFFF/txt_000000/border_CCCCCC/flags_0/"))
         Catch ex As Exception
-            Debug.WriteLine("LogAppStart: " + ex.Message)
+            tbLog.AppendText("LogAppStart: " + ex.Message + vbCrLf)
         End Try
         web = Nothing
     End Sub
@@ -997,6 +1010,7 @@ Public Class frmMain
         sw.Start()
         Do Until NetConnectionAvailable()
             If sw.ElapsedMilliseconds > 10000 Then
+
                 MsgBox("Sorry, but it looks like your internet is down." + vbCrLf + vbCrLf +
                        "Please try again later...", MsgBoxStyle.Exclamation)
                 noNet = True

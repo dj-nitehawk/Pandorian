@@ -39,9 +39,12 @@ Partial Class frmMain
         Me.MenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.miManageStation = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.miSleepTimer = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.miShowSettings = New System.Windows.Forms.ToolStripMenuItem()
         Me.miShowHotkeys = New System.Windows.Forms.ToolStripMenuItem()
-        Me.miSleepTimer = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
+        Me.miSendFeedback = New System.Windows.Forms.ToolStripMenuItem()
         Me.miUpdate = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.miVersion = New System.Windows.Forms.ToolStripMenuItem()
@@ -99,9 +102,7 @@ Partial Class frmMain
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Spinner = New System.Windows.Forms.PictureBox()
         Me.volSlider = New System.Windows.Forms.TrackBar()
-        Me.miSendFeedback = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tbLog = New System.Windows.Forms.TextBox()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
@@ -158,54 +159,58 @@ Partial Class frmMain
         '
         'btnLike
         '
-        Me.btnLike.BackColor = System.Drawing.Color.Azure
+        Me.btnLike.BackColor = System.Drawing.SystemColors.Control
+        Me.btnLike.BackgroundImage = CType(resources.GetObject("btnLike.BackgroundImage"), System.Drawing.Image)
+        Me.btnLike.FlatAppearance.BorderSize = 0
         Me.btnLike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLike.ForeColor = System.Drawing.Color.Black
         Me.btnLike.Location = New System.Drawing.Point(9, 421)
         Me.btnLike.Name = "btnLike"
-        Me.btnLike.Size = New System.Drawing.Size(53, 30)
+        Me.btnLike.Size = New System.Drawing.Size(53, 32)
         Me.btnLike.TabIndex = 6
         Me.btnLike.TabStop = False
-        Me.btnLike.Text = "Like"
         Me.btnLike.UseVisualStyleBackColor = False
         '
         'btnDislike
         '
-        Me.btnDislike.BackColor = System.Drawing.Color.Azure
+        Me.btnDislike.BackColor = System.Drawing.SystemColors.Control
+        Me.btnDislike.BackgroundImage = CType(resources.GetObject("btnDislike.BackgroundImage"), System.Drawing.Image)
+        Me.btnDislike.FlatAppearance.BorderSize = 0
         Me.btnDislike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDislike.ForeColor = System.Drawing.Color.Black
         Me.btnDislike.Location = New System.Drawing.Point(66, 421)
         Me.btnDislike.Name = "btnDislike"
-        Me.btnDislike.Size = New System.Drawing.Size(53, 30)
+        Me.btnDislike.Size = New System.Drawing.Size(53, 32)
         Me.btnDislike.TabIndex = 7
         Me.btnDislike.TabStop = False
-        Me.btnDislike.Text = "Dislike"
         Me.btnDislike.UseVisualStyleBackColor = False
         '
         'btnPlayPause
         '
-        Me.btnPlayPause.BackColor = System.Drawing.Color.Azure
+        Me.btnPlayPause.BackColor = System.Drawing.SystemColors.Control
+        Me.btnPlayPause.BackgroundImage = Global.Pandorian.My.Resources.Resources.play
+        Me.btnPlayPause.FlatAppearance.BorderSize = 0
         Me.btnPlayPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPlayPause.ForeColor = System.Drawing.Color.Black
-        Me.btnPlayPause.Location = New System.Drawing.Point(134, 421)
+        Me.btnPlayPause.Location = New System.Drawing.Point(133, 421)
         Me.btnPlayPause.Name = "btnPlayPause"
-        Me.btnPlayPause.Size = New System.Drawing.Size(53, 30)
+        Me.btnPlayPause.Size = New System.Drawing.Size(53, 32)
         Me.btnPlayPause.TabIndex = 8
         Me.btnPlayPause.TabStop = False
-        Me.btnPlayPause.Text = "Pause"
         Me.btnPlayPause.UseVisualStyleBackColor = False
         '
         'btnSkip
         '
-        Me.btnSkip.BackColor = System.Drawing.Color.Azure
+        Me.btnSkip.BackColor = System.Drawing.SystemColors.Control
+        Me.btnSkip.BackgroundImage = Global.Pandorian.My.Resources.Resources.skip
+        Me.btnSkip.FlatAppearance.BorderSize = 0
         Me.btnSkip.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnSkip.ForeColor = System.Drawing.Color.Black
-        Me.btnSkip.Location = New System.Drawing.Point(191, 421)
+        Me.btnSkip.Location = New System.Drawing.Point(190, 421)
         Me.btnSkip.Name = "btnSkip"
-        Me.btnSkip.Size = New System.Drawing.Size(53, 30)
+        Me.btnSkip.Size = New System.Drawing.Size(53, 32)
         Me.btnSkip.TabIndex = 9
         Me.btnSkip.TabStop = False
-        Me.btnSkip.Text = "Skip"
         Me.btnSkip.UseVisualStyleBackColor = False
         '
         'prgBar
@@ -224,15 +229,16 @@ Partial Class frmMain
         '
         'btnBlock
         '
-        Me.btnBlock.BackColor = System.Drawing.Color.Azure
+        Me.btnBlock.BackColor = System.Drawing.SystemColors.Control
+        Me.btnBlock.BackgroundImage = Global.Pandorian.My.Resources.Resources.block
+        Me.btnBlock.FlatAppearance.BorderSize = 0
         Me.btnBlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnBlock.ForeColor = System.Drawing.Color.Black
-        Me.btnBlock.Location = New System.Drawing.Point(259, 421)
+        Me.btnBlock.Location = New System.Drawing.Point(256, 421)
         Me.btnBlock.Name = "btnBlock"
-        Me.btnBlock.Size = New System.Drawing.Size(53, 30)
+        Me.btnBlock.Size = New System.Drawing.Size(53, 32)
         Me.btnBlock.TabIndex = 12
         Me.btnBlock.TabStop = False
-        Me.btnBlock.Text = "Block"
         Me.btnBlock.UseVisualStyleBackColor = False
         '
         'SongCoverImage
@@ -250,7 +256,7 @@ Partial Class frmMain
         '
         Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miManageStation, Me.ToolStripSeparator1, Me.miSleepTimer, Me.ToolStripSeparator8, Me.miShowSettings, Me.miShowHotkeys, Me.ToolStripSeparator9, Me.miSendFeedback, Me.miUpdate, Me.ToolStripSeparator2, Me.miVersion})
         Me.MenuStrip.Name = "MenuStrip"
-        Me.MenuStrip.Size = New System.Drawing.Size(193, 204)
+        Me.MenuStrip.Size = New System.Drawing.Size(193, 182)
         '
         'miManageStation
         '
@@ -262,6 +268,17 @@ Partial Class frmMain
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(189, 6)
+        '
+        'miSleepTimer
+        '
+        Me.miSleepTimer.Name = "miSleepTimer"
+        Me.miSleepTimer.Size = New System.Drawing.Size(192, 22)
+        Me.miSleepTimer.Text = "Sleep Timer"
+        '
+        'ToolStripSeparator8
+        '
+        Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
+        Me.ToolStripSeparator8.Size = New System.Drawing.Size(189, 6)
         '
         'miShowSettings
         '
@@ -275,11 +292,16 @@ Partial Class frmMain
         Me.miShowHotkeys.Size = New System.Drawing.Size(192, 22)
         Me.miShowHotkeys.Text = "Show HotKeys"
         '
-        'miSleepTimer
+        'ToolStripSeparator9
         '
-        Me.miSleepTimer.Name = "miSleepTimer"
-        Me.miSleepTimer.Size = New System.Drawing.Size(192, 22)
-        Me.miSleepTimer.Text = "Sleep Timer"
+        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
+        Me.ToolStripSeparator9.Size = New System.Drawing.Size(189, 6)
+        '
+        'miSendFeedback
+        '
+        Me.miSendFeedback.Name = "miSendFeedback"
+        Me.miSendFeedback.Size = New System.Drawing.Size(192, 22)
+        Me.miSendFeedback.Text = "Send Feedback"
         '
         'miUpdate
         '
@@ -301,7 +323,7 @@ Partial Class frmMain
         '
         'prgDownload
         '
-        Me.prgDownload.Location = New System.Drawing.Point(0, 451)
+        Me.prgDownload.Location = New System.Drawing.Point(0, 454)
         Me.prgDownload.Name = "prgDownload"
         Me.prgDownload.Size = New System.Drawing.Size(317, 10)
         Me.prgDownload.Step = 1
@@ -741,7 +763,7 @@ Partial Class frmMain
         Me.Spinner.Image = Global.Pandorian.My.Resources.Resources.spinner
         Me.Spinner.Location = New System.Drawing.Point(-6, -5)
         Me.Spinner.Name = "Spinner"
-        Me.Spinner.Size = New System.Drawing.Size(329, 476)
+        Me.Spinner.Size = New System.Drawing.Size(329, 480)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.Spinner.TabIndex = 17
         Me.Spinner.TabStop = False
@@ -761,28 +783,25 @@ Partial Class frmMain
         Me.volSlider.Value = 100
         Me.volSlider.Visible = False
         '
-        'miSendFeedback
+        'tbLog
         '
-        Me.miSendFeedback.Name = "miSendFeedback"
-        Me.miSendFeedback.Size = New System.Drawing.Size(192, 22)
-        Me.miSendFeedback.Text = "Send Feedback"
-        '
-        'ToolStripSeparator8
-        '
-        Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
-        Me.ToolStripSeparator8.Size = New System.Drawing.Size(189, 6)
-        '
-        'ToolStripSeparator9
-        '
-        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
-        Me.ToolStripSeparator9.Size = New System.Drawing.Size(189, 6)
+        Me.tbLog.Location = New System.Drawing.Point(9, 9)
+        Me.tbLog.Multiline = True
+        Me.tbLog.Name = "tbLog"
+        Me.tbLog.ReadOnly = True
+        Me.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.tbLog.Size = New System.Drawing.Size(300, 444)
+        Me.tbLog.TabIndex = 19
+        Me.tbLog.Visible = False
+        Me.tbLog.WordWrap = False
         '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
-        Me.ClientSize = New System.Drawing.Size(317, 461)
+        Me.ClientSize = New System.Drawing.Size(317, 463)
+        Me.Controls.Add(Me.tbLog)
         Me.Controls.Add(Me.Spinner)
         Me.Controls.Add(Me.lblSongName)
         Me.Controls.Add(Me.volSlider)
@@ -817,6 +836,7 @@ Partial Class frmMain
         CType(Me.Spinner, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.volSlider, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents ddStations As System.Windows.Forms.ComboBox
@@ -898,5 +918,6 @@ Partial Class frmMain
     Friend WithEvents ToolStripSeparator8 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripSeparator9 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents miSendFeedback As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents tbLog As System.Windows.Forms.TextBox
 
 End Class

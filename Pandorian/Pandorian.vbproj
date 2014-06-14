@@ -28,7 +28,7 @@
     <ProductName>Pandorian</ProductName>
     <PublisherName>DJ NiteHawk</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -217,6 +217,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Pandorian.ico" />
+    <None Include="Resources\like.png" />
+    <None Include="Resources\dislike.png" />
+    <None Include="Resources\skip.png" />
+    <None Include="Resources\play.png" />
+    <None Include="Resources\paused.png" />
+    <None Include="Resources\block.png" />
     <None Include="Resources\Icon.png" />
     <None Include="Resources\paypal.gif" />
     <None Include="Resources\spinner.png" />

@@ -74,6 +74,14 @@ Namespace Data
         End Property
         Private _PandoraIO As PandoraIO
 
+        Public ReadOnly Property SongLoadingOccurred() As Boolean
+            Get
+                Dim r As Boolean = _SongLoadingOccurred
+                _SongLoadingOccurred = False
+                Return r
+            End Get
+        End Property
+        Private _SongLoadingOccurred As Boolean
         Public Function GetNextSong(ByVal isSkip As Boolean, ByRef skipHistory As SkipHistory) As PandoraSong
 
             ' check if there's really a need to log a skip, cause the user may have paused the song 
@@ -117,7 +125,7 @@ Namespace Data
                 PlayList.Enqueue(s)
             Next
 
-            Diagnostics.Debug.WriteLine("Got " + PlayList.Count.ToString + " songs from pandora api...")
+            _SongLoadingOccurred = True
         End Sub
 
         Private Sub CheckForStationTags(song As PandoraSong)

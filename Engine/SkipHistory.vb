@@ -116,11 +116,11 @@ Public Class SkipHistory
         stationSkipHistory = newHistory
     End Sub
 
-    Public Sub PrintGlobalSkipCount()
-        Diagnostics.Debug.WriteLine("Global Skips: " + globalSkipHistory.Count.ToString)
-    End Sub
+    Public Function PrintGlobalSkipCount() As String
+        Return "Global Skips: " + globalSkipHistory.Count.ToString
+    End Function
 
-    Public Sub PrintStationSkipCount(station As PandoraStation)
-        Diagnostics.Debug.WriteLine("Station Skips: " + stationSkipHistory(station.Id).Count.ToString)
-    End Sub
+    Public Function PrintStationSkipCount(station As PandoraStation) As String
+        Return "Station Skips: " + stationSkipHistory(station.Id).Count.ToString
+    End Function
 End Class
