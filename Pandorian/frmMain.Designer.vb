@@ -217,7 +217,6 @@ Partial Class frmMain
         'prgBar
         '
         Me.prgBar.Location = New System.Drawing.Point(9, 352)
-        Me.prgBar.Minimum = 1
         Me.prgBar.Name = "prgBar"
         Me.prgBar.Size = New System.Drawing.Size(300, 10)
         Me.prgBar.Step = 1

@@ -14,7 +14,6 @@ Public Class frmMain
     Dim FX As Integer
     Dim Stream As Integer
     Dim Sync As SYNCPROC = New SYNCPROC(AddressOf SongEnded)
-    Dim StationCurrentSongBuffer As New Dictionary(Of String, Data.PandoraSong)
     Dim Downloader As WebClient
     Dim TargeFile As String
     Dim IsActiveForm As Boolean
@@ -24,7 +23,6 @@ Public Class frmMain
     Dim ResumePlaying As Boolean = True
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
-
 
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
@@ -179,7 +177,6 @@ Public Class frmMain
             End If
         Catch ex As PandoraException
             If ex.ErrorCode = ErrorCodeEnum.LISTENER_NOT_AUTHORIZED Then
-                tbLog.AppendText("Listner is not authorized..." + vbCrLf)
                 MsgBox(ex.Message, MsgBoxStyle.Exclamation)
             Else
                 MsgBox(ex.Message + ". Please check your internet/proxy settings and try again." + vbCrLf + vbCr + "Error Code: " + ex.ErrorCode.ToString, MsgBoxStyle.Critical)
@@ -221,7 +218,7 @@ Public Class frmMain
             Song = Pandora.CurrentStation.CurrentSong
         End If
         If Pandora.CurrentStation.SongLoadingOccurred Then
-            tbLog.AppendText("GOT NEW SONGS FROM PANDORA..." + vbCrLf)
+            tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
         End If
         PlayCurrentSongWithBASS()
         ddStations.Enabled = True
@@ -294,6 +291,7 @@ Public Class frmMain
         Application.DoEvents()
         Bass.BASS_ChannelStop(Stream)
         Bass.BASS_StreamFree(Stream)
+        prgBar.Value = 0
         Pandora.CurrentStation.GetNextSong(Skip, Pandora.SkipHistory)
         ResumePlaying = True
         PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
@@ -889,6 +887,7 @@ Public Class frmMain
         Try
             Using strm As New IO.MemoryStream(web.DownloadData(URL))
                 img = Image.FromStream(strm)
+                tbLog.AppendText("Downloaded album cover image..." + vbCrLf)
             End Using
         Catch ex As Exception
             img = Nothing
@@ -1045,6 +1044,7 @@ Public Class frmMain
     Private Sub PowerModeChanged(sender As Object, e As PowerModeChangedEventArgs)
         Select Case e.Mode
             Case PowerModes.Resume
+                tbLog.AppendText("Machine woke up from sleep..." + vbCrLf)
                 Spinner.Visible = True
                 Application.DoEvents()
                 WaitForNetConnection()
@@ -1056,6 +1056,7 @@ Public Class frmMain
     End Sub
 
     Private Sub PreSleepActivities()
+        tbLog.AppendText("Machine is going in to sleep now..." + vbCrLf)
         Timer.Enabled = False
         chkSleep.Checked = False
         ddSleepTimes.Enabled = True
