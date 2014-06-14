@@ -213,15 +213,6 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub SaveLastStationID()
-        If Not IsNothing(Pandora) Then
-            If Not IsNothing(Pandora.CurrentStation) Then
-                My.Settings.lastStationID = Pandora.CurrentStation.Id
-                My.Settings.Save()
-            End If
-        End If
-    End Sub
-
     Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/ReplaySong/PowerModeChanged)
         Dim Song As New Data.PandoraSong
         If IsNothing(Pandora.CurrentStation.CurrentSong) Then
@@ -240,7 +231,6 @@ Public Class frmMain
             SongCoverImage.Image = GetCoverViaProxy(Song.AlbumArtLargeURL)
         End If
         Timer.Enabled = True
-        SaveLastStationID()
         If Pandora.CanSkip(Pandora.CurrentStation) Then
             btnSkip.Enabled = True
             btnSkip.BackColor = Control.DefaultBackColor
@@ -672,8 +662,14 @@ Public Class frmMain
             For Each s In Pandora.AvailableStations
                 If s.Id = ddStations.SelectedValue Then
                     Pandora.CurrentStation = s
+                    Exit For
                 End If
             Next
+
+            My.Settings.lastStationID = Pandora.CurrentStation.Id
+            My.Settings.Save()
+
+            tbLog.AppendText("Station changed to: " + Pandora.CurrentStation.Name + vbCrLf)
 
             SeeIfLastSongNeedsToBeReplayed()
 

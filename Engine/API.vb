@@ -45,12 +45,10 @@ Public Class API
             Return _currentStation
         End Get
         Set(value As PandoraStation)
-            If AvailableStations.Contains(value) Then
-                _currentStation = value
-            End If
+            _currentStation = value
         End Set
     End Property
-    Protected _currentStation As PandoraStation
+    Private _currentStation As PandoraStation
 
     Public Property AvailableStations() As List(Of PandoraStation)
         Get
