@@ -294,10 +294,11 @@ Public Class frmMain
     End Sub
     Sub PlayNextSong(Skip As Boolean)
         Spinner.Visible = True
+        prgBar.Value = 0
+        prgBar.Update()
         Application.DoEvents()
         Bass.BASS_ChannelStop(Stream)
         Bass.BASS_StreamFree(Stream)
-        prgBar.Value = 0
         Pandora.CurrentStation.GetNextSong(Skip, Pandora.SkipHistory)
         ResumePlaying = True
         PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
@@ -737,8 +738,6 @@ Public Class frmMain
     End Sub
 
     Sub SongEnded(ByVal handle As Integer, ByVal channel As Integer, ByVal data As Integer, ByVal user As IntPtr)
-        prgBar.Value = 0
-        Application.DoEvents()
         Execute(Sub() PlayNextSong(False), "SongEnded")
     End Sub
 
