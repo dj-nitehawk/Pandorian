@@ -45,13 +45,6 @@ Public Class frmLockScreen
             lblTimeNow.Text = Now.ToString("t")
             lblDateNow.Text = Now.DayOfWeek.ToString + ", " + MonthName(Now.Month) + " " + Now.Day.ToString + " " + Now.Year.ToString
 
-            If Not lblTitle.Text = frmMain.lblSongName.Text Then
-                lblTitle.Text = frmMain.lblSongName.Text
-                lblArtist.Text = frmMain.lblArtistName.Text
-                lblAlbum.Text = frmMain.lblAlbumName.Text
-                CoverImage.Image = frmMain.SongCoverImage.Image
-            End If
-
         End If
     End Sub
 
@@ -60,6 +53,7 @@ Public Class frmLockScreen
         lblAlbum.UseMnemonic = False
         lblArtist.UseMnemonic = False
         lblTitle.UseMnemonic = False
+        AddHandler frmMain.SongInfoUpdated, AddressOf RefreshInfo
     End Sub
 
     Private Sub frmLockScreen_VisibleChanged(sender As Object, e As EventArgs) Handles Me.VisibleChanged
@@ -74,5 +68,14 @@ Public Class frmLockScreen
                 Windows.Forms.Cursor.Show()
         End Select
     End Sub
+
+    Private Sub RefreshInfo(Title As String, Artist As String, Album As String, Cover As Image)
+        lblTitle.Text = Title
+        lblArtist.Text = Artist
+        lblAlbum.Text = Album
+        CoverImage.Image = Cover
+    End Sub
+
+
 
 End Class

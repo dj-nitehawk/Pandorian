@@ -24,6 +24,8 @@ Public Class frmMain
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
 
+    Public Event SongInfoUpdated(Title As String, Artist As String, Album As String, Cover As Image)
+
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
             Pandora.ClearSession(My.Settings.pandoraOne)
@@ -278,7 +280,11 @@ Public Class frmMain
             lblArtistName.Text = Song.Artist
             lblAlbumName.Text = Song.Album
         End If
+
+        RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text, SongCoverImage.Image)
+
         Spinner.Visible = False
+        Application.DoEvents()
 
         SavePandoraObject()
 
@@ -520,11 +526,12 @@ Public Class frmMain
         prgDownload.Value = e.ProgressPercentage
     End Sub
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+        frmLockScreen.Show()
+        frmLockScreen.Visible = False
         Control.CheckForIllegalCrossThreadCalls = False
         lblAlbumName.UseMnemonic = False
         lblArtistName.UseMnemonic = False
         lblSongName.UseMnemonic = False
-        frmSettings.Hide()
         If Not System.Diagnostics.Debugger.IsAttached Then
             LogAppStartEvent()
         End If
