@@ -294,9 +294,9 @@ Public Class frmMain
     End Sub
     Sub PlayNextSong(Skip As Boolean)
         Spinner.Visible = True
+        Application.DoEvents()
         prgBar.Value = 0
         prgBar.Update()
-        Application.DoEvents()
         Bass.BASS_ChannelStop(Stream)
         Bass.BASS_StreamFree(Stream)
         Pandora.CurrentStation.GetNextSong(Skip, Pandora.SkipHistory)
