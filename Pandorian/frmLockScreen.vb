@@ -54,6 +54,7 @@ Public Class frmLockScreen
         lblArtist.UseMnemonic = False
         lblTitle.UseMnemonic = False
         AddHandler frmMain.SongInfoUpdated, AddressOf RefreshInfo
+        AddHandler frmMain.CoverImageUpdated, AddressOf RefreshCover
     End Sub
 
     Private Sub frmLockScreen_VisibleChanged(sender As Object, e As EventArgs) Handles Me.VisibleChanged
@@ -69,13 +70,14 @@ Public Class frmLockScreen
         End Select
     End Sub
 
-    Private Sub RefreshInfo(Title As String, Artist As String, Album As String, Cover As Image)
+    Private Sub RefreshInfo(Title As String, Artist As String, Album As String)
         lblTitle.Text = Title
         lblArtist.Text = Artist
         lblAlbum.Text = Album
-        CoverImage.Image = Cover
     End Sub
 
-
+    Private Sub RefreshCover(Cover As Image)
+        CoverImage.Image = Cover
+    End Sub
 
 End Class

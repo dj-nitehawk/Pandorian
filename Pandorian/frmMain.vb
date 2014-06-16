@@ -26,7 +26,8 @@ Public Class frmMain
     Dim VolLastChangedOn As Date
     Dim bgwCoverLoader As New BackgroundWorker
 
-    Public Event SongInfoUpdated(Title As String, Artist As String, Album As String, Cover As Image)
+    Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
+    Public Event CoverImageUpdated(Cover As Image)
 
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
@@ -225,7 +226,7 @@ Public Class frmMain
             tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
         End If
         If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
-            SongCoverImage.Image = My.Resources.logo
+            bgwCoverLoader.RunWorkerAsync(Nothing)
         Else
             bgwCoverLoader.RunWorkerAsync(Song.AlbumArtLargeURL)
         End If
@@ -282,6 +283,8 @@ Public Class frmMain
             lblArtistName.Text = Song.Artist
             lblAlbumName.Text = Song.Album
         End If
+
+        RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text)
 
         SavePandoraObject()
 
@@ -669,6 +672,8 @@ Public Class frmMain
             Application.DoEvents()
             ddStations.Enabled = False
 
+            Bass.BASS_ChannelStop(Stream)
+
             For Each s In Pandora.AvailableStations
                 If s.Id = ddStations.SelectedValue Then
                     Pandora.CurrentStation = s
@@ -890,20 +895,24 @@ Public Class frmMain
 
     Private Sub DownloadCoverImage(sender As Object, e As DoWorkEventArgs)
         SongCoverImage.Image = Nothing
-        Dim url As String = e.Argument
-        Dim web As New WebClient()
-        If Not My.Settings.noProxy Then
-            web.Proxy = Me.Proxy
-        End If
-        Try
-            Using strm As New IO.MemoryStream(web.DownloadData(url))
-                SongCoverImage.Image = Image.FromStream(strm)
-                tbLog.AppendText("Downloaded album cover image..." + vbCrLf)
-            End Using
-        Catch ex As Exception
+        If IsNothing(e.Argument) Then
             SongCoverImage.Image = My.Resources.logo
-        End Try
-        RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text, SongCoverImage.Image)
+        Else
+            Dim url As String = e.Argument
+            Dim web As New WebClient()
+            If Not My.Settings.noProxy Then
+                web.Proxy = Me.Proxy
+            End If
+            Try
+                Using strm As New IO.MemoryStream(web.DownloadData(url))
+                    SongCoverImage.Image = Image.FromStream(strm)
+                    tbLog.AppendText("Downloaded album cover image..." + vbCrLf)
+                End Using
+            Catch ex As Exception
+                SongCoverImage.Image = My.Resources.logo
+            End Try
+        End If
+        RaiseEvent CoverImageUpdated(SongCoverImage.Image)
     End Sub
 
     Sub LogAppStartEvent()
