@@ -283,14 +283,14 @@ Public Class frmMain
 
         RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text, SongCoverImage.Image)
 
-        Spinner.Visible = False
-        Application.DoEvents()
-
         SavePandoraObject()
 
         tbLog.AppendText(Pandora.SkipHistory.PrintGlobalSkipCount() + vbCrLf)
         tbLog.AppendText(Pandora.SkipHistory.PrintStationSkipCount(Pandora.CurrentStation) + vbCrLf)
         tbLog.AppendText("......................................................................" + vbCrLf)
+
+        Spinner.Visible = False
+        Application.DoEvents()
     End Sub
     Sub PlayNextSong(Skip As Boolean)
         Spinner.Visible = True
