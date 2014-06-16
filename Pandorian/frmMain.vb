@@ -225,6 +225,7 @@ Public Class frmMain
         If Pandora.CurrentStation.SongLoadingOccurred Then
             tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
         End If
+        tbLog.AppendText("Loading album cover art..." + vbCrLf)
         If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
             bgwCoverLoader.RunWorkerAsync(Nothing)
         Else
@@ -290,7 +291,7 @@ Public Class frmMain
 
         tbLog.AppendText(Pandora.SkipHistory.PrintGlobalSkipCount() + vbCrLf)
         tbLog.AppendText(Pandora.SkipHistory.PrintStationSkipCount(Pandora.CurrentStation) + vbCrLf)
-        tbLog.AppendText("......................................................................" + vbCrLf)
+        tbLog.AppendText("------------------------------------------------------------------------------------------" + vbCrLf)
 
         Spinner.Visible = False
         Application.DoEvents()
@@ -907,7 +908,6 @@ Public Class frmMain
             Try
                 Using strm As New IO.MemoryStream(web.DownloadData(url))
                     SongCoverImage.Image = Image.FromStream(strm)
-                    tbLog.AppendText("Downloaded album cover image..." + vbCrLf)
                 End Using
             Catch ex As Exception
                 SongCoverImage.Image = My.Resources.logo
