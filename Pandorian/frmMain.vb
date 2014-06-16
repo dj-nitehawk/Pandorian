@@ -672,6 +672,7 @@ Public Class frmMain
             Application.DoEvents()
             ddStations.Enabled = False
 
+            prgBar.Value = 0
             Bass.BASS_ChannelStop(Stream)
 
             For Each s In Pandora.AvailableStations
