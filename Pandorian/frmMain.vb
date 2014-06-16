@@ -5,6 +5,7 @@ Imports System.Net
 Imports Microsoft.Win32
 Imports System.IO
 Imports System.Runtime.Serialization.Formatters.Binary
+Imports System.ComponentModel
 
 Public Class frmMain
     Dim Pandora As API
@@ -23,6 +24,7 @@ Public Class frmMain
     Dim ResumePlaying As Boolean = True
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
+    Dim bgwCoverLoader As New BackgroundWorker
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String, Cover As Image)
 
@@ -222,13 +224,13 @@ Public Class frmMain
         If Pandora.CurrentStation.SongLoadingOccurred Then
             tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
         End If
-        PlayCurrentSongWithBASS()
-        ddStations.Enabled = True
         If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
             SongCoverImage.Image = My.Resources.logo
         Else
-            SongCoverImage.Image = GetCoverViaProxy(Song.AlbumArtLargeURL)
+            bgwCoverLoader.RunWorkerAsync(Song.AlbumArtLargeURL)
         End If
+        PlayCurrentSongWithBASS()
+        ddStations.Enabled = True
         Timer.Enabled = True
         If Pandora.CanSkip(Pandora.CurrentStation) Then
             btnSkip.Enabled = True
@@ -280,8 +282,6 @@ Public Class frmMain
             lblArtistName.Text = Song.Artist
             lblAlbumName.Text = Song.Album
         End If
-
-        RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text, SongCoverImage.Image)
 
         SavePandoraObject()
 
@@ -542,6 +542,7 @@ Public Class frmMain
         registerHotkeys()
         populateSleepTimes()
         AddHandler SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
+        AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
         Application.DoEvents()
     End Sub
     Private Sub TrayIcon_MouseClick(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseClick
@@ -705,7 +706,7 @@ Public Class frmMain
         Return Bass.BASS_ChannelIsActive(Stream)
     End Function
     Private Sub btnPlayPause_Click(sender As Object, e As EventArgs) Handles btnPlayPause.Click
-        
+
         If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
             Bass.BASS_ChannelPause(Stream)
             btnPlayPause.BackgroundImage = My.Resources.play
@@ -886,22 +887,24 @@ Public Class frmMain
             End If
         End If
     End Sub
-    Function GetCoverViaProxy(URL As String) As Drawing.Image
+
+    Private Sub DownloadCoverImage(sender As Object, e As DoWorkEventArgs)
+        SongCoverImage.Image = Nothing
+        Dim url As String = e.Argument
         Dim web As New WebClient()
-        Dim img As Drawing.Image
         If Not My.Settings.noProxy Then
             web.Proxy = Me.Proxy
         End If
         Try
-            Using strm As New IO.MemoryStream(web.DownloadData(URL))
-                img = Image.FromStream(strm)
+            Using strm As New IO.MemoryStream(web.DownloadData(url))
+                SongCoverImage.Image = Image.FromStream(strm)
                 tbLog.AppendText("Downloaded album cover image..." + vbCrLf)
             End Using
         Catch ex As Exception
-            img = Nothing
+            SongCoverImage.Image = My.Resources.logo
         End Try
-        Return img
-    End Function
+        RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text, SongCoverImage.Image)
+    End Sub
 
     Sub LogAppStartEvent()
         Dim web As New WebClient()
@@ -1280,4 +1283,5 @@ Public Class frmMain
     Private Sub btnBlock_MouseHover(sender As Object, e As EventArgs) Handles btnBlock.MouseHover
         tip.Show("Block Song For A Month", btnBlock)
     End Sub
+
 End Class
