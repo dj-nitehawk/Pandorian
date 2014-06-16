@@ -24,7 +24,6 @@ Public Class frmMain
     Dim ResumePlaying As Boolean = True
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
-    Dim bgwCoverLoader As New BackgroundWorker
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(Cover As Image)
@@ -216,24 +215,31 @@ Public Class frmMain
     End Sub
 
     Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/ReplaySong/PowerModeChanged)
+        Dim bgwCoverLoader As New BackgroundWorker
+        AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
+
         Dim Song As New Data.PandoraSong
         If IsNothing(Pandora.CurrentStation.CurrentSong) Then
             Song = Pandora.CurrentStation.GetNextSong(False, Nothing)
         Else
             Song = Pandora.CurrentStation.CurrentSong
         End If
+
         If Pandora.CurrentStation.SongLoadingOccurred Then
             tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
         End If
+
         tbLog.AppendText("Loading album cover art..." + vbCrLf)
         If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
             bgwCoverLoader.RunWorkerAsync(Nothing)
         Else
             bgwCoverLoader.RunWorkerAsync(Song.AlbumArtLargeURL)
         End If
+
         PlayCurrentSongWithBASS()
         ddStations.Enabled = True
         Timer.Enabled = True
+
         If Pandora.CanSkip(Pandora.CurrentStation) Then
             btnSkip.Enabled = True
             btnSkip.BackColor = Control.DefaultBackColor
@@ -241,6 +247,7 @@ Public Class frmMain
             btnSkip.Enabled = False
             btnSkip.BackColor = Color.DarkGray
         End If
+
         Select Case Song.Rating
             Case PandoraRating.Hate
                 btnLike.Enabled = True
@@ -269,6 +276,7 @@ Public Class frmMain
             btnBlock.Enabled = True
             btnBlock.BackColor = Control.DefaultBackColor
         End If
+
         If Pandora.CurrentStation.CurrentSong.AudioDurationSecs < 60 Then
             lblSongName.Text = "This is a 42 sec blank audio track"
             lblArtistName.Text = "Pandora is punishing you for excessive skipping :-("
@@ -546,7 +554,6 @@ Public Class frmMain
         registerHotkeys()
         populateSleepTimes()
         AddHandler SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
-        AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
         Application.DoEvents()
     End Sub
     Private Sub TrayIcon_MouseClick(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseClick
@@ -750,8 +757,8 @@ Public Class frmMain
     End Sub
 
     Private Sub DebugExpireSessionNow()
-        Pandora.Session.DebugCorruptAuthToken()
-        Pandora.Session.User.DebugCorruptAuthToken()
+        'Pandora.Session.DebugCorruptAuthToken()
+        'Pandora.Session.User.DebugCorruptAuthToken()
         Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(My.Settings.audioQuality)
         For Each s In Pandora.CurrentStation.PlayList
             s.DebugCorruptAudioUrl(My.Settings.audioQuality)
