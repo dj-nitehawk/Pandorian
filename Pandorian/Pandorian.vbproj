@@ -28,8 +28,8 @@
     <ProductName>Pandorian</ProductName>
     <PublisherName>DJ NiteHawk</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>13</ApplicationRevision>
-    <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>2.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -211,9 +211,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bass.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="bass_fx.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Pandorian.ico" />

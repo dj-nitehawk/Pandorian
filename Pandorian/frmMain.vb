@@ -10,17 +10,17 @@ Imports System.ComponentModel
 Public Class frmMain
     Dim Pandora As API
     Dim Proxy As Net.WebProxy
+    Dim BASSReady As Boolean = False
     Dim ProxyPtr As IntPtr
     Dim AAC As Integer
-    Dim FX As Integer
     Dim Stream As Integer
     Dim Sync As SYNCPROC = New SYNCPROC(AddressOf SongEnded)
+    Dim DSP As Misc.DSP_Gain = New Misc.DSP_Gain()
     Dim Downloader As WebClient
     Dim TargeFile As String
     Dim IsActiveForm As Boolean
     Dim SleepAt As Date
     Dim SleepNow As Boolean
-    Dim BASSReady As Boolean = False
     Dim ResumePlaying As Boolean = True
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
@@ -359,10 +359,6 @@ Public Class frmMain
                 Bass.BASS_SetConfigPtr(BASSConfig.BASS_CONFIG_NET_PROXY, ProxyPtr)
             End If
             AAC = Bass.BASS_PluginLoad("bass_aac.dll")
-            FX = Bass.BASS_PluginLoad("bass_fx.dll")
-            If Utils.HighWord(AddOn.Fx.BassFx.BASS_FX_GetVersion()) <> AddOn.Fx.BassFx.BASSFXVERSION Then
-                MsgBox("Wrong BassFx Version. Volume will be not normalize!", MsgBoxStyle.Exclamation)
-            End If
             tbLog.AppendText("Initialized BASS..." + vbCrLf)
         End If
     End Sub
@@ -372,24 +368,14 @@ Public Class frmMain
             Bass.BASS_ChannelStop(Stream)
             Bass.BASS_StreamFree(Stream)
             Bass.BASS_PluginFree(AAC)
-            Bass.BASS_PluginFree(FX)
             Bass.BASS_Free()
+            DSP.Stop()
             Marshal.FreeHGlobal(ProxyPtr)
             BASSReady = False
             tbLog.AppendText("De-Initialized BASS..." + vbCrLf)
         End If
     End Sub
 
-    Sub ApplyReplayGain()
-        Dim VolFX As Integer = Bass.BASS_ChannelSetFX(Stream, BASSFXType.BASS_FX_BFX_VOLUME, 0)
-        Dim VolParm As New AddOn.Fx.BASS_BFX_VOLUME
-        VolParm.lChannel = AddOn.Fx.BASSFXChan.BASS_BFX_CHANNONE
-        VolParm.fVolume = Math.Pow(10, Pandora.CurrentStation.CurrentSong.TrackGain / 70)
-        If Not Bass.BASS_FXSetParameters(VolFX, VolParm) Then
-            MsgBox("Normalize Error: " + Bass.BASS_ErrorGetCode.ToString, MsgBoxStyle.Information)
-        End If
-        tbLog.AppendText("ReplayGain: " + Pandora.CurrentStation.CurrentSong.TrackGain.ToString + " From 0 |" + " New Gain: " + VolParm.fVolume.ToString + " From 1" + vbCrLf)
-    End Sub
     Private Sub PlayCurrentSongWithBASS()
         If Not Stream = 0 Then
             Bass.BASS_ChannelStop(Stream)
@@ -404,10 +390,15 @@ Public Class frmMain
                 IntPtr.Zero)
 
         If Not Stream = 0 Then
-            tbLog.AppendText("Playing next song in playlist..." + vbCrLf)
+            tbLog.AppendText("Playing the song now..." + vbCrLf)
             Bass.BASS_ChannelSetSync(Stream, BASSSync.BASS_SYNC_END, 0, Sync, IntPtr.Zero)
             Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, volSlider.Value / 100)
-            ApplyReplayGain()
+
+            DSP.ChannelHandle = Stream
+            DSP.Gain_dBV = Pandora.CurrentStation.CurrentSong.TrackGain
+            DSP.Start()
+            tbLog.AppendText("ReplayGain Applied: " + Pandora.CurrentStation.CurrentSong.TrackGain.ToString + " dB" + vbCrLf)
+
             If ResumePlaying Then
                 Bass.BASS_ChannelPlay(Stream, False)
             End If
