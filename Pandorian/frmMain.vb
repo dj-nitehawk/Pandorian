@@ -1053,7 +1053,7 @@ Public Class frmMain
 
     Private Function NetConnectionAvailable() As Boolean
         If My.Computer.Network.IsAvailable Then
-            If My.Computer.Network.Ping("google.com") Then
+            If My.Computer.Network.Ping("8.8.8.8") Then
                 Return True
             End If
         End If
@@ -1063,9 +1063,9 @@ Public Class frmMain
     Private Sub PowerModeChanged(sender As Object, e As PowerModeChangedEventArgs)
         Select Case e.Mode
             Case PowerModes.Resume
-                tbLog.AppendText("Machine woke up from sleep..." + vbCrLf)
                 Spinner.Visible = True
                 Application.DoEvents()
+                tbLog.AppendText("Machine woke up from sleep..." + vbCrLf)
                 WaitForNetConnection()
                 InitBass()
                 Execute(Sub() PlayCurrentSong(), "PowerModeChanged.Resume")
