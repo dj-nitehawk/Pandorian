@@ -331,8 +331,10 @@ Public Class frmMain
         unRegisterHotkeys()
         SavePandoraObject()
     End Sub
+
     Sub InitBass()
         If Not BASSReady Then
+
             BassNet.Registration("pandorian@sharklasers.com", "2X2531425283122")
             BASSReady = Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero)
 
@@ -1292,4 +1294,9 @@ Public Class frmMain
         tip.Show("Block Song For A Month", btnBlock)
     End Sub
 
+    Public Sub New()
+        ' This call is required by the designer.
+        InitializeComponent()
+        ' Add any initialization after the InitializeComponent() call.
+    End Sub
 End Class
