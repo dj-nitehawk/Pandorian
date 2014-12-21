@@ -104,6 +104,8 @@ Partial Class frmMain
         Me.volSlider = New System.Windows.Forms.TrackBar()
         Me.tbLog = New System.Windows.Forms.TextBox()
         Me.tip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.bpmTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.lblBPM = New System.Windows.Forms.Label()
         CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
@@ -763,7 +765,7 @@ Partial Class frmMain
         Me.Spinner.Image = Global.Pandorian.My.Resources.Resources.spinner
         Me.Spinner.Location = New System.Drawing.Point(-6, -5)
         Me.Spinner.Name = "Spinner"
-        Me.Spinner.Size = New System.Drawing.Size(329, 480)
+        Me.Spinner.Size = New System.Drawing.Size(329, 483)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.Spinner.TabIndex = 17
         Me.Spinner.TabStop = False
@@ -800,16 +802,33 @@ Partial Class frmMain
         Me.tip.BackColor = System.Drawing.Color.White
         Me.tip.ForeColor = System.Drawing.Color.Black
         '
+        'bpmTimer
+        '
+        Me.bpmTimer.Interval = 20
+        '
+        'lblBPM
+        '
+        Me.lblBPM.BackColor = System.Drawing.Color.Black
+        Me.lblBPM.Font = New System.Drawing.Font("Microsoft Sans Serif", 35.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblBPM.Location = New System.Drawing.Point(0, 363)
+        Me.lblBPM.Name = "lblBPM"
+        Me.lblBPM.Size = New System.Drawing.Size(317, 54)
+        Me.lblBPM.TabIndex = 20
+        Me.lblBPM.Text = "000"
+        Me.lblBPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblBPM.Visible = False
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
         Me.ClientSize = New System.Drawing.Size(317, 463)
-        Me.Controls.Add(Me.tbLog)
         Me.Controls.Add(Me.Spinner)
-        Me.Controls.Add(Me.lblSongName)
+        Me.Controls.Add(Me.tbLog)
         Me.Controls.Add(Me.volSlider)
+        Me.Controls.Add(Me.lblBPM)
+        Me.Controls.Add(Me.lblSongName)
         Me.Controls.Add(Me.pnlHotKeys)
         Me.Controls.Add(Me.pnlSleepTimer)
         Me.Controls.Add(Me.prgDownload)
@@ -925,5 +944,7 @@ Partial Class frmMain
     Friend WithEvents miSendFeedback As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents tbLog As System.Windows.Forms.TextBox
     Friend WithEvents tip As System.Windows.Forms.ToolTip
+    Friend WithEvents bpmTimer As System.Windows.Forms.Timer
+    Friend WithEvents lblBPM As System.Windows.Forms.Label
 
 End Class

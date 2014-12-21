@@ -24,6 +24,7 @@ Public Class frmMain
     Dim ResumePlaying As Boolean = True
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
+    Dim BPMCounter As New Un4seen.Bass.Misc.BPMCounter(20, 44100)
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(Cover As Image)
@@ -404,6 +405,9 @@ Public Class frmMain
             If ResumePlaying Then
                 Bass.BASS_ChannelPlay(Stream, False)
             End If
+
+            BPMCounter.Reset(44100)
+
             Application.DoEvents()
             Pandora.CurrentStation.CurrentSong.PlayingStartTime = Now
             Pandora.CurrentStation.CurrentSong.AudioDurationSecs = SongDurationSecs()
@@ -414,6 +418,17 @@ Public Class frmMain
             Else
                 MsgBox("Couldn't open stream: " + Bass.BASS_ErrorGetCode().ToString + vbCr +
                        "Try restarting the app...", MsgBoxStyle.Critical)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub bpmTimer_Tick(sender As Object, e As EventArgs) Handles bpmTimer.Tick
+        
+        If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
+            Dim beat As Boolean = BPMCounter.ProcessAudio(Stream, True)
+            If beat Then
+                lblBPM.Text = BPMCounter.BPM.ToString("#00.0")
             End If
         End If
 
@@ -1298,5 +1313,17 @@ Public Class frmMain
         ' This call is required by the designer.
         InitializeComponent()
         ' Add any initialization after the InitializeComponent() call.
+    End Sub
+
+    Private Sub SongCoverImage_Click(sender As Object, e As EventArgs) Handles SongCoverImage.Click
+        If lblBPM.Visible Then
+            lblBPM.Visible = False
+            bpmTimer.Stop()
+            BPMCounter.Reset(44100)
+            lblBPM.Text = "000"
+        Else
+            lblBPM.Visible = True
+            bpmTimer.Start()
+        End If
     End Sub
 End Class
