@@ -258,69 +258,69 @@ Partial Class frmMain
         '
         Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miManageStation, Me.ToolStripSeparator1, Me.miSleepTimer, Me.ToolStripSeparator8, Me.miShowSettings, Me.miShowHotkeys, Me.ToolStripSeparator9, Me.miSendFeedback, Me.miUpdate, Me.ToolStripSeparator2, Me.miVersion})
         Me.MenuStrip.Name = "MenuStrip"
-        Me.MenuStrip.Size = New System.Drawing.Size(193, 182)
+        Me.MenuStrip.Size = New System.Drawing.Size(192, 182)
         '
         'miManageStation
         '
         Me.miManageStation.Name = "miManageStation"
-        Me.miManageStation.Size = New System.Drawing.Size(192, 22)
+        Me.miManageStation.Size = New System.Drawing.Size(191, 22)
         Me.miManageStation.Text = "Manage Station"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(189, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(188, 6)
         '
         'miSleepTimer
         '
         Me.miSleepTimer.Name = "miSleepTimer"
-        Me.miSleepTimer.Size = New System.Drawing.Size(192, 22)
+        Me.miSleepTimer.Size = New System.Drawing.Size(191, 22)
         Me.miSleepTimer.Text = "Sleep Timer"
         '
         'ToolStripSeparator8
         '
         Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
-        Me.ToolStripSeparator8.Size = New System.Drawing.Size(189, 6)
+        Me.ToolStripSeparator8.Size = New System.Drawing.Size(188, 6)
         '
         'miShowSettings
         '
         Me.miShowSettings.Name = "miShowSettings"
-        Me.miShowSettings.Size = New System.Drawing.Size(192, 22)
+        Me.miShowSettings.Size = New System.Drawing.Size(191, 22)
         Me.miShowSettings.Text = "Show Settings"
         '
         'miShowHotkeys
         '
         Me.miShowHotkeys.Name = "miShowHotkeys"
-        Me.miShowHotkeys.Size = New System.Drawing.Size(192, 22)
+        Me.miShowHotkeys.Size = New System.Drawing.Size(191, 22)
         Me.miShowHotkeys.Text = "Show HotKeys"
         '
         'ToolStripSeparator9
         '
         Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
-        Me.ToolStripSeparator9.Size = New System.Drawing.Size(189, 6)
+        Me.ToolStripSeparator9.Size = New System.Drawing.Size(188, 6)
         '
         'miSendFeedback
         '
         Me.miSendFeedback.Name = "miSendFeedback"
-        Me.miSendFeedback.Size = New System.Drawing.Size(192, 22)
+        Me.miSendFeedback.Size = New System.Drawing.Size(191, 22)
         Me.miSendFeedback.Text = "Send Feedback"
         '
         'miUpdate
         '
         Me.miUpdate.Name = "miUpdate"
-        Me.miUpdate.Size = New System.Drawing.Size(192, 22)
+        Me.miUpdate.Size = New System.Drawing.Size(191, 22)
         Me.miUpdate.Text = "Visit Website"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(189, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(188, 6)
         '
         'miVersion
         '
         Me.miVersion.Enabled = False
         Me.miVersion.Name = "miVersion"
-        Me.miVersion.Size = New System.Drawing.Size(192, 22)
+        Me.miVersion.Size = New System.Drawing.Size(191, 22)
         Me.miVersion.Text = "Current Version: v1.4.0"
         '
         'prgDownload

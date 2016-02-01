@@ -137,17 +137,17 @@ Public Class frmMain
         tbHKVolUp.Text = [Enum].GetName(GetType(Keys), My.Settings.hkVolUp)
         tbHKVolUp.Tag = My.Settings.hkVolUp
 
-        Hotkeys.RegisterHotKey(Me, 1, My.Settings.hkPlayPause, My.Settings.hkModifier) 'play/pause
-        Hotkeys.RegisterHotKey(Me, 2, My.Settings.hkLike, My.Settings.hkModifier) 'like
-        Hotkeys.RegisterHotKey(Me, 3, My.Settings.hkDislike, My.Settings.hkModifier) 'dislike
-        Hotkeys.RegisterHotKey(Me, 4, My.Settings.hkSkip, My.Settings.hkModifier) 'skip
-        Hotkeys.RegisterHotKey(Me, 5, My.Settings.hkShowHide, My.Settings.hkModifier) 'show/hide pandorian
-        Hotkeys.RegisterHotKey(Me, 6, My.Settings.hkBlock, My.Settings.hkModifier) 'block
-        Hotkeys.RegisterHotKey(Me, 7, My.Settings.hkSleep, My.Settings.hkModifier) 'sleep
-        Hotkeys.RegisterHotKey(Me, 8, My.Settings.hkGlobalMenu, My.Settings.hkModifier) 'show tray menu
-        Hotkeys.RegisterHotKey(Me, 9, My.Settings.hkLock, My.Settings.hkModifier) 'show lock screen
-        Hotkeys.RegisterHotKey(Me, 10, My.Settings.hkVolDown, My.Settings.hkModifier) 'vol down
-        Hotkeys.RegisterHotKey(Me, 11, My.Settings.hkVolUp, My.Settings.hkModifier) 'vol up
+        Hotkeys.registerHotkey(Me, 1, My.Settings.hkPlayPause, My.Settings.hkModifier) 'play/pause
+        Hotkeys.registerHotkey(Me, 2, My.Settings.hkLike, My.Settings.hkModifier) 'like
+        Hotkeys.registerHotkey(Me, 3, My.Settings.hkDislike, My.Settings.hkModifier) 'dislike
+        Hotkeys.registerHotkey(Me, 4, My.Settings.hkSkip, My.Settings.hkModifier) 'skip
+        Hotkeys.registerHotkey(Me, 5, My.Settings.hkShowHide, My.Settings.hkModifier) 'show/hide pandorian
+        Hotkeys.registerHotkey(Me, 6, My.Settings.hkBlock, My.Settings.hkModifier) 'block
+        Hotkeys.registerHotkey(Me, 7, My.Settings.hkSleep, My.Settings.hkModifier) 'sleep
+        Hotkeys.registerHotkey(Me, 8, My.Settings.hkGlobalMenu, My.Settings.hkModifier) 'show tray menu
+        Hotkeys.registerHotkey(Me, 9, My.Settings.hkLock, My.Settings.hkModifier) 'show lock screen
+        Hotkeys.registerHotkey(Me, 10, My.Settings.hkVolDown, My.Settings.hkModifier) 'vol down
+        Hotkeys.registerHotkey(Me, 11, My.Settings.hkVolUp, My.Settings.hkModifier) 'vol up
     End Sub
     Private Sub unRegisterHotkeys()
         Dim i As Integer = 1
@@ -424,7 +424,7 @@ Public Class frmMain
     End Sub
 
     Private Sub bpmTimer_Tick(sender As Object, e As EventArgs) Handles bpmTimer.Tick
-        
+
         If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
             Dim beat As Boolean = BPMCounter.ProcessAudio(Stream, True)
             If beat Then
@@ -1325,5 +1325,27 @@ Public Class frmMain
             lblBPM.Visible = True
             bpmTimer.Start()
         End If
+    End Sub
+
+    Dim BalloonShown = False
+    Private Sub TrayIcon_MouseMove(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseMove
+        If BalloonShown = False Then
+            TrayIcon.BalloonTipText = Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title + Environment.NewLine +
+                                      "Station: " + Pandora.CurrentStation.Name
+            TrayIcon.ShowBalloonTip(5000)
+            BalloonShown = True
+        End If
+    End Sub
+
+    Private Sub TrayIcon_BalloonTipClosed(sender As Object, e As EventArgs) Handles TrayIcon.BalloonTipClosed
+        BalloonShown = False
+    End Sub
+
+    Private Sub TrayIcon_BalloonTipShown(sender As Object, e As EventArgs) Handles TrayIcon.BalloonTipShown
+        BalloonShown = True
+    End Sub
+
+    Private Sub TrayIcon_BalloonTipClicked(sender As Object, e As EventArgs) Handles TrayIcon.BalloonTipClicked
+        BalloonShown = False
     End Sub
 End Class
