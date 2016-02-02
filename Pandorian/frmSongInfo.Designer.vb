@@ -36,7 +36,7 @@ Partial Class frmSongInfo
         '
         Me.artist.AutoSize = True
         Me.artist.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.artist.Location = New System.Drawing.Point(70, 9)
+        Me.artist.Location = New System.Drawing.Point(70, 29)
         Me.artist.Name = "artist"
         Me.artist.Size = New System.Drawing.Size(85, 18)
         Me.artist.TabIndex = 0
@@ -46,7 +46,7 @@ Partial Class frmSongInfo
         '
         Me.track.AutoSize = True
         Me.track.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.track.Location = New System.Drawing.Point(70, 27)
+        Me.track.Location = New System.Drawing.Point(70, 9)
         Me.track.Name = "track"
         Me.track.Size = New System.Drawing.Size(90, 18)
         Me.track.TabIndex = 1
@@ -56,7 +56,7 @@ Partial Class frmSongInfo
         '
         Me.station.AutoSize = True
         Me.station.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.station.Location = New System.Drawing.Point(70, 45)
+        Me.station.Location = New System.Drawing.Point(70, 49)
         Me.station.Name = "station"
         Me.station.Size = New System.Drawing.Size(98, 18)
         Me.station.TabIndex = 2
@@ -66,7 +66,7 @@ Partial Class frmSongInfo
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(21, 9)
+        Me.Label1.Location = New System.Drawing.Point(21, 29)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(52, 18)
         Me.Label1.TabIndex = 3
@@ -76,7 +76,7 @@ Partial Class frmSongInfo
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(17, 27)
+        Me.Label2.Location = New System.Drawing.Point(17, 9)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(56, 18)
         Me.Label2.TabIndex = 4
@@ -86,7 +86,7 @@ Partial Class frmSongInfo
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(7, 45)
+        Me.Label3.Location = New System.Drawing.Point(7, 49)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(66, 18)
         Me.Label3.TabIndex = 5
@@ -103,7 +103,7 @@ Partial Class frmSongInfo
         Me.AutoSize = True
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.AliceBlue
-        Me.ClientSize = New System.Drawing.Size(549, 74)
+        Me.ClientSize = New System.Drawing.Size(549, 79)
         Me.ControlBox = False
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)

@@ -26,6 +26,8 @@ Public Class frmMain
     Dim VolLastChangedOn As Date
     Dim BPMCounter As New Un4seen.Bass.Misc.BPMCounter(20, 44100)
     Dim SongInfo As New frmSongInfo()
+    Dim HideSongInfo As Boolean = False
+
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(Cover As Image)
 
@@ -570,6 +572,8 @@ Public Class frmMain
             Me.Visible = True
             Me.WindowState = FormWindowState.Normal
             Me.Activate()
+            HideSongInfo = True
+            SongInfo.Hide()
         End If
     End Sub
     Private Sub frmMain_Resize(sender As Object, e As EventArgs) Handles Me.Resize
@@ -580,8 +584,8 @@ Public Class frmMain
 
         If WindowState = FormWindowState.Minimized Or (Me.Visible = False And IsNothing(sender)) Then
             TrayIcon.Visible = True
-            TrayIcon.BalloonTipText = "Pandorian has been minimized to tray"
-            TrayIcon.ShowBalloonTip(1000)
+            HideSongInfo = False
+            TrayIcon_MouseMove(Nothing, Nothing)
             Me.Visible = False
         End If
 
@@ -1111,10 +1115,17 @@ Public Class frmMain
         If frmLockScreen.Visible Then
             Windows.Forms.Cursor.Hide()
         End If
+
+        HideSongInfo = False
     End Sub
 
     Private Sub TrayMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TrayMenu.Opening
         If Not IsNothing(Pandora) Then
+
+            HideSongInfo = True
+            SongInfo.Hide()
+            Application.DoEvents()
+
             If Not IsNothing(Pandora.CurrentStation.CurrentSong) And Not IsNothing(Pandora.CurrentStation) Then
                 tmiStationTitle.Text = Pandora.CurrentStation.Name.Replace("&", "&&")
                 If Pandora.CurrentStation.CurrentSong.AudioDurationSecs > 60 Then
@@ -1328,14 +1339,14 @@ Public Class frmMain
     End Sub
 
     Private Sub TrayIcon_MouseMove(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseMove
-        If SongInfo.Visible = False Then
-            'TrayIcon.BalloonTipText = Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title + Environment.NewLine +
-            '"Station: " + Pandora.CurrentStation.Name
-            'TrayIcon.ShowBalloonTip(5000)
+        If SongInfo.Visible = False And HideSongInfo = False Then
+            With SongInfo
+                .artist.Text = Pandora.CurrentStation.CurrentSong.Artist.Replace("&", "&&")
+                .track.Text = Pandora.CurrentStation.CurrentSong.Title.Replace("&", "&&")
+                .station.Text = Pandora.CurrentStation.Name.Replace("&", "&&")
+            End With
             SongInfo.Show()
-            SongInfo.timer.Enabled = True
         End If
     End Sub
-
 
 End Class
