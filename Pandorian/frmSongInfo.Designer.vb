@@ -52,7 +52,7 @@ Partial Class frmSongInfo
         Me.Panel1.Controls.Add(Me.artist)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(10, 10)
-        Me.Panel1.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel1.Margin = New System.Windows.Forms.Padding(10)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Padding = New System.Windows.Forms.Padding(5, 5, 5, 10)
         Me.Panel1.Size = New System.Drawing.Size(760, 83)
