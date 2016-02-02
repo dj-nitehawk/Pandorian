@@ -25,7 +25,7 @@ Public Class frmMain
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
     Dim BPMCounter As New Un4seen.Bass.Misc.BPMCounter(20, 44100)
-
+    Dim SongInfo As New frmSongInfo()
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(Cover As Image)
 
@@ -1327,25 +1327,15 @@ Public Class frmMain
         End If
     End Sub
 
-    Dim BalloonShown = False
     Private Sub TrayIcon_MouseMove(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseMove
-        If BalloonShown = False Then
-            TrayIcon.BalloonTipText = Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title + Environment.NewLine +
-                                      "Station: " + Pandora.CurrentStation.Name
-            TrayIcon.ShowBalloonTip(5000)
-            BalloonShown = True
+        If SongInfo.Visible = False Then
+            'TrayIcon.BalloonTipText = Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title + Environment.NewLine +
+            '"Station: " + Pandora.CurrentStation.Name
+            'TrayIcon.ShowBalloonTip(5000)
+            SongInfo.Show()
+            SongInfo.timer.Enabled = True
         End If
     End Sub
 
-    Private Sub TrayIcon_BalloonTipClosed(sender As Object, e As EventArgs) Handles TrayIcon.BalloonTipClosed
-        BalloonShown = False
-    End Sub
 
-    Private Sub TrayIcon_BalloonTipShown(sender As Object, e As EventArgs) Handles TrayIcon.BalloonTipShown
-        BalloonShown = True
-    End Sub
-
-    Private Sub TrayIcon_BalloonTipClicked(sender As Object, e As EventArgs) Handles TrayIcon.BalloonTipClicked
-        BalloonShown = False
-    End Sub
 End Class

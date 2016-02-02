@@ -153,6 +153,12 @@
     <Compile Include="frmSettings.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmSongInfo.Designer.vb">
+      <DependentUpon>frmSongInfo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmSongInfo.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Hotkeys.vb" />
     <Compile Include="KeyBoardJammer.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -185,6 +191,9 @@
     <EmbeddedResource Include="frmSettings.resx">
       <DependentUpon>frmSettings.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSongInfo.resx">
+      <DependentUpon>frmSongInfo.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
