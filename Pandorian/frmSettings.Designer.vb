@@ -202,7 +202,7 @@ Partial Class frmSettings
         Me.chkPandoraOne.Name = "chkPandoraOne"
         Me.chkPandoraOne.Size = New System.Drawing.Size(111, 17)
         Me.chkPandoraOne.TabIndex = 4
-        Me.chkPandoraOne.Text = "Use Pandora One"
+        Me.chkPandoraOne.Text = "Use Pandora Plus"
         Me.chkPandoraOne.UseVisualStyleBackColor = True
         '
         'chkNoProxy

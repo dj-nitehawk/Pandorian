@@ -822,7 +822,7 @@ Public Class frmMain
                 Case ErrorCodeEnum.PLAYLIST_EXCEEDED
                     MsgBox("Global song skip limit reached." + vbCrLf + vbCrLf +
                            "New songs cannot be played until skip limit is lifted by Pandora." + vbCrLf + vbCrLf +
-                           "Please quit the app and try again in a few minutes...", MsgBoxStyle.Exclamation)
+                           "Please quit the app and try again after 10 minutes...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
                 Case Else
                     ReportError(pex, Caller)

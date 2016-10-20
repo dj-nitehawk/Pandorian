@@ -84,7 +84,7 @@ Public Class API
                 AvailableStations = pandoraIO.GetStations()
                 Return True
             Else
-                Throw New PandoraException(ErrorCodeEnum.LISTENER_NOT_AUTHORIZED, "Your are not a Pandora One subscriber. Please change the settings.")
+                Throw New PandoraException(ErrorCodeEnum.LISTENER_NOT_AUTHORIZED, "Your are not a Pandora Plus subscriber. Please change the settings.")
             End If
         End If
 
