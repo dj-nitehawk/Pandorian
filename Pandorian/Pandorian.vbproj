@@ -28,7 +28,7 @@
     <ProductName>Pandorian</ProductName>
     <PublisherName>DJ NiteHawk</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>2.5.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -68,11 +68,10 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9A3283CFB86C40B63055A5A274735F1740D18638</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>84371F8A59F51FAA6FF5291AD44BB1AA287231A7</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>
-    </ManifestKeyFile>
+    <ManifestKeyFile>Pandorian_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -234,6 +233,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Pandorian.ico" />
+    <None Include="Pandorian_TemporaryKey.pfx" />
     <None Include="Resources\like.png" />
     <None Include="Resources\dislike.png" />
     <None Include="Resources\skip.png" />

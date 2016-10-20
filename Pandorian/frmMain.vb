@@ -223,7 +223,7 @@ Public Class frmMain
 
         Dim Song As New Data.PandoraSong
         If IsNothing(Pandora.CurrentStation.CurrentSong) Then
-            Song = Pandora.CurrentStation.GetNextSong(False, Nothing)
+            Song = Pandora.CurrentStation.GetNextSong()
         Else
             Song = Pandora.CurrentStation.CurrentSong
         End If
@@ -243,13 +243,8 @@ Public Class frmMain
         ddStations.Enabled = True
         Timer.Enabled = True
 
-        If Pandora.CanSkip(Pandora.CurrentStation) Then
-            btnSkip.Enabled = True
-            btnSkip.BackColor = Control.DefaultBackColor
-        Else
-            btnSkip.Enabled = False
-            btnSkip.BackColor = Color.DarkGray
-        End If
+        btnSkip.Enabled = True
+        btnSkip.BackColor = Control.DefaultBackColor
 
         Select Case Song.Rating
             Case PandoraRating.Hate
@@ -300,23 +295,33 @@ Public Class frmMain
 
         SavePandoraObject()
 
-        tbLog.AppendText(Pandora.SkipHistory.PrintGlobalSkipCount() + vbCrLf)
-        tbLog.AppendText(Pandora.SkipHistory.PrintStationSkipCount(Pandora.CurrentStation) + vbCrLf)
         tbLog.AppendText("------------------------------------------------------------------------------------------" + vbCrLf)
 
         Spinner.Visible = False
         Application.DoEvents()
     End Sub
+
     Sub PlayNextSong(Skip As Boolean)
         Spinner.Visible = True
         Application.DoEvents()
         prgBar.Value = 0
         prgBar.Update()
-        Bass.BASS_ChannelStop(Stream)
-        Bass.BASS_StreamFree(Stream)
-        Pandora.CurrentStation.GetNextSong(Skip, Pandora.SkipHistory)
         ResumePlaying = True
-        PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
+        Try
+            Pandora.CurrentStation.GetNextSong()
+            Bass.BASS_ChannelStop(Stream)
+            Bass.BASS_StreamFree(Stream)
+            PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
+        Catch ex As PandoraException
+            If ex.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
+                Bass.BASS_ChannelSetPosition(Stream, 0)
+                Bass.BASS_ChannelPlay(Stream, False)
+                Spinner.Visible = False
+                Application.DoEvents()
+                Exit Sub
+            End If
+            Throw ex
+        End Try
     End Sub
 
     Private Sub frmMain_Activated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -612,6 +617,9 @@ Public Class frmMain
     End Sub
 
     Private Sub RestorePandoraObject()
+
+        'File.Delete("api.dat")
+
         If File.Exists("api.dat") Then
             Try
                 Using stream As Stream = File.Open("api.dat", FileMode.Open, FileAccess.Read)
@@ -717,14 +725,16 @@ Public Class frmMain
 
     Private Sub SeeIfLastSongNeedsToBeReplayed()
 
-        If Not IsNothing(Pandora.CurrentStation.CurrentSong) Then
-            If Pandora.CurrentStation.CurrentSong.DurationElapsed Then
-                Pandora.CurrentStation.CurrentSong = Nothing
-                tbLog.AppendText("No need to replay the last song..." + vbCrLf)
-            Else
-                tbLog.AppendText("Has to replay the last song..." + vbCrLf)
-            End If
-        End If
+        'disabled due to unlimited skips feature
+
+        'If Not IsNothing(Pandora.CurrentStation.CurrentSong) Then
+        '    If Pandora.CurrentStation.CurrentSong.DurationElapsed Then
+        '        Pandora.CurrentStation.CurrentSong = Nothing
+        '        tbLog.AppendText("No need to replay the last song..." + vbCrLf)
+        '    Else
+        '        tbLog.AppendText("Has to replay the last song..." + vbCrLf)
+        '    End If
+        'End If
 
     End Sub
 
@@ -868,7 +878,7 @@ Public Class frmMain
     End Sub
 
     Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
-        If btnSkip.Enabled And Pandora.CanSkip(Pandora.CurrentStation) Then
+        If btnSkip.Enabled Then
             btnSkip.Enabled = False
             btnSkip.BackColor = Color.DarkGray
             Execute(Sub() PlayNextSong(True), "btnSkip_Click")
@@ -879,7 +889,8 @@ Public Class frmMain
             btnBlock.Enabled = False
             btnBlock.BackColor = Color.DarkGray
             Execute(Sub() Pandora.TemporarilyBanSong(Pandora.CurrentStation.CurrentSong), "btnBlock_Click.TemporarilyBanSong")
-            If Pandora.CanSkip(Pandora.CurrentStation) Then
+
+            If btnSkip.Enabled Then
                 Execute(Sub() PlayNextSong(True), "btnBlock_Click.PlayNextSong")
             End If
         End If
@@ -908,7 +919,10 @@ Public Class frmMain
             btnLike.Enabled = True
             btnLike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Hate), "btnDislike_Click.RateSong")
-            If Pandora.CanSkip(Pandora.CurrentStation) Then
+            'If Pandora.CanSkip(Pandora.CurrentStation) Then
+            '    Execute(Sub() PlayNextSong(True), "btnDislike_Click.PlayNextSong")
+            'End If
+            If btnSkip.Enabled Then
                 Execute(Sub() PlayNextSong(True), "btnDislike_Click.PlayNextSong")
             End If
         End If

@@ -94,7 +94,6 @@
     <Compile Include="Responses\GetPlaylistResponse.vb" />
     <Compile Include="Responses\GetStationListResponse.vb" />
     <Compile Include="Responses\PandoraResponse.vb" />
-    <Compile Include="SkipHistory.vb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\AssemblyInfoTemplate.txt" />

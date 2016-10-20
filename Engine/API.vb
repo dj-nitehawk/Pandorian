@@ -7,7 +7,6 @@ Imports System.Net
 Public Class API
 
     Private pandoraIO As PandoraIO
-    Property SkipHistory As SkipHistory
 
     Public Sub New(IsPandoraOne As Boolean)
         pandoraIO = New PandoraIO(IsPandoraOne)
@@ -60,10 +59,6 @@ Public Class API
     End Property
     Private m_AvailableStations As List(Of PandoraStation)
 
-    Public Function CanSkip(station As PandoraStation) As Boolean
-        Return SkipHistory.CanSkip(station)
-    End Function
-
     Public Function Login(username As String, password As String) As Boolean
 
         Session = pandoraIO.PartnerLogin()
@@ -72,15 +67,7 @@ Public Class API
         If Session.User IsNot Nothing Then
             If Session.User.CanListen Then
 
-                If IsNothing(SkipHistory) Then
-                    SkipHistory = New SkipHistory(Session)
-                Else
-                    SkipHistory.SetLimitations(Session)
-                End If
-
                 AvailableStations = pandoraIO.GetStations()
-                SkipHistory.CleanJunkHistory(AvailableStations)
-
                 Return True
             Else
                 Throw New PandoraException(ErrorCodeEnum.LISTENER_NOT_AUTHORIZED, "Your are not a Pandora One subscriber. Please change the settings.")

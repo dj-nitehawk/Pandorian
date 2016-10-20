@@ -81,21 +81,9 @@ Namespace Data
                 Return r
             End Get
         End Property
+
         Private _SongLoadingOccurred As Boolean
-        Public Function GetNextSong(ByVal isSkip As Boolean, ByRef skipHistory As SkipHistory) As PandoraSong
-
-            ' check if there's really a need to log a skip, cause the user may have paused the song 
-            ' and song duration may have elapsed
-            If isSkip = True And Not IsNothing(CurrentSong) Then
-                If CurrentSong.DurationElapsed Then
-                    isSkip = False
-                End If
-            End If
-
-            ' if necessary log a skip event. this will throw an exception if a skip is not allowed
-            If isSkip Then
-                skipHistory.Skip(Me)
-            End If
+        Public Function GetNextSong() As PandoraSong
 
             ' load 4 more songs if playlist empty
             If PlayList.Count = 0 Then
