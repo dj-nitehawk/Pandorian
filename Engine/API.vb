@@ -59,15 +59,19 @@ Public Class API
     End Property
     Private m_AvailableStations As List(Of PandoraStation)
 
+    Public Property SkipLimitReachedAt As Date
+
     Public Property SkipLimitReached() As Boolean
-        Get
-            Return _SkipLimitReached
-        End Get
-        Set(ByVal value As Boolean)
-            _SkipLimitReached = value
-        End Set
-    End Property
-    Private _SkipLimitReached As Boolean
+
+    Public Function OkToFetchSongs() As Boolean
+        If SkipLimitReached Then
+            If Now.Subtract(SkipLimitReachedAt).TotalMinutes > 10 Then
+                Return True
+            End If
+            Return False
+        End If
+        Return True
+    End Function
 
     Public Function Login(username As String, password As String) As Boolean
 

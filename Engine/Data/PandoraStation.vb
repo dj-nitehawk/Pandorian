@@ -61,7 +61,9 @@ Namespace Data
             End Set
         End Property
         Private _stationURL As String
+
         Public Property CurrentSong As PandoraSong
+
         Public Property PlayList As New Queue(Of PandoraSong)
 
         Public Property PandoraIO() As PandoraIO
@@ -81,8 +83,8 @@ Namespace Data
                 Return r
             End Get
         End Property
-
         Private _SongLoadingOccurred As Boolean
+
         Public Function GetNextSong() As PandoraSong
 
             ' load 4 more songs if playlist empty

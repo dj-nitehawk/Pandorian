@@ -308,7 +308,18 @@ Public Class frmMain
         prgBar.Update()
         ResumePlaying = True
         Try
-            Pandora.CurrentStation.GetNextSong()
+            If Pandora.OkToFetchSongs Then
+                Pandora.CurrentStation.GetNextSong()
+            Else
+                tbLog.AppendText("Waiting few mins before fetching new songs..." + vbCrLf)
+                Bass.BASS_ChannelSetPosition(Stream, 0)
+                Bass.BASS_ChannelPlay(Stream, False)
+                Spinner.Visible = False
+                ddStations.Enabled = False
+                btnSkip.Enabled = False
+                Application.DoEvents()
+                Exit Sub
+            End If
             Pandora.SkipLimitReached = False
             ddStations.Enabled = True
             btnSkip.Enabled = True
@@ -320,11 +331,12 @@ Public Class frmMain
                 Bass.BASS_ChannelSetPosition(Stream, 0)
                 Bass.BASS_ChannelPlay(Stream, False)
                 Spinner.Visible = False
-                Application.DoEvents()
                 tbLog.AppendText("Global skip limit reached. Replaying current song..." + vbCrLf)
                 Pandora.SkipLimitReached = True
+                Pandora.SkipLimitReachedAt = Now
                 ddStations.Enabled = False
                 btnSkip.Enabled = False
+                Application.DoEvents()
                 Exit Sub
             End If
             Throw ex
@@ -690,8 +702,7 @@ Public Class frmMain
 
                 InitBass()
 
-                SeeIfLastSongNeedsToBeReplayed()
-
+                Pandora.SkipLimitReached = False
                 Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
 
             End If
@@ -722,26 +733,9 @@ Public Class frmMain
 
             tbLog.AppendText("Station changed to: " + Pandora.CurrentStation.Name + vbCrLf)
 
-            SeeIfLastSongNeedsToBeReplayed()
-
             Execute(Sub() PlayCurrentSong(), "ddStations_SelectedIndexChanged.PlayCurrentSong")
 
         End If
-
-    End Sub
-
-    Private Sub SeeIfLastSongNeedsToBeReplayed()
-
-        'disabled due to unlimited skips feature
-
-        'If Not IsNothing(Pandora.CurrentStation.CurrentSong) Then
-        '    If Pandora.CurrentStation.CurrentSong.DurationElapsed Then
-        '        Pandora.CurrentStation.CurrentSong = Nothing
-        '        tbLog.AppendText("No need to replay the last song..." + vbCrLf)
-        '    Else
-        '        tbLog.AppendText("Has to replay the last song..." + vbCrLf)
-        '    End If
-        'End If
 
     End Sub
 
