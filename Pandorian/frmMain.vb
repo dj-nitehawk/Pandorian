@@ -217,7 +217,7 @@ Public Class frmMain
         End If
     End Sub
 
-    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/ReplaySong/PowerModeChanged)
+    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/PowerModeChanged/ddStations_SelectedIndexChanged)
         Dim bgwCoverLoader As New BackgroundWorker
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
 
@@ -301,7 +301,7 @@ Public Class frmMain
         Application.DoEvents()
     End Sub
 
-    Sub PlayNextSong(Skip As Boolean)
+    Sub PlayNextSong()
         Spinner.Visible = True
         Application.DoEvents()
         prgBar.Value = 0
@@ -309,6 +309,9 @@ Public Class frmMain
         ResumePlaying = True
         Try
             Pandora.CurrentStation.GetNextSong()
+            Pandora.SkipLimitReached = False
+            ddStations.Enabled = True
+            btnSkip.Enabled = True
             Bass.BASS_ChannelStop(Stream)
             Bass.BASS_StreamFree(Stream)
             PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
@@ -318,6 +321,10 @@ Public Class frmMain
                 Bass.BASS_ChannelPlay(Stream, False)
                 Spinner.Visible = False
                 Application.DoEvents()
+                tbLog.AppendText("Global skip limit reached. Replaying current song..." + vbCrLf)
+                Pandora.SkipLimitReached = True
+                ddStations.Enabled = False
+                btnSkip.Enabled = False
                 Exit Sub
             End If
             Throw ex
@@ -775,7 +782,7 @@ Public Class frmMain
     End Sub
 
     Sub SongEnded(ByVal handle As Integer, ByVal channel As Integer, ByVal data As Integer, ByVal user As IntPtr)
-        Execute(Sub() PlayNextSong(False), "SongEnded")
+        Execute(Sub() PlayNextSong(), "SongEnded")
     End Sub
 
     Private Sub DebugExpireSessionNow()
@@ -817,6 +824,11 @@ Public Class frmMain
                     Execute(Logic, "SongExpired.ReDoLogic")
                 Case ErrorCodeEnum.LICENSE_RESTRICTION
                     MsgBox("Looks like your country is not supported. Try using a proxy...", MsgBoxStyle.Exclamation)
+                    AfterErrorActions()
+                Case ErrorCodeEnum.PLAYLIST_EXCEEDED
+                    MsgBox("Global song skip limit reached." + vbCrLf + vbCrLf +
+                           "New songs cannot be played until skip limit is lifted by Pandora." + vbCrLf + vbCrLf +
+                           "Please quit the app and try again in a few minutes...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
                 Case Else
                     ReportError(pex, Caller)
@@ -881,17 +893,20 @@ Public Class frmMain
         If btnSkip.Enabled Then
             btnSkip.Enabled = False
             btnSkip.BackColor = Color.DarkGray
-            Execute(Sub() PlayNextSong(True), "btnSkip_Click")
+            If Not Pandora.SkipLimitReached Then
+                Execute(Sub() PlayNextSong(), "btnSkip_Click")
+            End If
         End If
     End Sub
+
     Private Sub btnBlock_Click(sender As Object, e As EventArgs) Handles btnBlock.Click
         If btnBlock.Enabled Then
             btnBlock.Enabled = False
             btnBlock.BackColor = Color.DarkGray
             Execute(Sub() Pandora.TemporarilyBanSong(Pandora.CurrentStation.CurrentSong), "btnBlock_Click.TemporarilyBanSong")
 
-            If btnSkip.Enabled Then
-                Execute(Sub() PlayNextSong(True), "btnBlock_Click.PlayNextSong")
+            If Not Pandora.SkipLimitReached Then
+                Execute(Sub() PlayNextSong(), "btnBlock_Click.PlayNextSong")
             End If
         End If
     End Sub
@@ -919,11 +934,9 @@ Public Class frmMain
             btnLike.Enabled = True
             btnLike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Hate), "btnDislike_Click.RateSong")
-            'If Pandora.CanSkip(Pandora.CurrentStation) Then
-            '    Execute(Sub() PlayNextSong(True), "btnDislike_Click.PlayNextSong")
-            'End If
-            If btnSkip.Enabled Then
-                Execute(Sub() PlayNextSong(True), "btnDislike_Click.PlayNextSong")
+
+            If Not Pandora.SkipLimitReached Then
+                Execute(Sub() PlayNextSong(), "btnDislike_Click.PlayNextSong")
             End If
         End If
     End Sub
