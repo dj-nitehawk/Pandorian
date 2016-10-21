@@ -68,7 +68,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>84371F8A59F51FAA6FF5291AD44BB1AA287231A7</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>53FD2D2AF2BB7FAFC56CCB3FFB3B5FEC986A1945</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>Pandorian_TemporaryKey.pfx</ManifestKeyFile>
