@@ -151,6 +151,10 @@ Namespace Data
         End Property
         Private m_AudioUrlMap As Dictionary(Of String, AudioUrlInfo)
 
+        <JsonProperty(PropertyName:="additionalAudioUrl")>
+        Public Property AdditionalAudioUrl As String
+
+
         <JsonProperty(PropertyName:="albumArtUrl")> _
         Public Property AlbumArtLargeURL() As String
             Get

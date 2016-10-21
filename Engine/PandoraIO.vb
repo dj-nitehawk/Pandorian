@@ -69,6 +69,15 @@ Public Class PandoraIO
         End If
 
         Dim response As GetPlaylistResponse = DirectCast(ExecuteRequest(New GetPlaylistRequest(Session, station.Token)), GetPlaylistResponse)
+
+        For Each s As PandoraSong In response.Songs
+            If Not String.IsNullOrEmpty(s.AdditionalAudioUrl) Then
+                Dim aui As PandoraSong.AudioUrlInfo = New PandoraSong.AudioUrlInfo()
+                aui.Url = s.AdditionalAudioUrl
+                s.AudioUrlMap.Add("128mp3", aui)
+            End If
+        Next
+
         Return response.Songs
 
     End Function

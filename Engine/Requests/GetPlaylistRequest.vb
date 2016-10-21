@@ -40,16 +40,16 @@ Namespace Requests
 				m_StationToken = Value
 			End Set
 		End Property
-		Private m_StationToken As String
-		<JsonProperty(PropertyName := "additionalAudioUrl")> _
-		Public ReadOnly Property AdditionalAudioTypeRequests() As String
-			Get
-                'Return "HTTP_192_MP3"
-                Return ""
-			End Get
-		End Property
+        Private m_StationToken As String
+        <JsonProperty(PropertyName:="additionalAudioUrl")>
+        Public ReadOnly Property AdditionalAudioTypeRequests() As String
+            Get
+                Return "HTTP_128_MP3"
+                'Return ""
+            End Get
+        End Property
 
-		Public Sub New(session As PandoraSession, stationToken As String)
+        Public Sub New(session As PandoraSession, stationToken As String)
 			MyBase.New(session)
 			Me.StationToken = stationToken
 		End Sub
