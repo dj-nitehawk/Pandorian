@@ -1,5 +1,4 @@
-Imports System.Collections.Generic
-Imports System.Text
+﻿Imports System.Collections.Generic
 Imports Pandorian.Engine.Data
 Imports System.Net
 
@@ -82,6 +81,18 @@ Public Class API
             If Session.User.CanListen Then
 
                 AvailableStations = pandoraIO.GetStations()
+                Dim qMixStation As PandoraStation
+                For Each s As PandoraStation In AvailableStations
+                    If s.IsQuickMix Then
+                        qMixStation = s
+                        Exit For
+                    End If
+                Next
+                For Each stn As PandoraStation In AvailableStations
+                    If qMixStation.QuickMixStations.Contains(stn.Id) Then
+                        stn.Name = stn.Name + " ✪"
+                    End If
+                Next
                 Return True
             Else
                 Throw New PandoraException(ErrorCodeEnum.LISTENER_NOT_AUTHORIZED, "Your are not a Pandora Plus subscriber. Please change the settings.")

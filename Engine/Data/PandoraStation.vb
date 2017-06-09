@@ -51,7 +51,7 @@ Namespace Data
         End Property
         Private m_IsQuickMix As Boolean
 
-        <JsonProperty(PropertyName:="stationDetailUrl")> _
+        <JsonProperty(PropertyName:="stationDetailUrl")>
         Public Property StationURL As String
             Get
                 Return _stationURL
@@ -61,6 +61,18 @@ Namespace Data
             End Set
         End Property
         Private _stationURL As String
+
+        <JsonProperty(PropertyName:="quickMixStationIds")>
+        Private _qMixStations As List(Of String)
+        Public Property QuickMixStations() As List(Of String)
+            Get
+                Return _qMixStations
+            End Get
+            Set(ByVal value As List(Of String))
+                _qMixStations = value
+            End Set
+        End Property
+
 
         Public Property CurrentSong As PandoraSong
 
