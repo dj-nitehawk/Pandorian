@@ -971,11 +971,13 @@ Public Class frmMain
         frmSettings.Show()
     End Sub
     Private Sub miManageStation_Click(sender As Object, e As EventArgs) Handles miManageStation.Click
+        btnPlayPause_Click(Nothing, Nothing)
         Me.Hide()
         frmBrowser.Show()
     End Sub
     Public Function GetStationURL() As String
-        Return Pandora.CurrentStation.StationURL.Replace("login?target=%2F", "")
+        'Return Pandora.CurrentStation.StationURL.Replace("login?target=%2F", "")
+        Return "https://www.pandora.com/station/play/" + Pandora.CurrentStation.Id
     End Function
 
     Private Sub miUpdate_Click(sender As Object, e As EventArgs) Handles miUpdate.Click
