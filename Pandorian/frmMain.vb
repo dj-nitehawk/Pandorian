@@ -251,10 +251,10 @@ Public Class frmMain
                 btnLike.Enabled = True
                 btnLike.BackColor = Control.DefaultBackColor
                 btnDislike.Enabled = False
-                btnDislike.BackColor = Color.LightSteelBlue
+                btnDislike.BackColor = Color.Pink
             Case PandoraRating.Love
                 btnLike.Enabled = False
-                btnLike.BackColor = Color.LightSteelBlue
+                btnLike.BackColor = Color.PaleGreen
                 btnDislike.Enabled = True
                 btnDislike.BackColor = Control.DefaultBackColor
             Case PandoraRating.Unrated
@@ -915,7 +915,7 @@ Public Class frmMain
     Private Sub btnLike_Click(sender As Object, e As EventArgs) Handles btnLike.Click
         If btnLike.Enabled Then
             btnLike.Enabled = False
-            btnLike.BackColor = Color.LightSteelBlue
+            btnLike.BackColor = Color.PaleGreen
             btnDislike.Enabled = True
             btnDislike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Love), "btnLike_Click")
@@ -924,7 +924,7 @@ Public Class frmMain
     Private Sub btnDislike_Click(sender As Object, e As EventArgs) Handles btnDislike.Click
         If btnDislike.Enabled Then
             btnDislike.Enabled = False
-            btnDislike.BackColor = Color.LightSteelBlue
+            btnDislike.BackColor = Color.Pink
             btnLike.Enabled = True
             btnLike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Hate), "btnDislike_Click.RateSong")
