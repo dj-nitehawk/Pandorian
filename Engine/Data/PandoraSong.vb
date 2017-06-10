@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 Imports System.Text
 Imports Pandorian.Engine.Encryption
 Imports System.Text.RegularExpressions
@@ -103,9 +103,16 @@ Namespace Data
         <JsonProperty(PropertyName:="songName")> _
         Public Property Title() As String
             Get
+                If m_Rating = PandoraRating.Love Then
+                    Return m_Title + " ✔"
+                End If
+                If m_Rating = PandoraRating.Hate Then
+                    Return m_Title + " ⭙"
+                End If
+
                 Return m_Title
             End Get
-            Friend Set(value As String)
+            Set(value As String)
                 m_Title = value
             End Set
         End Property
@@ -150,6 +157,10 @@ Namespace Data
             End Set
         End Property
         Private m_AudioUrlMap As Dictionary(Of String, AudioUrlInfo)
+
+        <JsonProperty(PropertyName:="additionalAudioUrl")>
+        Public Property AdditionalAudioUrl As String
+
 
         <JsonProperty(PropertyName:="albumArtUrl")> _
         Public Property AlbumArtLargeURL() As String

@@ -251,10 +251,10 @@ Public Class frmMain
                 btnLike.Enabled = True
                 btnLike.BackColor = Control.DefaultBackColor
                 btnDislike.Enabled = False
-                btnDislike.BackColor = Color.LightSteelBlue
+                btnDislike.BackColor = Color.Pink
             Case PandoraRating.Love
                 btnLike.Enabled = False
-                btnLike.BackColor = Color.LightSteelBlue
+                btnLike.BackColor = Color.PaleGreen
                 btnDislike.Enabled = True
                 btnDislike.BackColor = Control.DefaultBackColor
             Case PandoraRating.Unrated
@@ -263,6 +263,7 @@ Public Class frmMain
                 btnDislike.Enabled = True
                 btnDislike.BackColor = Control.DefaultBackColor
         End Select
+
         btnPlayPause.Enabled = True
         If ResumePlaying Then
             btnPlayPause.BackgroundImage = My.Resources.paused
@@ -588,8 +589,10 @@ Public Class frmMain
         registerHotkeys()
         populateSleepTimes()
         AddHandler SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
+        AddHandler SystemEvents.SessionEnding, AddressOf MachineShutDown
         Application.DoEvents()
     End Sub
+
     Private Sub TrayIcon_MouseClick(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseClick
         If e.Button = Windows.Forms.MouseButtons.Left Then
             TrayIcon.Visible = False
@@ -912,19 +915,23 @@ Public Class frmMain
         Dim pos As Long = Bass.BASS_ChannelGetPosition(Stream)
         Return Bass.BASS_ChannelBytes2Seconds(Stream, pos)
     End Function
+
     Private Sub btnLike_Click(sender As Object, e As EventArgs) Handles btnLike.Click
         If btnLike.Enabled Then
             btnLike.Enabled = False
-            btnLike.BackColor = Color.LightSteelBlue
+            btnLike.BackColor = Color.PaleGreen
             btnDislike.Enabled = True
             btnDislike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Love), "btnLike_Click")
+            lblSongName.Text = Pandora.CurrentStation.CurrentSong.Title
+            RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text)
         End If
     End Sub
+
     Private Sub btnDislike_Click(sender As Object, e As EventArgs) Handles btnDislike.Click
         If btnDislike.Enabled Then
             btnDislike.Enabled = False
-            btnDislike.BackColor = Color.LightSteelBlue
+            btnDislike.BackColor = Color.Pink
             btnLike.Enabled = True
             btnLike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Hate), "btnDislike_Click.RateSong")
@@ -971,11 +978,13 @@ Public Class frmMain
         frmSettings.Show()
     End Sub
     Private Sub miManageStation_Click(sender As Object, e As EventArgs) Handles miManageStation.Click
+        btnPlayPause_Click(Nothing, Nothing)
         Me.Hide()
         frmBrowser.Show()
     End Sub
     Public Function GetStationURL() As String
-        Return Pandora.CurrentStation.StationURL.Replace("login?target=%2F", "")
+        'Return Pandora.CurrentStation.StationURL.Replace("login?target=%2F", "")
+        Return "https://www.pandora.com/station/play/" + Pandora.CurrentStation.Id
     End Function
 
     Private Sub miUpdate_Click(sender As Object, e As EventArgs) Handles miUpdate.Click
@@ -1130,6 +1139,10 @@ Public Class frmMain
         End If
         DeInitBass()
         SavePandoraObject() 'in case power is lost during sleep
+    End Sub
+
+    Public Sub MachineShutDown(ByVal sender As Object, ByVal e As SessionEndingEventArgs)
+        frmMain_FormClosing(Nothing, Nothing)
     End Sub
 
     Private Sub TrayMenu_Closing(sender As Object, e As ToolStripDropDownClosingEventArgs) Handles TrayMenu.Closing

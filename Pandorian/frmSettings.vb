@@ -94,8 +94,10 @@
         If IsPandoraOne Then
             Qualities.Add("High (192k MP3)", "highQuality")
             Qualities.Add("Medium (64k AAC+)", "mediumQuality")
+            Qualities.Add("Medium (128k MP3)", "128mp3")
         Else
             Qualities.Add("Medium (64k AAC+)", "mediumQuality")
+            Qualities.Add("Medium (128k MP3)", "128mp3")
             Qualities.Add("Low (32k AAC+)", "lowQuality")
         End If
         ddQuality.ValueMember = "Value"
