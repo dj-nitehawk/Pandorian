@@ -263,6 +263,7 @@ Public Class frmMain
                 btnDislike.Enabled = True
                 btnDislike.BackColor = Control.DefaultBackColor
         End Select
+
         btnPlayPause.Enabled = True
         If ResumePlaying Then
             btnPlayPause.BackgroundImage = My.Resources.paused
@@ -914,6 +915,7 @@ Public Class frmMain
         Dim pos As Long = Bass.BASS_ChannelGetPosition(Stream)
         Return Bass.BASS_ChannelBytes2Seconds(Stream, pos)
     End Function
+
     Private Sub btnLike_Click(sender As Object, e As EventArgs) Handles btnLike.Click
         If btnLike.Enabled Then
             btnLike.Enabled = False
@@ -921,8 +923,11 @@ Public Class frmMain
             btnDislike.Enabled = True
             btnDislike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Love), "btnLike_Click")
+            lblSongName.Text = Pandora.CurrentStation.CurrentSong.Title
+            RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text)
         End If
     End Sub
+
     Private Sub btnDislike_Click(sender As Object, e As EventArgs) Handles btnDislike.Click
         If btnDislike.Enabled Then
             btnDislike.Enabled = False
@@ -1137,9 +1142,7 @@ Public Class frmMain
     End Sub
 
     Public Sub MachineShutDown(ByVal sender As Object, ByVal e As SessionEndingEventArgs)
-        DeInitBass()
-        SavePandoraObject()
-        Me.Close()
+        frmMain_FormClosing(Nothing, Nothing)
     End Sub
 
     Private Sub TrayMenu_Closing(sender As Object, e As ToolStripDropDownClosingEventArgs) Handles TrayMenu.Closing
