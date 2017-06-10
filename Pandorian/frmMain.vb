@@ -588,8 +588,10 @@ Public Class frmMain
         registerHotkeys()
         populateSleepTimes()
         AddHandler SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
+        AddHandler SystemEvents.SessionEnding, AddressOf MachineShutDown
         Application.DoEvents()
     End Sub
+
     Private Sub TrayIcon_MouseClick(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseClick
         If e.Button = Windows.Forms.MouseButtons.Left Then
             TrayIcon.Visible = False
@@ -1132,6 +1134,12 @@ Public Class frmMain
         End If
         DeInitBass()
         SavePandoraObject() 'in case power is lost during sleep
+    End Sub
+
+    Public Sub MachineShutDown(ByVal sender As Object, ByVal e As SessionEndingEventArgs)
+        DeInitBass()
+        SavePandoraObject()
+        Me.Close()
     End Sub
 
     Private Sub TrayMenu_Closing(sender As Object, e As ToolStripDropDownClosingEventArgs) Handles TrayMenu.Closing
