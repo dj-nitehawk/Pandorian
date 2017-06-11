@@ -16,6 +16,7 @@ Public Class frmMain
     Dim Stream As Integer
     Dim Sync As SYNCPROC = New SYNCPROC(AddressOf SongEnded)
     Dim DSP As Misc.DSP_Gain = New Misc.DSP_Gain()
+    Dim Downloader As WebClient
     Dim TargeFile As String
     Dim IsActiveForm As Boolean
     Dim SleepAt As Date
@@ -41,6 +42,8 @@ Public Class frmMain
         End If
 
         If buffer = IntPtr.Zero Then
+            prgDownload.Value = 100
+            prgDownload.Visible = False
             FS.Flush()
             FS.Close()
             FS = Nothing
@@ -62,9 +65,6 @@ Public Class frmMain
             Dim down As Integer = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_DOWNLOAD)
             progress = down * 100.0F / len
             prgDownload.Value = progress
-            If progress = 100 Then
-                prgDownload.Visible = False
-            End If
         End If
     End Sub
 
@@ -560,9 +560,42 @@ Public Class frmMain
             End If
         End If
 
-        If e.Control And e.KeyCode = Global.System.Windows.Forms.Keys.D And
+        '192k file download while playing any stream
+        If e.Control And e.Alt And e.KeyCode = Keys.D And
                             Not IsNothing(Pandora.CurrentStation.CurrentSong) And
                             prgDownload.Value = 100 And
+                            Pandora.Session.User.PartnerCredentials.AccountType = Engine.Data.AccountType.PANDORA_ONE_USER Then
+
+            If Not Directory.Exists(My.Settings.downloadLocation) Then
+                If folderBrowser.ShowDialog = Windows.Forms.DialogResult.OK Then
+                    My.Settings.downloadLocation = folderBrowser.SelectedPath
+                    My.Settings.Save()
+                Else
+                    Exit Sub
+                End If
+            End If
+
+            If Directory.Exists(My.Settings.downloadLocation) Then
+                TargeFile = My.Settings.downloadLocation + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
+
+                If Not System.IO.File.Exists(TargeFile) Then
+                    Downloader = New WebClient
+                    AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
+                    AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
+                    If Not My.Settings.noProxy Then
+                        Downloader.Proxy = Me.Proxy
+                    End If
+                    Downloader.DownloadFileAsync(
+                            New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargeFile)
+                    prgDownload.Visible = True
+                End If
+            End If
+        End If
+
+        '192k file export while playing 192k stream
+        If e.Control And e.KeyCode = Global.System.Windows.Forms.Keys.D And
+                            Not IsNothing(Pandora.CurrentStation.CurrentSong) And
+                            prgDownload.Value > 99 And
                             My.Settings.audioQuality = "highQuality" And
                             Me.Pandora.Session.User.PartnerCredentials.AccountType = Global.Pandorian.Engine.Data.AccountType.PANDORA_ONE_USER Then
 
@@ -584,6 +617,18 @@ Public Class frmMain
                 End If
             End If
         End If
+    End Sub
+
+    Private Sub FileDownloadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs)
+        prgDownload.Visible = False
+        prgDownload.Value = 0
+        If Not IsNothing(e.Error) Then
+            File.Delete(TargeFile)
+            MsgBox(e.Error.Message, MsgBoxStyle.Critical)
+        End If
+    End Sub
+    Private Sub FileDownloadProgressChanged(sender As Object, e As DownloadProgressChangedEventArgs)
+        prgDownload.Value = e.ProgressPercentage
     End Sub
 
     Private Function ValidFileName(Text As String) As String
