@@ -231,6 +231,9 @@ Namespace Data
         Public ReadOnly Property TrackGain() As Single
             Get
                 Dim rtn As Single = 0
+                If String.IsNullOrEmpty(TrackGainStr) Then
+                    TrackGainStr = "-5.55"
+                End If
                 Single.TryParse(TrackGainStr, rtn)
                 Return rtn
             End Get
