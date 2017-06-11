@@ -543,6 +543,7 @@ Public Class frmMain
 
         With Settings
             If .ValueCount = 0 Then
+                File.Delete("api.dat")
                 .Write("proxyAddress", "http://server:port")
                 .Write("proyxUsername", "")
                 .Write("proxyPassword", "")
