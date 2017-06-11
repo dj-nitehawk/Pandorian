@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:og="http://ogp.me/ns#"
-xmlns:fb="http://www.facebook.com/2008/fbml">
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -25,7 +25,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
                 (i[r].q = i[r].q || []).push(arguments)
             }, i[r].l = 1 * new Date(); a = s.createElement(o),
-            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
         ga('create', 'UA-39155502-3', 'djnitehawk.com');
         ga('send', 'pageview');
@@ -36,14 +36,15 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
     <header>
         <div class="inner">
             <h1>Pandorian</h1>
-            <h2>A better desktop client for Pandora
+            <h2>
+                A better desktop client for Pandora
                 <br />
-                with built-in proxy support</h2>
-            <a
-                onclick="ga('send', 'event', 'LINK', 'CLICK', 'View Source On GitHub');"
-                href="https://github.com/dj-nitehawk/Pandorian"
-                class="button"
-                target="_blank">
+                with built-in proxy support
+            </h2>
+            <a onclick="ga('send', 'event', 'LINK', 'CLICK', 'View Source On GitHub');"
+               href="https://github.com/dj-nitehawk/Pandorian"
+               class="button"
+               target="_blank">
                 <small>View source on</small>GitHub
             </a>
             <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fpandorian.djnitehawk.com&amp;width=1&amp;layout=box_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=65&amp;appId=1442573219316352" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 50px; height: 65px; position: absolute; right: 75px; top: 90px;" allowtransparency="true"></iframe>
@@ -58,7 +59,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                     <img style="margin-bottom: 90px;" src="https://raw.githubusercontent.com/dj-nitehawk/Pandorian/master/settings.jpg" alt="Settings Window">
                 </p>
 
-                <h1>Pandorian v2.7</h1>
+                <h1>Pandorian v2.7.1</h1>
 
                 <p>Pandorian is a simple yet elegant desktop client for Pandora, featuring ad-free listening, unlimited song skips*, proxy support and a host of other features to make your Pandora listening experience stress-free and enjoyable as much as possible...</p>
 
@@ -68,7 +69,7 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                     <li>Ad-free listening</li>
                     <li>*Unlimited song skips (have to wait 10 mins if/when skipping limit is reached)</li>
                     <li>Proxy support for listening from unsupported countries</li>
-                    <li>Download 192Kbps MP3 of currently playing song (CTRL+D) - only for Pandora Plus users</li>
+                    <li>Export MP3 of currently playing song (CTRL+D) - only works when streaming 192k audio with a Pandora Plus subscription.</li>
                     <li>User configurable sytem-wide Hot-Keys (Right-click on album cover to access)</li>
                     <li>Like/ Dislike songs (ALT+L / ALT+D)</li>
                     <li>Block a song for a month/ Tired of song (ALT+B)</li>
@@ -106,17 +107,17 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
 
                 <ul>
                     <li>
-                        <a
-                            onclick="ga('send', 'event', 'LINK', 'CLICK', 'Pandora Music Box');"
-                            href="https://code.google.com/p/pandora-musicbox/"
-                            target="_blank">PandoraMusicBoxEngine
+                        <a onclick="ga('send', 'event', 'LINK', 'CLICK', 'Pandora Music Box');"
+                           href="https://code.google.com/p/pandora-musicbox/"
+                           target="_blank">
+                            PandoraMusicBoxEngine
                         </a>
                     </li>
                     <li>
-                        <a
-                            onclick="ga('send', 'event', 'LINK', 'CLICK', 'BASS');"
-                            href="http://www.un4seen.com/"
-                            target="_blank">BASS
+                        <a onclick="ga('send', 'event', 'LINK', 'CLICK', 'BASS');"
+                           href="http://www.un4seen.com/"
+                           target="_blank">
+                            BASS
                         </a>
                     </li>
                 </ul>
@@ -124,11 +125,11 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                 <h1>Support/Feedback:</h1>
 
                 <p>
-                    If you need support or would like to send some feedback, please 
-                    <a
-                        href="https://github.com/dj-nitehawk/Pandorian/issues"
-                        onclick="ga('send', 'event', 'LINK', 'CLICK', 'FeedBack Support');"
-                        target="_blank">create a new issue here
+                    If you need support or would like to send some feedback, please
+                    <a href="https://github.com/dj-nitehawk/Pandorian/issues"
+                       onclick="ga('send', 'event', 'LINK', 'CLICK', 'FeedBack Support');"
+                       target="_blank">
+                        create a new issue here
                     </a>
                 </p>
 
@@ -140,6 +141,14 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                 </ul>
 
                 <h1>Release History</h1>
+
+                <p>v2.7.1</p>
+                <ul>
+                    <li>Added audio stream download progress indicator at bottom of window</li>
+                    <li>Revamped MP3 export functionality due to new Pandora restrictions. For CTRL+D to export the currently playing song, you must now have a Pandora Plus subscription and select "High (192k)" quality in settings.</li>
+                    <li>New hourglass graphic for loading/ waiting view</li>
+                    <li>BASS updates and other performance improvements</li>
+                </ul>
 
                 <p>v2.7</p>
                 <ul>
@@ -359,7 +368,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
 
                 <p>v1.5.2</p>
                 <ul>
-                    <li>Added system-wide hotkeys for main functions
+                    <li>
+                        Added system-wide hotkeys for main functions
 
                         <ul>
                             <li>Play/Pause Current Song: ALT + SPACE</li>
@@ -384,7 +394,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
 
                 <p>v.1.4.3</p>
                 <ul>
-                    <li>Added two new items to the right click menu
+                    <li>
+                        Added two new items to the right click menu
 
                         <ul>
                             <li>Check for an update</li>
@@ -405,7 +416,8 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
 
                 <p>v1.4</p>
                 <ul>
-                    <li>Right click on album cover to:
+                    <li>
+                        Right click on album cover to:
 
                         <ul>
                             <li>Manage Station</li>
@@ -441,38 +453,33 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
             </section>
 
             <aside id="sidebar">
-                <a
-                    href="https://github.com/dj-nitehawk/Pandorian/releases/tag/windows"
-                    class="button"
-                    onclick="ga('send', 'event', 'LINK', 'CLICK', 'Download 64bit');"
-                    target="_blank">
+                <a href="https://github.com/dj-nitehawk/Pandorian/releases/tag/windows"
+                   class="button"
+                   onclick="ga('send', 'event', 'LINK', 'CLICK', 'Download 64bit');"
+                   target="_blank">
                     <small>DOWNLOAD:</small> 64bit Setup
                 </a>
-                <a
-                    href="https://github.com/dj-nitehawk/Pandorian/releases/tag/windows-32bit"
-                    class="button"
-                    onclick="ga('send', 'event', 'LINK', 'CLICK', 'Download 32bit');"
-                    target="_blank">
+                <a href="https://github.com/dj-nitehawk/Pandorian/releases/tag/windows-32bit"
+                   class="button"
+                   onclick="ga('send', 'event', 'LINK', 'CLICK', 'Download 32bit');"
+                   target="_blank">
                     <small>DOWNLOAD:</small> 32bit Setup
                 </a>
 
                 <p style="text-align: center;">
-                    <a
-                        href="http://www.softpedia.com/get/Internet/Internet-Radio-TV-Player/Pandorian.shtml"
-                        onclick="ga('send', 'event', 'LINK', 'CLICK', 'Softpedia');"
-                        target="_blank">
+                    <a href="http://www.softpedia.com/get/Internet/Internet-Radio-TV-Player/Pandorian.shtml"
+                       onclick="ga('send', 'event', 'LINK', 'CLICK', 'Softpedia');"
+                       target="_blank">
                         <img style="margin-bottom: 20px" src="http://i.imgur.com/OvUC7uO.png">
                     </a>
-                    <a
-                        href="http://download.cnet.com/Pandorian/3000-2168_4-76113466.html"
-                        onclick="ga('send', 'event', 'LINK', 'CLICK', 'CNet');"
-                        target="_blank">
+                    <a href="http://download.cnet.com/Pandorian/3000-2168_4-76113466.html"
+                       onclick="ga('send', 'event', 'LINK', 'CLICK', 'CNet');"
+                       target="_blank">
                         <img style="margin-bottom: 20px" src="http://i.i.cbsi.com/cnwk.1d/i/dl/button/anim_button.gif">
                     </a>
-                    <a
-                        href="http://pandorian.en.softonic.com/"
-                        onclick="ga('send', 'event', 'LINK', 'CLICK', 'Softonic');"
-                        target="_blank">
+                    <a href="http://pandorian.en.softonic.com/"
+                       onclick="ga('send', 'event', 'LINK', 'CLICK', 'Softonic');"
+                       target="_blank">
                         <img src="http://i.imgur.com/xzS45do.jpgo" height="100">
                     </a>
                 </p>
@@ -480,18 +487,17 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
                 <p style="text-align: center;" class="repo-owner">
                     Pandorian is brought to you by:<br />
                     <br />
-                    <a
-                        href="http://djnitehawk.com"
-                        onclick="ga('send', 'event', 'LINK', 'CLICK', 'DJ NiteHawk');"
-                        target="_blank">Đĵ ΝιΓΞΗΛψΚ
+                    <a href="http://djnitehawk.com"
+                       onclick="ga('send', 'event', 'LINK', 'CLICK', 'DJ NiteHawk');"
+                       target="_blank">
+                        Đĵ ΝιΓΞΗΛψΚ
                     </a>
                 </p>
 
                 <p style="text-align: center;">
-                    <a
-                        href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JFH9VRVFAYZAW"
-                        onclick="ga('send', 'event', 'LINK', 'CLICK', 'PayPal');"
-                        target="_blank">
+                    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JFH9VRVFAYZAW"
+                       onclick="ga('send', 'event', 'LINK', 'CLICK', 'PayPal');"
+                       target="_blank">
                         <img src="https://raw.githubusercontent.com/dj-nitehawk/Pandorian/master/Pandorian/Resources/paypal.gif">
                     </a>
             </aside>
