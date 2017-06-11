@@ -42,8 +42,6 @@ Public Class frmMain
         End If
 
         If buffer = IntPtr.Zero Then
-            prgDownload.Value = 100
-            prgDownload.Visible = False
             FS.Flush()
             FS.Close()
             FS = Nothing
@@ -51,9 +49,7 @@ Public Class frmMain
             If Data Is Nothing OrElse Data.Length < length Then
                 Data = New Byte(length) {}
             End If
-
             Marshal.Copy(buffer, Data, 0, length)
-
             FS.Write(Data, 0, length)
         End If
     End Sub
@@ -65,6 +61,9 @@ Public Class frmMain
             Dim down As Integer = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_DOWNLOAD)
             progress = down * 100.0F / len
             prgDownload.Value = progress
+            If prgDownload.Value = 100 Then
+                prgDownload.Visible = False
+            End If
         End If
     End Sub
 
@@ -322,6 +321,7 @@ Public Class frmMain
             btnDislike.Enabled = False
             btnPlayPause.Enabled = False
             btnSkip.Enabled = False
+            btnSkip.BackColor = Color.DarkGray
             btnBlock.Enabled = False
         Else
             lblSongName.Text = Song.Title
@@ -355,14 +355,14 @@ Public Class frmMain
                 Spinner.Visible = False
                 ddStations.Enabled = False
                 btnSkip.Enabled = False
+                btnSkip.BackColor = Color.DarkGray
                 Application.DoEvents()
                 Exit Sub
             End If
             Pandora.SkipLimitReached = False
             ddStations.Enabled = True
             btnSkip.Enabled = True
-            Bass.BASS_ChannelStop(Stream)
-            Bass.BASS_StreamFree(Stream)
+            btnSkip.BackColor = Control.DefaultBackColor
             PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
         Catch ex As PandoraException
             If ex.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
@@ -374,6 +374,7 @@ Public Class frmMain
                 Pandora.SkipLimitReachedAt = Now
                 ddStations.Enabled = False
                 btnSkip.Enabled = False
+                btnSkip.BackColor = Color.DarkGray
                 Application.DoEvents()
                 Exit Sub
             End If
@@ -432,7 +433,6 @@ Public Class frmMain
 
     Sub DeInitBass()
         If BASSReady Then
-            Bass.BASS_ChannelStop(Stream)
             Bass.BASS_StreamFree(Stream)
             Bass.BASS_PluginFree(AAC)
             Bass.BASS_Free()
@@ -445,7 +445,7 @@ Public Class frmMain
 
     Private Sub PlayCurrentSongWithBASS()
         If Not Stream = 0 Then
-            Bass.BASS_ChannelStop(Stream)
+            Bass.BASS_StreamFree(Stream)
             Stream = 0
         End If
 
@@ -943,6 +943,7 @@ Public Class frmMain
         btnDislike.Enabled = False
         btnLike.Enabled = False
         btnSkip.Enabled = True
+        btnSkip.BackColor = Control.DefaultBackColor
     End Sub
 
     Private Sub ReLoginToPandora()
@@ -1246,6 +1247,7 @@ Public Class frmMain
                 Case Else
                     tmiPlayPause.Text = "Play/Pause"
             End Select
+            tmiPlayPause.Enabled = True
             tmiLikeCurrentSong.Enabled = btnLike.Enabled
             tmiDislikeCurrentSong.Enabled = btnDislike.Enabled
             tmiSkipSong.Enabled = btnSkip.Enabled
