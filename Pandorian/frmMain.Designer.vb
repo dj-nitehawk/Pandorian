@@ -325,9 +325,9 @@ Partial Class frmMain
         '
         'prgDownload
         '
-        Me.prgDownload.Location = New System.Drawing.Point(0, 454)
+        Me.prgDownload.Location = New System.Drawing.Point(0, 460)
         Me.prgDownload.Name = "prgDownload"
-        Me.prgDownload.Size = New System.Drawing.Size(317, 10)
+        Me.prgDownload.Size = New System.Drawing.Size(317, 3)
         Me.prgDownload.Step = 1
         Me.prgDownload.TabIndex = 14
         Me.prgDownload.Visible = False

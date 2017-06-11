@@ -9,14 +9,13 @@ Imports System.ComponentModel
 
 Public Class frmMain
     Dim Pandora As API
-    Dim Proxy As Net.WebProxy
+    Dim Proxy As WebProxy
     Dim BASSReady As Boolean = False
     Dim ProxyPtr As IntPtr
     Dim AAC As Integer
     Dim Stream As Integer
     Dim Sync As SYNCPROC = New SYNCPROC(AddressOf SongEnded)
     Dim DSP As Misc.DSP_Gain = New Misc.DSP_Gain()
-    Dim Downloader As WebClient
     Dim TargeFile As String
     Dim IsActiveForm As Boolean
     Dim SleepAt As Date
@@ -24,12 +23,50 @@ Public Class frmMain
     Dim ResumePlaying As Boolean = True
     Dim NagShown As Boolean = False
     Dim VolLastChangedOn As Date
-    Dim BPMCounter As New Un4seen.Bass.Misc.BPMCounter(20, 44100)
+    Dim BPMCounter As New Misc.BPMCounter(20, 44100)
     Dim SongInfo As New frmSongInfo()
     Dim HideSongInfo As Boolean = False
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(Cover As Image)
+
+    Dim FS As FileStream
+    Dim DownloadProc As DOWNLOADPROC = New DOWNLOADPROC(AddressOf DownloadSong)
+    Dim Data() As Byte
+    Private Sub DownloadSong(buffer As IntPtr, length As Integer, user As IntPtr)
+        If FS Is Nothing Then
+            FS = File.OpenWrite("current.stream")
+            prgDownload.Visible = True
+            prgDownload.Value = 0
+        End If
+
+        If buffer = IntPtr.Zero Then
+            FS.Flush()
+            FS.Close()
+            FS = Nothing
+        Else
+            If Data Is Nothing OrElse Data.Length < length Then
+                Data = New Byte(length) {}
+            End If
+
+            Marshal.Copy(buffer, Data, 0, length)
+
+            FS.Write(Data, 0, length)
+        End If
+    End Sub
+
+    Private Sub UpdateDownloadProgress()
+        If BASSReady Then
+            Dim progress As Single
+            Dim len As Integer = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
+            Dim down As Integer = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_DOWNLOAD)
+            progress = down * 100.0F / len
+            prgDownload.Value = progress
+            If progress = 100 Then
+                prgDownload.Visible = False
+            End If
+        End If
+    End Sub
 
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
@@ -416,7 +453,7 @@ Public Class frmMain
                 Pandora.CurrentStation.CurrentSong.AudioUrlMap(My.Settings.audioQuality).Url,
                 0,
                 BASSFlag.BASS_STREAM_AUTOFREE,
-                Nothing,
+                DownloadProc,
                 IntPtr.Zero)
 
         If Not Stream = 0 Then
@@ -507,7 +544,7 @@ Public Class frmMain
 
     Private Sub frmMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
 
-        If System.Diagnostics.Debugger.IsAttached Then
+        If Debugger.IsAttached Then
             If e.Control And e.Alt And e.KeyCode = Keys.E Then
                 DebugExpireSessionNow()
             End If
@@ -523,13 +560,14 @@ Public Class frmMain
             End If
         End If
 
-        If e.Control And e.KeyCode = Keys.D And
+        If e.Control And e.KeyCode = Global.System.Windows.Forms.Keys.D And
                             Not IsNothing(Pandora.CurrentStation.CurrentSong) And
-                            prgDownload.Value = 0 And
-                            Pandora.Session.User.PartnerCredentials.AccountType = Data.AccountType.PANDORA_ONE_USER Then
+                            prgDownload.Value = 100 And
+                            My.Settings.audioQuality = "highQuality" And
+                            Me.Pandora.Session.User.PartnerCredentials.AccountType = Global.Pandorian.Engine.Data.AccountType.PANDORA_ONE_USER Then
 
-            If Not IO.Directory.Exists(My.Settings.downloadLocation) Then
-                If folderBrowser.ShowDialog = Windows.Forms.DialogResult.OK Then
+            If Not Directory.Exists(My.Settings.downloadLocation) Then
+                If Me.folderBrowser.ShowDialog = Global.System.Windows.Forms.DialogResult.OK Then
                     My.Settings.downloadLocation = folderBrowser.SelectedPath
                     My.Settings.Save()
                 Else
@@ -537,19 +575,12 @@ Public Class frmMain
                 End If
             End If
 
-            If IO.Directory.Exists(My.Settings.downloadLocation) Then
+            If Directory.Exists(My.Settings.downloadLocation) Then
                 TargeFile = My.Settings.downloadLocation + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
 
-                If Not System.IO.File.Exists(TargeFile) Then
-                    Downloader = New WebClient
-                    AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
-                    AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
-                    If Not My.Settings.noProxy Then
-                        Downloader.Proxy = Me.Proxy
-                    End If
-                    Downloader.DownloadFileAsync(
-                            New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargeFile)
-                    prgDownload.Visible = True
+                If Not File.Exists(TargeFile) Then
+                    File.Copy("current.stream", TargeFile)
+                    MsgBox("Mp3 File Exported!", MsgBoxStyle.Information)
                 End If
             End If
         End If
@@ -562,17 +593,6 @@ Public Class frmMain
         Return Text
     End Function
 
-    Private Sub FileDownloadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs)
-        prgDownload.Visible = False
-        prgDownload.Value = 0
-        If Not IsNothing(e.Error) Then
-            IO.File.Delete(TargeFile)
-            MsgBox(e.Error.Message, MsgBoxStyle.Critical)
-        End If
-    End Sub
-    Private Sub FileDownloadProgressChanged(sender As Object, e As DownloadProgressChangedEventArgs)
-        prgDownload.Value = e.ProgressPercentage
-    End Sub
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
         frmLockScreen.Show()
         frmLockScreen.Visible = False
@@ -768,8 +788,10 @@ Public Class frmMain
             prgBar.Value = Convert.ToInt32(pos)
         End If
     End Sub
+
     Private Sub Timer_Tick(sender As Object, e As EventArgs) Handles Timer.Tick
         UpdatePlayPosition()
+        UpdateDownloadProgress()
         SleepCheck()
         If volSlider.Visible Then
             If VolLastChangedOn.AddSeconds(4) <= Now Then
