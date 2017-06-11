@@ -32,6 +32,7 @@
     <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>2.6.0.%2a</ApplicationVersion>
     <ApplicationVersion>2.7.0.%2a</ApplicationVersion>
+    <ApplicationVersion>2.7.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -235,6 +236,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Pandorian.ico" />
+    <None Include="Resources\wait.png" />
     <None Include="Pandorian_TemporaryKey.pfx" />
     <None Include="Resources\like.png" />
     <None Include="Resources\dislike.png" />
@@ -244,7 +246,6 @@
     <None Include="Resources\block.png" />
     <None Include="Resources\Icon.png" />
     <None Include="Resources\paypal.gif" />
-    <None Include="Resources\spinner.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vbproj">

@@ -28,14 +28,8 @@ Partial Class frmMain
         Me.lblSongName = New System.Windows.Forms.Label()
         Me.lblArtistName = New System.Windows.Forms.Label()
         Me.lblAlbumName = New System.Windows.Forms.Label()
-        Me.btnLike = New System.Windows.Forms.Button()
-        Me.btnDislike = New System.Windows.Forms.Button()
-        Me.btnPlayPause = New System.Windows.Forms.Button()
-        Me.btnSkip = New System.Windows.Forms.Button()
         Me.prgBar = New System.Windows.Forms.ProgressBar()
         Me.Timer = New System.Windows.Forms.Timer(Me.components)
-        Me.btnBlock = New System.Windows.Forms.Button()
-        Me.SongCoverImage = New System.Windows.Forms.PictureBox()
         Me.MenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.miManageStation = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -100,19 +94,25 @@ Partial Class frmMain
         Me.cbModKey = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.Spinner = New System.Windows.Forms.PictureBox()
         Me.volSlider = New System.Windows.Forms.TrackBar()
         Me.tbLog = New System.Windows.Forms.TextBox()
         Me.tip = New System.Windows.Forms.ToolTip(Me.components)
         Me.bpmTimer = New System.Windows.Forms.Timer(Me.components)
         Me.lblBPM = New System.Windows.Forms.Label()
-        CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Spinner = New System.Windows.Forms.PictureBox()
+        Me.btnBlock = New System.Windows.Forms.Button()
+        Me.btnSkip = New System.Windows.Forms.Button()
+        Me.btnPlayPause = New System.Windows.Forms.Button()
+        Me.btnDislike = New System.Windows.Forms.Button()
+        Me.btnLike = New System.Windows.Forms.Button()
+        Me.SongCoverImage = New System.Windows.Forms.PictureBox()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
         Me.TrayMenu.SuspendLayout()
         Me.pnlHotKeys.SuspendLayout()
-        CType(Me.Spinner, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.volSlider, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.Spinner, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ddStations
@@ -160,62 +160,6 @@ Partial Class frmMain
         Me.lblAlbumName.Text = "Album Name"
         Me.lblAlbumName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'btnLike
-        '
-        Me.btnLike.BackColor = System.Drawing.SystemColors.Control
-        Me.btnLike.BackgroundImage = CType(resources.GetObject("btnLike.BackgroundImage"), System.Drawing.Image)
-        Me.btnLike.FlatAppearance.BorderSize = 0
-        Me.btnLike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnLike.ForeColor = System.Drawing.Color.Black
-        Me.btnLike.Location = New System.Drawing.Point(9, 421)
-        Me.btnLike.Name = "btnLike"
-        Me.btnLike.Size = New System.Drawing.Size(53, 32)
-        Me.btnLike.TabIndex = 6
-        Me.btnLike.TabStop = False
-        Me.btnLike.UseVisualStyleBackColor = False
-        '
-        'btnDislike
-        '
-        Me.btnDislike.BackColor = System.Drawing.SystemColors.Control
-        Me.btnDislike.BackgroundImage = CType(resources.GetObject("btnDislike.BackgroundImage"), System.Drawing.Image)
-        Me.btnDislike.FlatAppearance.BorderSize = 0
-        Me.btnDislike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnDislike.ForeColor = System.Drawing.Color.Black
-        Me.btnDislike.Location = New System.Drawing.Point(66, 421)
-        Me.btnDislike.Name = "btnDislike"
-        Me.btnDislike.Size = New System.Drawing.Size(53, 32)
-        Me.btnDislike.TabIndex = 7
-        Me.btnDislike.TabStop = False
-        Me.btnDislike.UseVisualStyleBackColor = False
-        '
-        'btnPlayPause
-        '
-        Me.btnPlayPause.BackColor = System.Drawing.SystemColors.Control
-        Me.btnPlayPause.BackgroundImage = Global.Pandorian.My.Resources.Resources.play
-        Me.btnPlayPause.FlatAppearance.BorderSize = 0
-        Me.btnPlayPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnPlayPause.ForeColor = System.Drawing.Color.Black
-        Me.btnPlayPause.Location = New System.Drawing.Point(133, 421)
-        Me.btnPlayPause.Name = "btnPlayPause"
-        Me.btnPlayPause.Size = New System.Drawing.Size(53, 32)
-        Me.btnPlayPause.TabIndex = 8
-        Me.btnPlayPause.TabStop = False
-        Me.btnPlayPause.UseVisualStyleBackColor = False
-        '
-        'btnSkip
-        '
-        Me.btnSkip.BackColor = System.Drawing.SystemColors.Control
-        Me.btnSkip.BackgroundImage = Global.Pandorian.My.Resources.Resources.skip
-        Me.btnSkip.FlatAppearance.BorderSize = 0
-        Me.btnSkip.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnSkip.ForeColor = System.Drawing.Color.Black
-        Me.btnSkip.Location = New System.Drawing.Point(190, 421)
-        Me.btnSkip.Name = "btnSkip"
-        Me.btnSkip.Size = New System.Drawing.Size(53, 32)
-        Me.btnSkip.TabIndex = 9
-        Me.btnSkip.TabStop = False
-        Me.btnSkip.UseVisualStyleBackColor = False
-        '
         'prgBar
         '
         Me.prgBar.Location = New System.Drawing.Point(9, 352)
@@ -228,31 +172,6 @@ Partial Class frmMain
         'Timer
         '
         Me.Timer.Interval = 1000
-        '
-        'btnBlock
-        '
-        Me.btnBlock.BackColor = System.Drawing.SystemColors.Control
-        Me.btnBlock.BackgroundImage = Global.Pandorian.My.Resources.Resources.block
-        Me.btnBlock.FlatAppearance.BorderSize = 0
-        Me.btnBlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnBlock.ForeColor = System.Drawing.Color.Black
-        Me.btnBlock.Location = New System.Drawing.Point(256, 421)
-        Me.btnBlock.Name = "btnBlock"
-        Me.btnBlock.Size = New System.Drawing.Size(53, 32)
-        Me.btnBlock.TabIndex = 12
-        Me.btnBlock.TabStop = False
-        Me.btnBlock.UseVisualStyleBackColor = False
-        '
-        'SongCoverImage
-        '
-        Me.SongCoverImage.BackColor = System.Drawing.Color.Black
-        Me.SongCoverImage.ContextMenuStrip = Me.MenuStrip
-        Me.SongCoverImage.Location = New System.Drawing.Point(9, 44)
-        Me.SongCoverImage.Name = "SongCoverImage"
-        Me.SongCoverImage.Size = New System.Drawing.Size(300, 300)
-        Me.SongCoverImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.SongCoverImage.TabIndex = 2
-        Me.SongCoverImage.TabStop = False
         '
         'MenuStrip
         '
@@ -325,9 +244,9 @@ Partial Class frmMain
         '
         'prgDownload
         '
-        Me.prgDownload.Location = New System.Drawing.Point(0, 454)
+        Me.prgDownload.Location = New System.Drawing.Point(0, 460)
         Me.prgDownload.Name = "prgDownload"
-        Me.prgDownload.Size = New System.Drawing.Size(317, 10)
+        Me.prgDownload.Size = New System.Drawing.Size(317, 3)
         Me.prgDownload.Step = 1
         Me.prgDownload.TabIndex = 14
         Me.prgDownload.Visible = False
@@ -759,17 +678,6 @@ Partial Class frmMain
         Me.Label2.Text = "Hotkey Configuration"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'Spinner
-        '
-        Me.Spinner.BackColor = System.Drawing.Color.Black
-        Me.Spinner.Image = Global.Pandorian.My.Resources.Resources.spinner
-        Me.Spinner.Location = New System.Drawing.Point(-6, -5)
-        Me.Spinner.Name = "Spinner"
-        Me.Spinner.Size = New System.Drawing.Size(329, 483)
-        Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
-        Me.Spinner.TabIndex = 17
-        Me.Spinner.TabStop = False
-        '
         'volSlider
         '
         Me.volSlider.AutoSize = False
@@ -818,6 +726,100 @@ Partial Class frmMain
         Me.lblBPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblBPM.Visible = False
         '
+        'Spinner
+        '
+        Me.Spinner.BackColor = System.Drawing.Color.Black
+        Me.Spinner.BackgroundImage = Global.Pandorian.My.Resources.Resources.wait
+        Me.Spinner.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.Spinner.Location = New System.Drawing.Point(-6, -5)
+        Me.Spinner.Name = "Spinner"
+        Me.Spinner.Size = New System.Drawing.Size(329, 483)
+        Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.Spinner.TabIndex = 17
+        Me.Spinner.TabStop = False
+        Me.Spinner.UseWaitCursor = True
+        '
+        'btnBlock
+        '
+        Me.btnBlock.BackColor = System.Drawing.SystemColors.Control
+        Me.btnBlock.BackgroundImage = Global.Pandorian.My.Resources.Resources.block
+        Me.btnBlock.FlatAppearance.BorderSize = 0
+        Me.btnBlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnBlock.ForeColor = System.Drawing.Color.Black
+        Me.btnBlock.Location = New System.Drawing.Point(256, 421)
+        Me.btnBlock.Name = "btnBlock"
+        Me.btnBlock.Size = New System.Drawing.Size(53, 32)
+        Me.btnBlock.TabIndex = 12
+        Me.btnBlock.TabStop = False
+        Me.btnBlock.UseVisualStyleBackColor = False
+        '
+        'btnSkip
+        '
+        Me.btnSkip.BackColor = System.Drawing.SystemColors.Control
+        Me.btnSkip.BackgroundImage = Global.Pandorian.My.Resources.Resources.skip
+        Me.btnSkip.FlatAppearance.BorderSize = 0
+        Me.btnSkip.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnSkip.ForeColor = System.Drawing.Color.Black
+        Me.btnSkip.Location = New System.Drawing.Point(190, 421)
+        Me.btnSkip.Name = "btnSkip"
+        Me.btnSkip.Size = New System.Drawing.Size(53, 32)
+        Me.btnSkip.TabIndex = 9
+        Me.btnSkip.TabStop = False
+        Me.btnSkip.UseVisualStyleBackColor = False
+        '
+        'btnPlayPause
+        '
+        Me.btnPlayPause.BackColor = System.Drawing.SystemColors.Control
+        Me.btnPlayPause.BackgroundImage = Global.Pandorian.My.Resources.Resources.play
+        Me.btnPlayPause.FlatAppearance.BorderSize = 0
+        Me.btnPlayPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnPlayPause.ForeColor = System.Drawing.Color.Black
+        Me.btnPlayPause.Location = New System.Drawing.Point(133, 421)
+        Me.btnPlayPause.Name = "btnPlayPause"
+        Me.btnPlayPause.Size = New System.Drawing.Size(53, 32)
+        Me.btnPlayPause.TabIndex = 8
+        Me.btnPlayPause.TabStop = False
+        Me.btnPlayPause.UseVisualStyleBackColor = False
+        '
+        'btnDislike
+        '
+        Me.btnDislike.BackColor = System.Drawing.SystemColors.Control
+        Me.btnDislike.BackgroundImage = CType(resources.GetObject("btnDislike.BackgroundImage"), System.Drawing.Image)
+        Me.btnDislike.FlatAppearance.BorderSize = 0
+        Me.btnDislike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDislike.ForeColor = System.Drawing.Color.Black
+        Me.btnDislike.Location = New System.Drawing.Point(66, 421)
+        Me.btnDislike.Name = "btnDislike"
+        Me.btnDislike.Size = New System.Drawing.Size(53, 32)
+        Me.btnDislike.TabIndex = 7
+        Me.btnDislike.TabStop = False
+        Me.btnDislike.UseVisualStyleBackColor = False
+        '
+        'btnLike
+        '
+        Me.btnLike.BackColor = System.Drawing.SystemColors.Control
+        Me.btnLike.BackgroundImage = CType(resources.GetObject("btnLike.BackgroundImage"), System.Drawing.Image)
+        Me.btnLike.FlatAppearance.BorderSize = 0
+        Me.btnLike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnLike.ForeColor = System.Drawing.Color.Black
+        Me.btnLike.Location = New System.Drawing.Point(9, 421)
+        Me.btnLike.Name = "btnLike"
+        Me.btnLike.Size = New System.Drawing.Size(53, 32)
+        Me.btnLike.TabIndex = 6
+        Me.btnLike.TabStop = False
+        Me.btnLike.UseVisualStyleBackColor = False
+        '
+        'SongCoverImage
+        '
+        Me.SongCoverImage.BackColor = System.Drawing.Color.Black
+        Me.SongCoverImage.ContextMenuStrip = Me.MenuStrip
+        Me.SongCoverImage.Location = New System.Drawing.Point(9, 44)
+        Me.SongCoverImage.Name = "SongCoverImage"
+        Me.SongCoverImage.Size = New System.Drawing.Size(300, 300)
+        Me.SongCoverImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.SongCoverImage.TabIndex = 2
+        Me.SongCoverImage.TabStop = False
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -850,15 +852,15 @@ Partial Class frmMain
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Pandorian By Đĵ ΝιΓΞΗΛψΚ"
-        CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip.ResumeLayout(False)
         Me.pnlSleepTimer.ResumeLayout(False)
         Me.pnlSleepTimer.PerformLayout()
         Me.TrayMenu.ResumeLayout(False)
         Me.pnlHotKeys.ResumeLayout(False)
         Me.pnlHotKeys.PerformLayout()
-        CType(Me.Spinner, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.volSlider, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.Spinner, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.SongCoverImage, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
