@@ -81,7 +81,7 @@ Public Class API
             If Session.User.CanListen Then
 
                 AvailableStations = pandoraIO.GetStations()
-                Dim qMixStation As PandoraStation
+                Dim qMixStation As New PandoraStation
                 For Each s As PandoraStation In AvailableStations
                     If s.IsQuickMix Then
                         qMixStation = s

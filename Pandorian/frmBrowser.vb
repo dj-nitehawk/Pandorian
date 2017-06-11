@@ -1,4 +1,6 @@
 ﻿Imports Microsoft.Win32
+Imports Pandorian.Utility.ModifyRegistry
+
 
 Public Class frmBrowser
 
@@ -15,12 +17,14 @@ Public Class frmBrowser
                           11001,
                           RegistryValueKind.DWord)
 
-        If Not My.Settings.noProxy Then
+        Dim Settings As New RegistryStore
+
+        If Not Settings.Read("noProxy") Then
             Dim p As New InternetProxy
             With p
-                .Address = Decrypt(My.Settings.proxyAddress)
-                .UserName = Decrypt(My.Settings.proyxUsername)
-                .Password = Decrypt(My.Settings.proxyPassword)
+                .Address = Decrypt(Settings.Read("proxyAddress"))
+                .UserName = Decrypt(Settings.Read("proyxUsername"))
+                .Password = Decrypt(Settings.Read("proxyPassword"))
             End With
             wBrowser.Proxy = p
         End If

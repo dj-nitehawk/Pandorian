@@ -6,8 +6,11 @@ Imports Microsoft.Win32
 Imports System.IO
 Imports System.Runtime.Serialization.Formatters.Binary
 Imports System.ComponentModel
+Imports Pandorian.Utility.ModifyRegistry
+
 
 Public Class frmMain
+    Dim Settings As RegistryStore = New RegistryStore()
     Dim Pandora As API
     Dim Proxy As WebProxy
     Dim BASSReady As Boolean = False
@@ -69,7 +72,7 @@ Public Class frmMain
 
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
-            Pandora.ClearSession(My.Settings.pandoraOne)
+            Pandora.ClearSession(Settings.Read("pandoraOne"))
             SavePandoraObject()
         End If
     End Sub
@@ -115,7 +118,7 @@ Public Class frmMain
                 End If
             Case 9
                 If Not frmLockScreen.Visible Then
-                    If Not String.IsNullOrEmpty(My.Settings.unlockPassword) Then
+                    If Not String.IsNullOrEmpty(Settings.Read("unlockPassword")) Then
                         frmLockScreen.Show()
                     Else
                         MsgBox("You have not set an unlock password in Pandorian settings." + vbCrLf +
@@ -144,6 +147,20 @@ Public Class frmMain
     End Sub
 
     Private Sub registerHotkeys()
+
+        Dim hkPlayPause As Integer = Settings.Read("hkPlayPause")
+        Dim hkLike As Integer = Settings.Read("hkLike")
+        Dim hkDislike As Integer = Settings.Read("hkDislike")
+        Dim hkSkip As Integer = Settings.Read("hkSkip")
+        Dim hkBlock As Integer = Settings.Read("hkBlock")
+        Dim hkShowHide As Integer = Settings.Read("hkShowHide")
+        Dim hkGlobalMenu As Integer = Settings.Read("hkGlobalMenu")
+        Dim hkSleep As Integer = Settings.Read("hkSleep")
+        Dim hkLock As Integer = Settings.Read("hkLock")
+        Dim hkVolDown As Integer = Settings.Read("hkVolDown")
+        Dim hkVolUp As Integer = Settings.Read("hkVolUp")
+        Dim hkModifier As Integer = Settings.Read("hkModifier")
+
         Dim modKeys As New Dictionary(Of String, Integer)
         For Each k As Hotkeys.KeyModifier In [Enum].GetValues(GetType(Hotkeys.KeyModifier))
             modKeys.Add(k.ToString, k)
@@ -151,41 +168,41 @@ Public Class frmMain
         cbModKey.DisplayMember = "Key"
         cbModKey.ValueMember = "Value"
         cbModKey.DataSource = New BindingSource(modKeys, Nothing)
-        cbModKey.SelectedIndex = cbModKey.FindStringExact(CType(My.Settings.hkModifier, Hotkeys.KeyModifier).ToString)
-        tbHKPlayPause.Text = [Enum].GetName(GetType(Keys), My.Settings.hkPlayPause)
-        tbHKPlayPause.Tag = My.Settings.hkPlayPause
-        tbHKLikeSong.Text = [Enum].GetName(GetType(Keys), My.Settings.hkLike)
-        tbHKLikeSong.Tag = My.Settings.hkLike
-        tbHKDislikeSong.Text = [Enum].GetName(GetType(Keys), My.Settings.hkDislike)
-        tbHKDislikeSong.Tag = My.Settings.hkDislike
-        tbHKSkipSong.Text = [Enum].GetName(GetType(Keys), My.Settings.hkSkip)
-        tbHKSkipSong.Tag = My.Settings.hkSkip
-        tbHKBlockSong.Text = [Enum].GetName(GetType(Keys), My.Settings.hkBlock)
-        tbHKBlockSong.Tag = My.Settings.hkBlock
-        tbHKShowHide.Text = [Enum].GetName(GetType(Keys), My.Settings.hkShowHide)
-        tbHKShowHide.Tag = My.Settings.hkShowHide
-        tbHKGlobalMenu.Text = [Enum].GetName(GetType(Keys), My.Settings.hkGlobalMenu)
-        tbHKGlobalMenu.Tag = My.Settings.hkGlobalMenu
-        tbHKSleepNow.Text = [Enum].GetName(GetType(Keys), My.Settings.hkSleep)
-        tbHKSleepNow.Tag = My.Settings.hkSleep
-        tbHKLockNow.Text = [Enum].GetName(GetType(Keys), My.Settings.hkLock)
-        tbHKLockNow.Tag = My.Settings.hkLock
-        tbHKVolDown.Text = [Enum].GetName(GetType(Keys), My.Settings.hkVolDown)
-        tbHKVolDown.Tag = My.Settings.hkVolDown
-        tbHKVolUp.Text = [Enum].GetName(GetType(Keys), My.Settings.hkVolUp)
-        tbHKVolUp.Tag = My.Settings.hkVolUp
+        cbModKey.SelectedIndex = cbModKey.FindStringExact(CType(hkModifier, Hotkeys.KeyModifier).ToString)
+        tbHKPlayPause.Text = [Enum].GetName(GetType(Keys), hkPlayPause)
+        tbHKPlayPause.Tag = hkPlayPause
+        tbHKLikeSong.Text = [Enum].GetName(GetType(Keys), hkLike)
+        tbHKLikeSong.Tag = hkLike
+        tbHKDislikeSong.Text = [Enum].GetName(GetType(Keys), hkDislike)
+        tbHKDislikeSong.Tag = hkDislike
+        tbHKSkipSong.Text = [Enum].GetName(GetType(Keys), hkSkip)
+        tbHKSkipSong.Tag = hkSkip
+        tbHKBlockSong.Text = [Enum].GetName(GetType(Keys), hkBlock)
+        tbHKBlockSong.Tag = hkBlock
+        tbHKShowHide.Text = [Enum].GetName(GetType(Keys), hkShowHide)
+        tbHKShowHide.Tag = hkShowHide
+        tbHKGlobalMenu.Text = [Enum].GetName(GetType(Keys), hkGlobalMenu)
+        tbHKGlobalMenu.Tag = hkGlobalMenu
+        tbHKSleepNow.Text = [Enum].GetName(GetType(Keys), hkSleep)
+        tbHKSleepNow.Tag = hkSleep
+        tbHKLockNow.Text = [Enum].GetName(GetType(Keys), hkLock)
+        tbHKLockNow.Tag = hkLock
+        tbHKVolDown.Text = [Enum].GetName(GetType(Keys), hkVolDown)
+        tbHKVolDown.Tag = hkVolDown
+        tbHKVolUp.Text = [Enum].GetName(GetType(Keys), hkVolUp)
+        tbHKVolUp.Tag = hkVolUp
 
-        Hotkeys.registerHotkey(Me, 1, My.Settings.hkPlayPause, My.Settings.hkModifier) 'play/pause
-        Hotkeys.registerHotkey(Me, 2, My.Settings.hkLike, My.Settings.hkModifier) 'like
-        Hotkeys.registerHotkey(Me, 3, My.Settings.hkDislike, My.Settings.hkModifier) 'dislike
-        Hotkeys.registerHotkey(Me, 4, My.Settings.hkSkip, My.Settings.hkModifier) 'skip
-        Hotkeys.registerHotkey(Me, 5, My.Settings.hkShowHide, My.Settings.hkModifier) 'show/hide pandorian
-        Hotkeys.registerHotkey(Me, 6, My.Settings.hkBlock, My.Settings.hkModifier) 'block
-        Hotkeys.registerHotkey(Me, 7, My.Settings.hkSleep, My.Settings.hkModifier) 'sleep
-        Hotkeys.registerHotkey(Me, 8, My.Settings.hkGlobalMenu, My.Settings.hkModifier) 'show tray menu
-        Hotkeys.registerHotkey(Me, 9, My.Settings.hkLock, My.Settings.hkModifier) 'show lock screen
-        Hotkeys.registerHotkey(Me, 10, My.Settings.hkVolDown, My.Settings.hkModifier) 'vol down
-        Hotkeys.registerHotkey(Me, 11, My.Settings.hkVolUp, My.Settings.hkModifier) 'vol up
+        Hotkeys.registerHotkey(Me, 1, hkPlayPause, hkModifier) 'play/pause
+        Hotkeys.registerHotkey(Me, 2, hkLike, hkModifier) 'like
+        Hotkeys.registerHotkey(Me, 3, hkDislike, hkModifier) 'dislike
+        Hotkeys.registerHotkey(Me, 4, hkSkip, hkModifier) 'skip
+        Hotkeys.registerHotkey(Me, 5, hkShowHide, hkModifier) 'show/hide pandorian
+        Hotkeys.registerHotkey(Me, 6, hkBlock, hkModifier) 'block
+        Hotkeys.registerHotkey(Me, 7, hkSleep, hkModifier) 'sleep
+        Hotkeys.registerHotkey(Me, 8, hkGlobalMenu, hkModifier) 'show tray menu
+        Hotkeys.registerHotkey(Me, 9, hkLock, hkModifier) 'show lock screen
+        Hotkeys.registerHotkey(Me, 10, hkVolDown, hkModifier) 'vol down
+        Hotkeys.registerHotkey(Me, 11, hkVolUp, hkModifier) 'vol up
     End Sub
     Private Sub unRegisterHotkeys()
         Dim i As Integer = 1
@@ -212,12 +229,12 @@ Public Class frmMain
     End Function
     Private Function LoginToPandora() As Boolean
         Try
-            If Pandora.Login(Decrypt(My.Settings.pandoraUsername), Decrypt(My.Settings.pandoraPassword)) Then
+            If Pandora.Login(Decrypt(Settings.Read("pandoraUsername")), Decrypt(Settings.Read("pandoraPassword"))) Then
                 tbLog.AppendText("Successfully logged in to pandora..." + vbCrLf)
                 Return True
             Else
                 MsgBox("Couldn't log in to Pandora. Check pandora a/c details.", MsgBoxStyle.Exclamation)
-            End If
+        End If
         Catch ex As PandoraException
             If ex.ErrorCode = ErrorCodeEnum.LISTENER_NOT_AUTHORIZED Then
                 MsgBox(ex.Message, MsgBoxStyle.Exclamation)
@@ -225,7 +242,7 @@ Public Class frmMain
                 MsgBox(ex.Message + ". Please check your internet/proxy settings and try again." + vbCrLf + vbCr + "Error Code: " + ex.ErrorCode.ToString, MsgBoxStyle.Critical)
             End If
         End Try
-        Pandora.ClearSession(My.Settings.pandoraOne)
+        Pandora.ClearSession(Settings.Read("pandoraOne"))
         Return False
     End Function
     Sub LoadStationList()
@@ -234,7 +251,7 @@ Public Class frmMain
             Dim Stations As New SortedDictionary(Of String, String)
             For Each Station In Pandora.AvailableStations
                 Stations.Add(Station.Name, Station.Id)
-                If My.Settings.lastStationID = Station.Id Then
+                If Settings.Read("lastStationID") = Station.Id Then
                     Pandora.CurrentStation = Station
                     FoundLastPlayedStation = True
                 End If
@@ -419,10 +436,11 @@ Public Class frmMain
                        "Please double check your gear and restart Pandorian...", MsgBoxStyle.Critical)
             End If
 
-            If Not My.Settings.noProxy Then
-                Dim proxy As String = Decrypt(My.Settings.proyxUsername) + ":" +
-                                      Decrypt(My.Settings.proxyPassword) + "@" +
-                                      Decrypt(My.Settings.proxyAddress).Replace("http://", "")
+            Dim noProxy As Boolean = Settings.Read("noProxy")
+            If Not noProxy Then
+                Dim proxy As String = Decrypt(Settings.Read("proyxUsername")) + ":" +
+                                      Decrypt(Settings.Read("proxyPassword")) + "@" +
+                                      Decrypt(Settings.Read("proxyAddress")).Replace("http://", "")
                 ProxyPtr = Marshal.StringToHGlobalAnsi(proxy)
                 Bass.BASS_SetConfigPtr(BASSConfig.BASS_CONFIG_NET_PROXY, ProxyPtr)
             End If
@@ -450,7 +468,7 @@ Public Class frmMain
         End If
 
         Stream = Bass.BASS_StreamCreateURL(
-                Pandora.CurrentStation.CurrentSong.AudioUrlMap(My.Settings.audioQuality).Url,
+                Pandora.CurrentStation.CurrentSong.AudioUrlMap(Settings.Read("audioQuality")).Url,
                 0,
                 BASSFlag.BASS_STREAM_AUTOFREE,
                 DownloadProc,
@@ -499,9 +517,10 @@ Public Class frmMain
     End Sub
 
     Private Sub ShareTheLove()
+        Dim launchCount = Settings.Read("launchCount")
         Dim triggers As Integer() = {3, 10, 20, 30, 40}
         For Each t In triggers
-            If t = My.Settings.launchCount And NagShown = False Then
+            If t = launchCount And NagShown = False Then
 
                 If MsgBox("Hi there!" + vbCrLf + vbCrLf +
                           "Glad to see you're enjoying Pandorian..." + vbCrLf + vbCrLf +
@@ -515,27 +534,57 @@ Public Class frmMain
             End If
         Next
 
-        If My.Settings.launchCount >= 90 Then
-            My.Settings.launchCount = 39
-            My.Settings.Save()
+        If launchCount >= 90 Then
+            Settings.Write("launchCount", 39)
         End If
     End Sub
 
     Function HasSettings() As Boolean
 
+        With Settings
+            If .ValueCount = 0 Then
+                .Write("proxyAddress", "http://server:port")
+                .Write("proyxUsername", "")
+                .Write("proxyPassword", "")
+                .Write("pandoraUsername", "")
+                .Write("pandoraPassword", "")
+                .Write("lastStationID", 0)
+                .Write("audioQuality", "mediumQuality")
+                .Write("pandoraOne", 0)
+                .Write("downloadLocation", "")
+                .Write("noProxy", 0)
+                .Write("launchCount", 0)
+                .Write("hkModifier", 1)
+                .Write("hkPlayPause", 32)
+                .Write("hkLike", 76)
+                .Write("hkDislike", 68)
+                .Write("hkSkip", 83)
+                .Write("hkShowHide", 80)
+                .Write("hkBlock", 66)
+                .Write("hkSleep", 27)
+                .Write("hkGlobalMenu", 77)
+                .Write("hkLock", 88)
+                .Write("hkVolDown", 40)
+                .Write("hkVolUp", 38)
+                .Write("unlockPassword", "")
+                Return False
+            End If
+        End With
+
         Dim prxSettingsReqd As Boolean
 
-        If My.Settings.noProxy = True Then
+        Dim noProxy As Boolean = Settings.Read("noProxy")
+        If noProxy = True Then
             prxSettingsReqd = False
         Else
-            If Decrypt(My.Settings.proxyAddress) = "http://server:port" Then
+            If Decrypt(Settings.Read("proxyAddress")) = "http://server:port" Then
                 prxSettingsReqd = True
             End If
         End If
 
         If prxSettingsReqd Or
-            String.IsNullOrEmpty(Decrypt(My.Settings.pandoraUsername)) Or
-            String.IsNullOrEmpty(Decrypt(My.Settings.pandoraPassword)) Then
+            String.IsNullOrEmpty(Decrypt(Settings.Read("pandoraUsername"))) Or
+            String.IsNullOrEmpty(Decrypt(Settings.Read("pandoraPassword"))) Then
             Return False
         Else
             Return True
@@ -543,6 +592,8 @@ Public Class frmMain
     End Function
 
     Private Sub frmMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
+
+        Dim downLoc = Settings.Read("downloadLocation")
 
         If Debugger.IsAttached Then
             If e.Control And e.Alt And e.KeyCode = Keys.E Then
@@ -566,23 +617,24 @@ Public Class frmMain
                             prgDownload.Value = 100 And
                             Pandora.Session.User.PartnerCredentials.AccountType = Engine.Data.AccountType.PANDORA_ONE_USER Then
 
-            If Not Directory.Exists(My.Settings.downloadLocation) Then
+            If Not Directory.Exists(downLoc) Then
                 If folderBrowser.ShowDialog = Windows.Forms.DialogResult.OK Then
-                    My.Settings.downloadLocation = folderBrowser.SelectedPath
-                    My.Settings.Save()
+                    downLoc = folderBrowser.SelectedPath
+                    Settings.Write("downloadLocation", downLoc)
                 Else
                     Exit Sub
                 End If
             End If
 
-            If Directory.Exists(My.Settings.downloadLocation) Then
-                TargeFile = My.Settings.downloadLocation + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
+            If Directory.Exists(downLoc) Then
+                TargeFile = downLoc + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
 
-                If Not System.IO.File.Exists(TargeFile) Then
+                If Not File.Exists(TargeFile) Then
                     Downloader = New WebClient
                     AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
                     AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
-                    If Not My.Settings.noProxy Then
+                    Dim noProxy As Boolean = Settings.Read("noProxy")
+                    If Not noProxy Then
                         Downloader.Proxy = Me.Proxy
                     End If
                     Downloader.DownloadFileAsync(
@@ -596,20 +648,20 @@ Public Class frmMain
         If e.Control And e.KeyCode = Global.System.Windows.Forms.Keys.D And
                             Not IsNothing(Pandora.CurrentStation.CurrentSong) And
                             prgDownload.Value > 99 And
-                            My.Settings.audioQuality = "highQuality" And
+                            Settings.Read("audioQuality") = "highQuality" And
                             Me.Pandora.Session.User.PartnerCredentials.AccountType = Global.Pandorian.Engine.Data.AccountType.PANDORA_ONE_USER Then
 
-            If Not Directory.Exists(My.Settings.downloadLocation) Then
+            If Not Directory.Exists(downLoc) Then
                 If Me.folderBrowser.ShowDialog = Global.System.Windows.Forms.DialogResult.OK Then
-                    My.Settings.downloadLocation = folderBrowser.SelectedPath
-                    My.Settings.Save()
+                    downLoc = folderBrowser.SelectedPath
+                    Settings.Write("downloadLocation", downLoc)
                 Else
                     Exit Sub
                 End If
             End If
 
-            If Directory.Exists(My.Settings.downloadLocation) Then
-                TargeFile = My.Settings.downloadLocation + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
+            If Directory.Exists(downLoc) Then
+                TargeFile = downLoc + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
 
                 If Not File.Exists(TargeFile) Then
                     File.Copy("current.stream", TargeFile)
@@ -639,17 +691,22 @@ Public Class frmMain
     End Function
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Control.CheckForIllegalCrossThreadCalls = False
+        If Not HasSettings() Then
+            frmSettings.Show()
+            Me.Hide()
+            Exit Sub
+        End If
         frmLockScreen.Show()
         frmLockScreen.Visible = False
-        Control.CheckForIllegalCrossThreadCalls = False
         lblAlbumName.UseMnemonic = False
         lblArtistName.UseMnemonic = False
         lblSongName.UseMnemonic = False
-        If Not System.Diagnostics.Debugger.IsAttached Then
+        If Not Debugger.IsAttached Then
             LogAppStartEvent()
         End If
-        My.Settings.launchCount = My.Settings.launchCount + 1
-        My.Settings.Save()
+        Dim launchCount As Integer = Settings.Read("launchCount") + 1
+        Settings.Write("launchCount", launchCount)
         CheckForUpdate()
         registerHotkeys()
         populateSleepTimes()
@@ -722,7 +779,7 @@ Public Class frmMain
                 ReportError(e, "RestorePandoraObject")
             End Try
         End If
-        Pandora = New API(My.Settings.pandoraOne)
+        Pandora = New API(Settings.Read("pandoraOne"))
     End Sub
 
     Sub RunNow()
@@ -738,10 +795,13 @@ Public Class frmMain
 
         RestorePandoraObject()
 
-        If Not My.Settings.noProxy Then
-            Me.Proxy = New Net.WebProxy(Decrypt(My.Settings.proxyAddress))
-            If Not String.IsNullOrEmpty(Decrypt(My.Settings.proyxUsername)) And Not String.IsNullOrEmpty(Decrypt(My.Settings.proxyPassword)) Then
-                Me.Proxy.Credentials = New Net.NetworkCredential(Decrypt(My.Settings.proyxUsername), Decrypt(My.Settings.proxyPassword))
+        Dim noProxy As Boolean = Settings.Read("noProxy")
+        If Not noProxy Then
+            Dim prxUser = Settings.Read("proyxUsername")
+            Dim prxPass = Settings.Read("proxyPassword")
+            Me.Proxy = New WebProxy(Decrypt(Settings.Read("proxyAddress")))
+            If Not String.IsNullOrEmpty(Decrypt(prxUser)) And Not String.IsNullOrEmpty(Decrypt(prxPass)) Then
+                Me.Proxy.Credentials = New NetworkCredential(Decrypt(prxUser), Decrypt(prxPass))
             End If
             Pandora.Proxy = Me.Proxy
         Else
@@ -796,8 +856,7 @@ Public Class frmMain
                 End If
             Next
 
-            My.Settings.lastStationID = Pandora.CurrentStation.Id
-            My.Settings.Save()
+            Settings.Write("lastStationID", Pandora.CurrentStation.Id)
 
             tbLog.AppendText("Station changed to: " + Pandora.CurrentStation.Name + vbCrLf)
 
@@ -852,9 +911,10 @@ Public Class frmMain
     Private Sub DebugExpireSessionNow()
         'Pandora.Session.DebugCorruptAuthToken()
         'Pandora.Session.User.DebugCorruptAuthToken()
-        Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(My.Settings.audioQuality)
+        Dim quality = Settings.Read("audioQuality")
+        Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(quality)
         For Each s In Pandora.CurrentStation.PlayList
-            s.DebugCorruptAudioUrl(My.Settings.audioQuality)
+            s.DebugCorruptAudioUrl(quality)
         Next
     End Sub
 
@@ -949,7 +1009,7 @@ Public Class frmMain
     Private Sub ReLoginToPandora()
         Spinner.Visible = True
         Application.DoEvents()
-        Pandora.ClearSession(My.Settings.pandoraOne)
+        Pandora.ClearSession(Settings.Read("pandoraOne"))
         SavePandoraObject()
         Execute(Sub() RunNow(), "ReLoginToPandora")
     End Sub
@@ -1017,7 +1077,8 @@ Public Class frmMain
         Else
             Dim url As String = e.Argument
             Dim web As New WebClient()
-            If Not My.Settings.noProxy Then
+            Dim noProxy As Boolean = Settings.Read("noProxy")
+            If Not noProxy Then
                 web.Proxy = Me.Proxy
             End If
             Try
@@ -1366,21 +1427,20 @@ Public Class frmMain
             Exit Sub
         End If
 
-        With My.Settings
-            .hkModifier = CType(cbModKey.SelectedValue, Integer)
-            .hkBlock = tbHKBlockSong.Tag
-            .hkDislike = tbHKDislikeSong.Tag
-            .hkGlobalMenu = tbHKGlobalMenu.Tag
-            .hkLike = tbHKLikeSong.Tag
-            .hkPlayPause = tbHKPlayPause.Tag
-            .hkShowHide = tbHKShowHide.Tag
-            .hkSkip = tbHKSkipSong.Tag
-            .hkSleep = tbHKSleepNow.Tag
-            .hkLock = tbHKLockNow.Tag
-            .hkVolDown = tbHKVolDown.Tag
-            .hkVolUp = tbHKVolUp.Tag
+        With Settings
+            .Write("hkModifier", CType(cbModKey.SelectedValue, Integer))
+            .Write("hkBlock", tbHKBlockSong.Tag)
+            .Write("hkDislike", tbHKDislikeSong.Tag)
+            .Write("hkGlobalMenu", tbHKGlobalMenu.Tag)
+            .Write("hkLike", tbHKLikeSong.Tag)
+            .Write("hkPlayPause", tbHKPlayPause.Tag)
+            .Write("hkShowHide", tbHKShowHide.Tag)
+            .Write("hkSkip", tbHKSkipSong.Tag)
+            .Write("hkSleep", tbHKSleepNow.Tag)
+            .Write("hkLock", tbHKLockNow.Tag)
+            .Write("hkVolDown", tbHKVolDown.Tag)
+            .Write("hkVolUp", tbHKVolUp.Tag)
         End With
-        My.Settings.Save()
 
         pnlHotKeys.Visible = False
 

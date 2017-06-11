@@ -1,5 +1,9 @@
-﻿Public Class frmSettings
+﻿Imports Pandorian.Utility.ModifyRegistry
 
+
+Public Class frmSettings
+
+    Private Settings As New RegistryStore
     Private Qualities As New Dictionary(Of String, String)
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -16,18 +20,17 @@
 
         If Not String.IsNullOrEmpty(pnUsername.Text) And Not String.IsNullOrEmpty(pnPassword.Text) Then
 
-            My.Settings.proxyAddress = Encrypt(prxAddress.Text)
-            My.Settings.proxyPassword = Encrypt(prxPassword.Text)
-            My.Settings.proyxUsername = Encrypt(prxUserName.Text)
-            My.Settings.noProxy = chkNoProxy.Checked
-            My.Settings.pandoraUsername = Encrypt(pnUsername.Text)
-            My.Settings.pandoraPassword = Encrypt(pnPassword.Text)
-            My.Settings.pandoraOne = chkPandoraOne.Checked
-            My.Settings.audioQuality = ddQuality.SelectedValue
+            Settings.Write("proxyAddress", Encrypt(prxAddress.Text))
+            Settings.Write("proxyPassword", Encrypt(prxPassword.Text))
+            Settings.Write("proyxUsername", Encrypt(prxUserName.Text))
+            Settings.Write("noProxy", Convert.ToInt32(chkNoProxy.Checked))
+            Settings.Write("pandoraUsername",Encrypt(pnUsername.Text))
+            Settings.Write("pandoraPassword", Encrypt(pnPassword.Text))
+            Settings.Write("pandoraOne", Convert.ToInt32(chkPandoraOne.Checked))
+            Settings.Write("audioQuality", ddQuality.SelectedValue)
             If Not String.IsNullOrEmpty(unlockCode.Text) And Not unlockCode.Text = "secret" Then
-                My.Settings.unlockPassword = Encrypt(getMD5Hash(unlockCode.Text))
+                Settings.Write("unlockPassword", Encrypt(getMD5Hash(unlockCode.Text)))
             End If
-            My.Settings.Save()
             frmMain.ClearSession()
 
             Me.Hide()
@@ -51,22 +54,22 @@
     End Sub
 
     Private Sub frmSettings_Load(sender As Object, e As EventArgs) Handles Me.Load
-        prxAddress.Text = Decrypt(My.Settings.proxyAddress)
-        prxUserName.Text = Decrypt(My.Settings.proyxUsername)
-        prxPassword.Text = Decrypt(My.Settings.proxyPassword)
-        chkNoProxy.Checked = My.Settings.noProxy
-        pnUsername.Text = Decrypt(My.Settings.pandoraUsername)
-        pnPassword.Text = Decrypt(My.Settings.pandoraPassword)
-        chkPandoraOne.Checked = My.Settings.pandoraOne
-        chkNoProxy.Checked = My.Settings.noProxy
-        If Not String.IsNullOrEmpty(My.Settings.unlockPassword) Then
+        prxAddress.Text = Decrypt(Settings.Read("proxyAddress"))
+        prxUserName.Text = Decrypt(Settings.Read("proyxUsername"))
+        prxPassword.Text = Decrypt(Settings.Read("proxyPassword"))
+        chkNoProxy.Checked = Settings.Read("noProxy")
+        pnUsername.Text = Decrypt(Settings.Read("pandoraUsername"))
+        pnPassword.Text = Decrypt(Settings.Read("pandoraPassword"))
+        chkPandoraOne.Checked = Settings.Read("pandoraOne")
+        chkNoProxy.Checked = Settings.Read("noProxy")
+        If Not String.IsNullOrEmpty(Settings.Read("unlockPassword")) Then
             unlockCode.Text = "secret"
         End If
 
-        PopulateQualityList(My.Settings.pandoraOne)
+        PopulateQualityList(Settings.Read("pandoraOne"))
 
         For Each i As KeyValuePair(Of String, String) In ddQuality.Items
-            If i.Value = My.Settings.audioQuality Then
+            If i.Value = Settings.Read("audioQuality") Then
                 ddQuality.SelectedIndex = ddQuality.FindStringExact(i.Key)
                 Exit For
             End If
@@ -107,7 +110,7 @@
 
     Private Sub chkNoProxy_CheckedChanged(sender As Object, e As EventArgs) Handles chkNoProxy.CheckedChanged
         If chkNoProxy.Checked Then
-            My.Settings.noProxy = True
+            Settings.Write("noProxy", 1)
             lblProxyAddre.Enabled = False
             lblProxyPass.Enabled = False
             lblProxyUser.Enabled = False
@@ -116,7 +119,7 @@
             prxUserName.Enabled = False
             lnkProxy.Enabled = False
         Else
-            My.Settings.noProxy = False
+            Settings.Write("noProxy", 0)
             lblProxyAddre.Enabled = True
             lblProxyPass.Enabled = True
             lblProxyUser.Enabled = True
