@@ -1,7 +1,4 @@
 ﻿Imports System.Collections.Generic
-Imports System.Text
-Imports Pandorian.Engine.Encryption
-Imports System.Text.RegularExpressions
 Imports Newtonsoft.Json
 
 Namespace Data
@@ -103,13 +100,6 @@ Namespace Data
         <JsonProperty(PropertyName:="songName")> _
         Public Property Title() As String
             Get
-                If m_Rating = PandoraRating.Love Then
-                    Return m_Title + " ✔"
-                End If
-                If m_Rating = PandoraRating.Hate Then
-                    Return m_Title + " ⭙"
-                End If
-
                 Return m_Title
             End Get
             Set(value As String)
@@ -117,6 +107,18 @@ Namespace Data
             End Set
         End Property
         Private m_Title As String
+
+        Public Function GetProperTitle(DontIndicateLiked As Boolean)
+            If Not DontIndicateLiked Then
+                If m_Rating = PandoraRating.Love Then
+                    Return m_Title + " ✔"
+                End If
+                If m_Rating = PandoraRating.Hate Then
+                    Return m_Title + " ⭙"
+                End If
+            End If
+            Return m_Title
+        End Function
 
         Public ReadOnly Property AudioInfo() As AudioUrlInfo
             Get
@@ -231,6 +233,9 @@ Namespace Data
         Public ReadOnly Property TrackGain() As Single
             Get
                 Dim rtn As Single = 0
+                If String.IsNullOrEmpty(TrackGainStr) Then
+                    TrackGainStr = "-5.55"
+                End If
                 Single.TryParse(TrackGainStr, rtn)
                 Return rtn
             End Get

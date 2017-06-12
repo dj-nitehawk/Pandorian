@@ -33,6 +33,7 @@
     <ApplicationVersion>2.6.0.%2a</ApplicationVersion>
     <ApplicationVersion>2.7.0.%2a</ApplicationVersion>
     <ApplicationVersion>2.7.1.%2a</ApplicationVersion>
+    <ApplicationVersion>2.7.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -178,6 +179,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Settings.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="frmBrowser.resx">

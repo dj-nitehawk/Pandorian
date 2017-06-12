@@ -63,7 +63,7 @@ Partial Class frmLockScreen
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(982, 726)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(978, 722)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'CoverImage
@@ -71,7 +71,7 @@ Partial Class frmLockScreen
         Me.CoverImage.BackColor = System.Drawing.Color.Black
         Me.CoverImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.CoverImage.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.CoverImage.Location = New System.Drawing.Point(241, 89)
+        Me.CoverImage.Location = New System.Drawing.Point(239, 86)
         Me.CoverImage.MaximumSize = New System.Drawing.Size(500, 500)
         Me.CoverImage.MinimumSize = New System.Drawing.Size(500, 500)
         Me.CoverImage.Name = "CoverImage"
@@ -84,7 +84,7 @@ Partial Class frmLockScreen
         '
         Me.tbPassword.AcceptsReturn = True
         Me.tbPassword.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.tbPassword.Location = New System.Drawing.Point(391, 612)
+        Me.tbPassword.Location = New System.Drawing.Point(389, 609)
         Me.tbPassword.Margin = New System.Windows.Forms.Padding(3, 20, 3, 10)
         Me.tbPassword.MaxLength = 100
         Me.tbPassword.Name = "tbPassword"
@@ -100,13 +100,14 @@ Partial Class frmLockScreen
         Me.Panel1.Controls.Add(Me.lblAlbum)
         Me.Panel1.Controls.Add(Me.lblArtist)
         Me.Panel1.Controls.Add(Me.lblTitle)
-        Me.Panel1.Location = New System.Drawing.Point(244, 18)
+        Me.Panel1.Location = New System.Drawing.Point(242, 15)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(494, 65)
         Me.Panel1.TabIndex = 5
         '
         'lblAlbum
         '
+        Me.lblAlbum.AutoEllipsis = True
         Me.lblAlbum.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblAlbum.ForeColor = System.Drawing.Color.White
         Me.lblAlbum.Location = New System.Drawing.Point(3, 44)
@@ -117,6 +118,7 @@ Partial Class frmLockScreen
         '
         'lblArtist
         '
+        Me.lblArtist.AutoEllipsis = True
         Me.lblArtist.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblArtist.ForeColor = System.Drawing.Color.White
         Me.lblArtist.Location = New System.Drawing.Point(3, 24)
@@ -127,6 +129,7 @@ Partial Class frmLockScreen
         '
         'lblTitle
         '
+        Me.lblTitle.AutoEllipsis = True
         Me.lblTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTitle.ForeColor = System.Drawing.Color.White
         Me.lblTitle.Location = New System.Drawing.Point(3, 4)
@@ -141,7 +144,7 @@ Partial Class frmLockScreen
         Me.lblTimeNow.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lblTimeNow.Font = New System.Drawing.Font("Calibri", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTimeNow.ForeColor = System.Drawing.Color.White
-        Me.lblTimeNow.Location = New System.Drawing.Point(241, 642)
+        Me.lblTimeNow.Location = New System.Drawing.Point(239, 639)
         Me.lblTimeNow.Name = "lblTimeNow"
         Me.lblTimeNow.Size = New System.Drawing.Size(500, 27)
         Me.lblTimeNow.TabIndex = 6
@@ -153,7 +156,7 @@ Partial Class frmLockScreen
         Me.lblDateNow.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lblDateNow.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblDateNow.ForeColor = System.Drawing.Color.White
-        Me.lblDateNow.Location = New System.Drawing.Point(241, 669)
+        Me.lblDateNow.Location = New System.Drawing.Point(239, 666)
         Me.lblDateNow.Name = "lblDateNow"
         Me.lblDateNow.Size = New System.Drawing.Size(500, 20)
         Me.lblDateNow.TabIndex = 7
@@ -164,7 +167,7 @@ Partial Class frmLockScreen
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
-        Me.ClientSize = New System.Drawing.Size(982, 726)
+        Me.ClientSize = New System.Drawing.Size(978, 722)
         Me.ControlBox = False
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle

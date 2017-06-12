@@ -134,16 +134,18 @@ Partial Class frmMain
         '
         'lblSongName
         '
+        Me.lblSongName.AutoEllipsis = True
         Me.lblSongName.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSongName.Location = New System.Drawing.Point(-9, 368)
+        Me.lblSongName.Location = New System.Drawing.Point(0, 368)
         Me.lblSongName.Name = "lblSongName"
-        Me.lblSongName.Size = New System.Drawing.Size(332, 15)
+        Me.lblSongName.Size = New System.Drawing.Size(317, 15)
         Me.lblSongName.TabIndex = 3
         Me.lblSongName.Text = "Song Name"
         Me.lblSongName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblArtistName
         '
+        Me.lblArtistName.AutoEllipsis = True
         Me.lblArtistName.Location = New System.Drawing.Point(-9, 384)
         Me.lblArtistName.Name = "lblArtistName"
         Me.lblArtistName.Size = New System.Drawing.Size(332, 15)
@@ -153,9 +155,10 @@ Partial Class frmMain
         '
         'lblAlbumName
         '
-        Me.lblAlbumName.Location = New System.Drawing.Point(-6, 400)
+        Me.lblAlbumName.AutoEllipsis = True
+        Me.lblAlbumName.Location = New System.Drawing.Point(0, 400)
         Me.lblAlbumName.Name = "lblAlbumName"
-        Me.lblAlbumName.Size = New System.Drawing.Size(329, 15)
+        Me.lblAlbumName.Size = New System.Drawing.Size(317, 15)
         Me.lblAlbumName.TabIndex = 5
         Me.lblAlbumName.Text = "Album Name"
         Me.lblAlbumName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
