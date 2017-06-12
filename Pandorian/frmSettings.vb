@@ -136,7 +136,11 @@ Public Class frmSettings
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        Me.Hide()
-        frmMain.Close()
+        If frmMain.HasSettings() Then
+            frmMain.Show()
+            Me.Close()
+        Else
+            frmMain.Close()
+        End If
     End Sub
 End Class

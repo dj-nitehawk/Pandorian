@@ -73,6 +73,7 @@ Public Class frmMain
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
             Pandora.ClearSession(Settings.Read("pandoraOne"))
+            'File.Delete("api.dat")
             SavePandoraObject()
         End If
     End Sub
@@ -539,7 +540,7 @@ Public Class frmMain
         End If
     End Sub
 
-    Function HasSettings() As Boolean
+    Public Function HasSettings() As Boolean
 
         With Settings
             If .ValueCount = 0 Then

@@ -141,7 +141,7 @@ Partial Class frmSettings
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(82, 26)
         Me.Button1.TabIndex = 13
-        Me.Button1.Text = "Save Settings"
+        Me.Button1.Text = "Apply"
         Me.Button1.UseVisualStyleBackColor = True
         '
         'lnkPandora
@@ -240,7 +240,7 @@ Partial Class frmSettings
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(82, 26)
         Me.Button2.TabIndex = 14
-        Me.Button2.Text = "Exit"
+        Me.Button2.Text = "Close"
         Me.Button2.UseVisualStyleBackColor = True
         '
         'frmSettings
