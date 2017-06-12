@@ -72,7 +72,7 @@ Public Class API
         Return True
     End Function
 
-    Public Function Login(username As String, password As String) As Boolean
+    Public Function Login(username As String, password As String, DontIndicateQuickMixMembers As Boolean) As Boolean
 
         Session = pandoraIO.PartnerLogin()
         Session.User = pandoraIO.UserLogin(username, password)
@@ -88,11 +88,15 @@ Public Class API
                         Exit For
                     End If
                 Next
-                For Each stn As PandoraStation In AvailableStations
-                    If qMixStation.QuickMixStations.Contains(stn.Id) Then
-                        stn.Name = stn.Name + " ✪"
-                    End If
-                Next
+
+                If Not DontIndicateQuickMixMembers Then
+                    For Each stn As PandoraStation In AvailableStations
+                        If qMixStation.QuickMixStations.Contains(stn.Id) Then
+                            stn.Name = stn.Name + " ✪"
+                        End If
+                    Next
+                End If
+
                 Return True
             Else
                 Throw New PandoraException(ErrorCodeEnum.LISTENER_NOT_AUTHORIZED, "Your are not a Pandora Plus subscriber. Please change the settings.")

@@ -34,8 +34,6 @@ Partial Class frmSettings
         Me.prxUserName = New System.Windows.Forms.TextBox()
         Me.prxAddress = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
-        Me.lnkPandora = New System.Windows.Forms.LinkLabel()
-        Me.lnkProxy = New System.Windows.Forms.LinkLabel()
         Me.btnPayPal = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.ddQuality = New System.Windows.Forms.ComboBox()
@@ -44,12 +42,14 @@ Partial Class frmSettings
         Me.Label1 = New System.Windows.Forms.Label()
         Me.unlockCode = New System.Windows.Forms.TextBox()
         Me.Button2 = New System.Windows.Forms.Button()
+        Me.chkNoQMix = New System.Windows.Forms.CheckBox()
+        Me.chkNoLiked = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'lblProxyAddre
         '
         Me.lblProxyAddre.AutoSize = True
-        Me.lblProxyAddre.Location = New System.Drawing.Point(12, 139)
+        Me.lblProxyAddre.Location = New System.Drawing.Point(12, 112)
         Me.lblProxyAddre.Name = "lblProxyAddre"
         Me.lblProxyAddre.Size = New System.Drawing.Size(74, 13)
         Me.lblProxyAddre.TabIndex = 0
@@ -58,7 +58,7 @@ Partial Class frmSettings
         'lblProxyUser
         '
         Me.lblProxyUser.AutoSize = True
-        Me.lblProxyUser.Location = New System.Drawing.Point(12, 161)
+        Me.lblProxyUser.Location = New System.Drawing.Point(12, 134)
         Me.lblProxyUser.Name = "lblProxyUser"
         Me.lblProxyUser.Size = New System.Drawing.Size(84, 13)
         Me.lblProxyUser.TabIndex = 0
@@ -67,7 +67,7 @@ Partial Class frmSettings
         'lblProxyPass
         '
         Me.lblProxyPass.AutoSize = True
-        Me.lblProxyPass.Location = New System.Drawing.Point(12, 183)
+        Me.lblProxyPass.Location = New System.Drawing.Point(12, 156)
         Me.lblProxyPass.Name = "lblProxyPass"
         Me.lblProxyPass.Size = New System.Drawing.Size(82, 13)
         Me.lblProxyPass.TabIndex = 0
@@ -112,7 +112,7 @@ Partial Class frmSettings
         'prxPassword
         '
         Me.prxPassword.BackColor = System.Drawing.Color.White
-        Me.prxPassword.Location = New System.Drawing.Point(114, 180)
+        Me.prxPassword.Location = New System.Drawing.Point(114, 153)
         Me.prxPassword.Name = "prxPassword"
         Me.prxPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.prxPassword.Size = New System.Drawing.Size(157, 20)
@@ -122,7 +122,7 @@ Partial Class frmSettings
         'prxUserName
         '
         Me.prxUserName.BackColor = System.Drawing.Color.White
-        Me.prxUserName.Location = New System.Drawing.Point(114, 158)
+        Me.prxUserName.Location = New System.Drawing.Point(114, 131)
         Me.prxUserName.Name = "prxUserName"
         Me.prxUserName.Size = New System.Drawing.Size(157, 20)
         Me.prxUserName.TabIndex = 7
@@ -130,39 +130,19 @@ Partial Class frmSettings
         'prxAddress
         '
         Me.prxAddress.BackColor = System.Drawing.Color.White
-        Me.prxAddress.Location = New System.Drawing.Point(114, 136)
+        Me.prxAddress.Location = New System.Drawing.Point(114, 109)
         Me.prxAddress.Name = "prxAddress"
         Me.prxAddress.Size = New System.Drawing.Size(157, 20)
         Me.prxAddress.TabIndex = 6
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(55, 352)
+        Me.Button1.Location = New System.Drawing.Point(50, 355)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(82, 26)
         Me.Button1.TabIndex = 13
         Me.Button1.Text = "Apply"
         Me.Button1.UseVisualStyleBackColor = True
-        '
-        'lnkPandora
-        '
-        Me.lnkPandora.AutoSize = True
-        Me.lnkPandora.Location = New System.Drawing.Point(113, 53)
-        Me.lnkPandora.Name = "lnkPandora"
-        Me.lnkPandora.Size = New System.Drawing.Size(117, 13)
-        Me.lnkPandora.TabIndex = 3
-        Me.lnkPandora.TabStop = True
-        Me.lnkPandora.Text = "Get a pandora account"
-        '
-        'lnkProxy
-        '
-        Me.lnkProxy.AutoSize = True
-        Me.lnkProxy.Location = New System.Drawing.Point(112, 204)
-        Me.lnkProxy.Name = "lnkProxy"
-        Me.lnkProxy.Size = New System.Drawing.Size(103, 13)
-        Me.lnkProxy.TabIndex = 9
-        Me.lnkProxy.TabStop = True
-        Me.lnkProxy.Text = "Get a proxy account"
         '
         'btnPayPal
         '
@@ -170,7 +150,7 @@ Partial Class frmSettings
         Me.btnPayPal.FlatAppearance.BorderSize = 0
         Me.btnPayPal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPayPal.Image = Global.Pandorian.My.Resources.Resources.paypal
-        Me.btnPayPal.Location = New System.Drawing.Point(64, 284)
+        Me.btnPayPal.Location = New System.Drawing.Point(59, 287)
         Me.btnPayPal.Name = "btnPayPal"
         Me.btnPayPal.Size = New System.Drawing.Size(155, 56)
         Me.btnPayPal.TabIndex = 12
@@ -179,7 +159,7 @@ Partial Class frmSettings
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 105)
+        Me.Label6.Location = New System.Drawing.Point(12, 80)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(69, 13)
         Me.Label6.TabIndex = 0
@@ -190,7 +170,7 @@ Partial Class frmSettings
         Me.ddQuality.BackColor = System.Drawing.Color.White
         Me.ddQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ddQuality.FormattingEnabled = True
-        Me.ddQuality.Location = New System.Drawing.Point(115, 102)
+        Me.ddQuality.Location = New System.Drawing.Point(115, 77)
         Me.ddQuality.Name = "ddQuality"
         Me.ddQuality.Size = New System.Drawing.Size(120, 21)
         Me.ddQuality.TabIndex = 5
@@ -198,7 +178,7 @@ Partial Class frmSettings
         'chkPandoraOne
         '
         Me.chkPandoraOne.AutoSize = True
-        Me.chkPandoraOne.Location = New System.Drawing.Point(115, 77)
+        Me.chkPandoraOne.Location = New System.Drawing.Point(115, 54)
         Me.chkPandoraOne.Name = "chkPandoraOne"
         Me.chkPandoraOne.Size = New System.Drawing.Size(111, 17)
         Me.chkPandoraOne.TabIndex = 4
@@ -208,7 +188,7 @@ Partial Class frmSettings
         'chkNoProxy
         '
         Me.chkNoProxy.AutoSize = True
-        Me.chkNoProxy.Location = New System.Drawing.Point(114, 226)
+        Me.chkNoProxy.Location = New System.Drawing.Point(114, 179)
         Me.chkNoProxy.Name = "chkNoProxy"
         Me.chkNoProxy.Size = New System.Drawing.Size(112, 17)
         Me.chkNoProxy.TabIndex = 10
@@ -218,7 +198,7 @@ Partial Class frmSettings
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(11, 256)
+        Me.Label1.Location = New System.Drawing.Point(12, 206)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(90, 13)
         Me.Label1.TabIndex = 13
@@ -227,7 +207,7 @@ Partial Class frmSettings
         'unlockCode
         '
         Me.unlockCode.BackColor = System.Drawing.Color.White
-        Me.unlockCode.Location = New System.Drawing.Point(114, 253)
+        Me.unlockCode.Location = New System.Drawing.Point(114, 203)
         Me.unlockCode.Name = "unlockCode"
         Me.unlockCode.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.unlockCode.Size = New System.Drawing.Size(157, 20)
@@ -236,19 +216,41 @@ Partial Class frmSettings
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(149, 352)
+        Me.Button2.Location = New System.Drawing.Point(144, 355)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(82, 26)
         Me.Button2.TabIndex = 14
         Me.Button2.Text = "Close"
         Me.Button2.UseVisualStyleBackColor = True
         '
+        'chkNoQMix
+        '
+        Me.chkNoQMix.AutoSize = True
+        Me.chkNoQMix.Location = New System.Drawing.Point(38, 235)
+        Me.chkNoQMix.Name = "chkNoQMix"
+        Me.chkNoQMix.Size = New System.Drawing.Size(226, 17)
+        Me.chkNoQMix.TabIndex = 15
+        Me.chkNoQMix.Text = "Don't indicate QuickMix members with a ✪"
+        Me.chkNoQMix.UseVisualStyleBackColor = True
+        '
+        'chkNoLiked
+        '
+        Me.chkNoLiked.AutoSize = True
+        Me.chkNoLiked.Location = New System.Drawing.Point(38, 258)
+        Me.chkNoLiked.Name = "chkNoLiked"
+        Me.chkNoLiked.Size = New System.Drawing.Size(190, 17)
+        Me.chkNoLiked.TabIndex = 16
+        Me.chkNoLiked.Text = "Don't indicate liked songs with a ✔"
+        Me.chkNoLiked.UseVisualStyleBackColor = True
+        '
         'frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 387)
+        Me.ClientSize = New System.Drawing.Size(284, 390)
         Me.ControlBox = False
+        Me.Controls.Add(Me.chkNoLiked)
+        Me.Controls.Add(Me.chkNoQMix)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.chkNoProxy)
@@ -256,8 +258,6 @@ Partial Class frmSettings
         Me.Controls.Add(Me.ddQuality)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.btnPayPal)
-        Me.Controls.Add(Me.lnkProxy)
-        Me.Controls.Add(Me.lnkPandora)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.prxAddress)
         Me.Controls.Add(Me.prxUserName)
@@ -291,8 +291,6 @@ Partial Class frmSettings
     Friend WithEvents prxUserName As System.Windows.Forms.TextBox
     Friend WithEvents prxAddress As System.Windows.Forms.TextBox
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents lnkPandora As System.Windows.Forms.LinkLabel
-    Friend WithEvents lnkProxy As System.Windows.Forms.LinkLabel
     Friend WithEvents btnPayPal As System.Windows.Forms.Button
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents ddQuality As System.Windows.Forms.ComboBox
@@ -301,4 +299,6 @@ Partial Class frmSettings
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents unlockCode As System.Windows.Forms.TextBox
     Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents chkNoQMix As CheckBox
+    Friend WithEvents chkNoLiked As CheckBox
 End Class

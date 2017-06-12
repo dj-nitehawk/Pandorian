@@ -24,9 +24,11 @@ Public Class frmSettings
             Settings.Write("proxyPassword", Encrypt(prxPassword.Text))
             Settings.Write("proyxUsername", Encrypt(prxUserName.Text))
             Settings.Write("noProxy", Convert.ToInt32(chkNoProxy.Checked))
-            Settings.Write("pandoraUsername",Encrypt(pnUsername.Text))
+            Settings.Write("pandoraUsername", Encrypt(pnUsername.Text))
             Settings.Write("pandoraPassword", Encrypt(pnPassword.Text))
             Settings.Write("pandoraOne", Convert.ToInt32(chkPandoraOne.Checked))
+            Settings.Write("noQmix", Convert.ToInt32(chkNoQMix.Checked))
+            Settings.Write("noLiked", Convert.ToInt32(chkNoLiked.Checked))
             Settings.Write("audioQuality", ddQuality.SelectedValue)
             If Not String.IsNullOrEmpty(unlockCode.Text) And Not unlockCode.Text = "secret" Then
                 Settings.Write("unlockPassword", Encrypt(getMD5Hash(unlockCode.Text)))
@@ -62,6 +64,8 @@ Public Class frmSettings
         pnPassword.Text = Decrypt(Settings.Read("pandoraPassword"))
         chkPandoraOne.Checked = Settings.Read("pandoraOne")
         chkNoProxy.Checked = Settings.Read("noProxy")
+        chkNoQMix.Checked = Settings.Read("noQmix")
+        chkNoLiked.Checked = Settings.Read("noLiked")
         If Not String.IsNullOrEmpty(Settings.Read("unlockPassword")) Then
             unlockCode.Text = "secret"
         End If
@@ -74,14 +78,6 @@ Public Class frmSettings
                 Exit For
             End If
         Next
-    End Sub
-
-    Private Sub lnkPandora_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnkPandora.LinkClicked
-        Process.Start("http://www.pandora.com")
-    End Sub
-
-    Private Sub lnkProxy_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnkProxy.LinkClicked
-        Process.Start("http://instantproxies.com/billing/aff.php?aff=120")
     End Sub
 
     Private Sub btnPayPal_Click(sender As Object, e As EventArgs) Handles btnPayPal.Click
@@ -117,7 +113,6 @@ Public Class frmSettings
             prxAddress.Enabled = False
             prxPassword.Enabled = False
             prxUserName.Enabled = False
-            lnkProxy.Enabled = False
         Else
             Settings.Write("noProxy", 0)
             lblProxyAddre.Enabled = True
@@ -126,7 +121,6 @@ Public Class frmSettings
             prxAddress.Enabled = True
             prxPassword.Enabled = True
             prxUserName.Enabled = True
-            lnkProxy.Enabled = True
         End If
     End Sub
 
@@ -143,4 +137,5 @@ Public Class frmSettings
             frmMain.Close()
         End If
     End Sub
+
 End Class

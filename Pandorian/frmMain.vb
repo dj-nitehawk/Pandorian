@@ -230,7 +230,7 @@ Public Class frmMain
     End Function
     Private Function LoginToPandora() As Boolean
         Try
-            If Pandora.Login(Decrypt(Settings.Read("pandoraUsername")), Decrypt(Settings.Read("pandoraPassword"))) Then
+            If Pandora.Login(Decrypt(Settings.Read("pandoraUsername")), Decrypt(Settings.Read("pandoraPassword")), Settings.Read("noQmix")) Then
                 tbLog.AppendText("Successfully logged in to pandora..." + vbCrLf)
                 Return True
             Else
@@ -342,7 +342,7 @@ Public Class frmMain
             btnSkip.BackColor = Color.DarkGray
             btnBlock.Enabled = False
         Else
-            lblSongName.Text = Song.Title
+            lblSongName.Text = Song.GetProperTitle(Settings.Read("noLiked"))
             lblArtistName.Text = Song.Artist
             lblAlbumName.Text = Song.Album
         End If
@@ -569,6 +569,8 @@ Public Class frmMain
                 .Write("hkVolDown", 40)
                 .Write("hkVolUp", 38)
                 .Write("unlockPassword", "")
+                .Write("noQmix", 0)
+                .Write("noLiked", 0)
                 Return False
             End If
         End With
@@ -1053,7 +1055,7 @@ Public Class frmMain
             btnDislike.Enabled = True
             btnDislike.BackColor = Control.DefaultBackColor
             Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Love), "btnLike_Click")
-            lblSongName.Text = Pandora.CurrentStation.CurrentSong.Title
+            lblSongName.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(Settings.Read("noLiked"))
             RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text)
         End If
     End Sub
@@ -1295,7 +1297,7 @@ Public Class frmMain
                 tmiStationTitle.Text = Pandora.CurrentStation.Name.Replace("&", "&&")
                 If Pandora.CurrentStation.CurrentSong.AudioDurationSecs > 60 Then
                     tmiArtistTitle.Text = Pandora.CurrentStation.CurrentSong.Artist.Replace("&", "&&")
-                    tmiSongTitle.Text = Pandora.CurrentStation.CurrentSong.Title.Replace("&", "&&")
+                    tmiSongTitle.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(Settings.Read("noLiked")).Replace("&", "&&")
                 Else
                     tmiArtistTitle.Text = "Pandora The Punisher"
                     tmiSongTitle.Text = "42 Sec Blank Audio"
@@ -1507,7 +1509,7 @@ Public Class frmMain
         If SongInfo.Visible = False And HideSongInfo = False Then
             With SongInfo
                 .artist.Text = Pandora.CurrentStation.CurrentSong.Artist.Replace("&", "&&")
-                .track.Text = Pandora.CurrentStation.CurrentSong.Title.Replace("&", "&&")
+                .track.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(Settings.Read("noLiked")).Replace("&", "&&")
                 .station.Text = Pandora.CurrentStation.Name.Replace("&", "&&")
             End With
             SongInfo.Show()
