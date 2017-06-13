@@ -108,8 +108,8 @@ Namespace Data
         End Property
         Private m_Title As String
 
-        Public Function GetProperTitle(DontIndicateLiked As Boolean)
-            If Not DontIndicateLiked Then
+        Public Function GetProperTitle(IndicateLiked As Boolean)
+            If IndicateLiked Then
                 If m_Rating = PandoraRating.Love Then
                     Return m_Title + " ✔"
                 End If
