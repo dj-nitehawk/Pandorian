@@ -291,12 +291,11 @@ Public Class frmMain
         Dim bgwCoverLoader As New BackgroundWorker
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
 
-        Dim Song As New Data.PandoraSong
         If IsNothing(Pandora.CurrentStation.CurrentSong) Then
-            Song = Pandora.CurrentStation.GetNextSong()
-        Else
-            Song = Pandora.CurrentStation.CurrentSong
+            Pandora.CurrentStation.LoadNextSong()
         End If
+
+        Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
 
         If Pandora.CurrentStation.SongLoadingOccurred Then
             tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
@@ -391,7 +390,7 @@ Public Class frmMain
         ResumePlaying = True
         Try
             If Pandora.OkToFetchSongs Then
-                Pandora.CurrentStation.GetNextSong()
+                Pandora.CurrentStation.LoadNextSong()
             Else
                 tbLog.AppendText("Waiting few mins before fetching new songs..." + vbCrLf)
                 Bass.BASS_ChannelSetPosition(Stream, 0)
@@ -1572,19 +1571,18 @@ Public Class frmMain
         If MouseOverControl(SongCoverImage) Then
             btnLeft.Visible = True
             btnRight.Visible = True
-
         End If
     End Sub
 
     Private Sub btnLeft_Click(sender As Object, e As EventArgs) Handles btnLeft.Click
         Bass.BASS_StreamFree(Stream)
-        Pandora.CurrentStation.LoadPastSong(PlaylistDirection.Backward)
+        Pandora.CurrentStation.LoadPrevSong()
         PlayCurrentSong()
     End Sub
 
     Private Sub btnRight_Click(sender As Object, e As EventArgs) Handles btnRight.Click
         Bass.BASS_StreamFree(Stream)
-        Pandora.CurrentStation.LoadPastSong(PlaylistDirection.Forward)
+        Pandora.CurrentStation.LoadNextSong()
         PlayCurrentSong()
     End Sub
 End Class

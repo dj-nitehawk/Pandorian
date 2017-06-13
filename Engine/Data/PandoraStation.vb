@@ -73,45 +73,12 @@ Namespace Data
             End Set
         End Property
 
-        Dim Position As Integer = 0
-        Public Function LoadPastSong(Direction As PlaylistDirection) As Boolean
 
-            Select Case Direction
-                Case PlaylistDirection.Backward
-                    If PlayedSongs.Count - Position > 1 Then
-                        Position += 1
-                    Else
-                        Return False
-                    End If
-                Case PlaylistDirection.Forward
-                    If PlayedSongs.Count - Position > 0 Then
-                        Position += -1
-                    Else
-                        Return False
-                    End If
-            End Select
-
-            Dim index As Integer = 0
-
-            If Position > 0 Then
-                index = Position - 1
-            End If
-
-            Diagnostics.Debug.WriteLine("pos: " + Position.ToString)
-
-            CurrentSong = PlayedSongs.ToArray(index)
-            CurrentSong.RePlayAllowed = True
-
-            Return True
-
-        End Function
-
-
-        Public Property PlayedSongs As New PastSongs(5)
+        'D[0], C[1], B[2], A[3]
 
         Public Property CurrentSong As PandoraSong
 
-        Public Property PlayList As New Queue(Of PandoraSong)
+        Public Property PlayList As New PastSongs(8)
 
         Public Property PandoraIO() As PandoraIO
             Get
@@ -132,23 +99,26 @@ Namespace Data
         End Property
         Private _SongLoadingOccurred As Boolean
 
-        Public Function GetNextSong() As PandoraSong
+        Public Sub LoadPrevSong()
 
-            ' load 4 more songs if playlist empty
-            If PlayList.Count = 0 Then
-                LoadSongs()
-            End If
+        End Sub
 
-            'check if loading songs worked
-            If Not PlayList.Count = 0 Then
-                CurrentSong = PlayList.Dequeue()
-                PlayedSongs.Add(CurrentSong)
-            Else
-                Throw New PandoraException(ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION, "API didn't return any songs for this station.")
-            End If
+        Public Sub LoadNextSong()
 
-            Return CurrentSong
-        End Function
+            '' load 4 more songs if playlist empty
+            'If PlayList.Count = 0 Then
+            '    LoadSongs()
+            'End If
+
+            ''check if loading songs worked
+            'If Not PlayList.Count = 0 Then
+            '    CurrentSong = PlayList.Dequeue()
+            'Else
+            '    Throw New PandoraException(ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION, "API didn't return any songs for this station.")
+            'End If
+
+            'Return CurrentSong
+        End Sub
 
         Public Sub LoadSongs()
             Dim newSongs As New List(Of PandoraSong)()
