@@ -100,8 +100,6 @@ Namespace Data
 
         Public Function GetNextSong() As PandoraSong
 
-            CurrentSong.ShouldBeReplayed = False
-
             ' load 4 more songs if playlist empty
             If PlayList.Count = 0 Then
                 LoadSongs()

@@ -155,7 +155,7 @@ Namespace Data
             End Get
         End Property
 
-        Public Property SavedToDisk As Boolean
+        Public Property FinishedDownloading As Boolean = False
 
         <JsonProperty(PropertyName:="audioUrlMap")> _
         Public Property AudioUrlMap() As Dictionary(Of String, AudioUrlInfo)
@@ -312,7 +312,7 @@ Namespace Data
             End Try
         End Function
 
-        Public Property ShouldBeReplayed As Boolean = True
+        Public Property DidntCompletePlaying As Boolean = True
 
     End Class
 End Namespace

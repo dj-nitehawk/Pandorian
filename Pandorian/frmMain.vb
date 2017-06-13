@@ -40,7 +40,7 @@ Public Class frmMain
 
     Private Sub DownloadSong(buffer As IntPtr, length As Integer, user As IntPtr)
         If FS Is Nothing Then
-            Pandora.CurrentStation.CurrentSong.SavedToDisk = False
+            Pandora.CurrentStation.CurrentSong.FinishedDownloading = False
             FS = File.OpenWrite(Pandora.CurrentStation.CurrentSong.AudioFileName)
             prgDownload.Visible = True
             prgDownload.Value = 0
@@ -50,7 +50,9 @@ Public Class frmMain
             FS.Flush()
             FS.Close()
             FS = Nothing
-            Pandora.CurrentStation.CurrentSong.SavedToDisk = True
+            If Not StreamDownloadedLength() = -1 Then
+                Pandora.CurrentStation.CurrentSong.FinishedDownloading = True
+            End If
         Else
             If Data Is Nothing OrElse Data.Length < length Then
                 Data = New Byte(length) {}
@@ -60,12 +62,22 @@ Public Class frmMain
         End If
     End Sub
 
+    Private Function StreamTotalLength() As Long
+        Return Bass.BASS_ChannelGetLength(Stream)
+    End Function
+
+    Private Function StreamLength() As Long
+        Return Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
+    End Function
+
+    Private Function StreamDownloadedLength() As Long
+        Return Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_DOWNLOAD)
+    End Function
+
     Private Sub UpdateDownloadProgress()
-        If BASSReady Then
+        If BASSReady And prgDownload.Visible Then
             Dim progress As Single
-            Dim len As Integer = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
-            Dim down As Integer = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_DOWNLOAD)
-            progress = down * 100.0F / len
+            progress = StreamDownloadedLength() * 100.0F / StreamLength()
             prgDownload.Value = progress
             If prgDownload.Value = 100 Then
                 prgDownload.Visible = False
@@ -362,6 +374,7 @@ Public Class frmMain
     End Sub
 
     Sub PlayNextSong()
+        Pandora.CurrentStation.CurrentSong.DidntCompletePlaying = False
         Spinner.Visible = True
         Application.DoEvents()
         prgBar.Value = 0
@@ -474,7 +487,8 @@ Public Class frmMain
 
         Dim song = Pandora.CurrentStation.CurrentSong
 
-        If song.ShouldBeReplayed And File.Exists(song.AudioFileName) Then
+        If song.DidntCompletePlaying And File.Exists(song.AudioFileName) And song.FinishedDownloading Then
+            tbLog.AppendText("Loaded song from local cache." + vbCrLf)
             Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
         Else
             Stream = Bass.BASS_StreamCreateURL(
@@ -1055,9 +1069,9 @@ Public Class frmMain
             End If
         End If
     End Sub
+
     Function SongDurationSecs() As Double
-        Dim len As Long = Bass.BASS_ChannelGetLength(Stream)
-        Return Bass.BASS_ChannelBytes2Seconds(Stream, len)
+        Return Bass.BASS_ChannelBytes2Seconds(Stream, StreamTotalLength())
     End Function
     Function CurrentPositionSecs() As Double
         Dim pos As Long = Bass.BASS_ChannelGetPosition(Stream)
