@@ -374,7 +374,9 @@ Public Class frmMain
     End Sub
 
     Sub PlayNextSong()
-        Pandora.CurrentStation.CurrentSong.DidntCompletePlaying = False
+        If Not IsNothing(Pandora.CurrentStation.CurrentSong) Then
+            Pandora.CurrentStation.CurrentSong.DidntCompletePlaying = False
+        End If
         Spinner.Visible = True
         Application.DoEvents()
         prgBar.Value = 0
@@ -1546,4 +1548,22 @@ Public Class frmMain
         End If
     End Sub
 
+    Private Function MouseOverControl(control As Control) As Boolean
+        Dim pt As Point = control.PointToClient(Control.MousePosition)
+        Return (pt.X >= 0 AndAlso pt.Y >= 0 AndAlso pt.X <= control.Width AndAlso pt.Y <= control.Height)
+    End Function
+
+    Private Sub SongCoverImage_MouseLeave(sender As Object, e As EventArgs) Handles SongCoverImage.MouseLeave
+        If Not MouseOverControl(SongCoverImage) Then
+            btnLeft.Visible = False
+            btnRight.Visible = False
+        End If
+    End Sub
+
+    Private Sub SongCoverImage_MouseEnter(sender As Object, e As EventArgs) Handles SongCoverImage.MouseMove
+        If MouseOverControl(SongCoverImage) Then
+            btnLeft.Visible = True
+            btnRight.Visible = True
+        End If
+    End Sub
 End Class

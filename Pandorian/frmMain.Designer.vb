@@ -106,6 +106,8 @@ Partial Class frmMain
         Me.btnDislike = New System.Windows.Forms.Button()
         Me.btnLike = New System.Windows.Forms.Button()
         Me.SongCoverImage = New System.Windows.Forms.PictureBox()
+        Me.btnLeft = New System.Windows.Forms.Button()
+        Me.btnRight = New System.Windows.Forms.Button()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
         Me.TrayMenu.SuspendLayout()
@@ -262,7 +264,7 @@ Partial Class frmMain
         Me.pnlSleepTimer.Controls.Add(Me.Label1)
         Me.pnlSleepTimer.Controls.Add(Me.ddSleepTimes)
         Me.pnlSleepTimer.Controls.Add(Me.lblSleepStatus)
-        Me.pnlSleepTimer.Location = New System.Drawing.Point(9, 44)
+        Me.pnlSleepTimer.Location = New System.Drawing.Point(89, 437)
         Me.pnlSleepTimer.Name = "pnlSleepTimer"
         Me.pnlSleepTimer.Size = New System.Drawing.Size(300, 300)
         Me.pnlSleepTimer.TabIndex = 15
@@ -458,7 +460,7 @@ Partial Class frmMain
         Me.pnlHotKeys.Controls.Add(Me.cbModKey)
         Me.pnlHotKeys.Controls.Add(Me.Label3)
         Me.pnlHotKeys.Controls.Add(Me.Label2)
-        Me.pnlHotKeys.Location = New System.Drawing.Point(9, 44)
+        Me.pnlHotKeys.Location = New System.Drawing.Point(125, 402)
         Me.pnlHotKeys.Name = "pnlHotKeys"
         Me.pnlHotKeys.Size = New System.Drawing.Size(300, 300)
         Me.pnlHotKeys.TabIndex = 16
@@ -698,7 +700,7 @@ Partial Class frmMain
         '
         'tbLog
         '
-        Me.tbLog.Location = New System.Drawing.Point(9, 9)
+        Me.tbLog.Location = New System.Drawing.Point(167, 386)
         Me.tbLog.Multiline = True
         Me.tbLog.Name = "tbLog"
         Me.tbLog.ReadOnly = True
@@ -734,9 +736,9 @@ Partial Class frmMain
         Me.Spinner.BackColor = System.Drawing.Color.Black
         Me.Spinner.BackgroundImage = Global.Pandorian.My.Resources.Resources.wait
         Me.Spinner.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.Spinner.Location = New System.Drawing.Point(-6, -5)
+        Me.Spinner.Location = New System.Drawing.Point(233, 378)
         Me.Spinner.Name = "Spinner"
-        Me.Spinner.Size = New System.Drawing.Size(329, 483)
+        Me.Spinner.Size = New System.Drawing.Size(317, 463)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.Spinner.TabIndex = 17
         Me.Spinner.TabStop = False
@@ -823,12 +825,46 @@ Partial Class frmMain
         Me.SongCoverImage.TabIndex = 2
         Me.SongCoverImage.TabStop = False
         '
+        'btnLeft
+        '
+        Me.btnLeft.BackColor = System.Drawing.Color.White
+        Me.btnLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnLeft.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.btnLeft.FlatAppearance.BorderSize = 0
+        Me.btnLeft.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnLeft.Image = Global.Pandorian.My.Resources.Resources.left
+        Me.btnLeft.Location = New System.Drawing.Point(19, 167)
+        Me.btnLeft.Name = "btnLeft"
+        Me.btnLeft.Size = New System.Drawing.Size(30, 47)
+        Me.btnLeft.TabIndex = 21
+        Me.btnLeft.UseVisualStyleBackColor = False
+        Me.btnLeft.Visible = False
+        '
+        'btnRight
+        '
+        Me.btnRight.BackColor = System.Drawing.Color.White
+        Me.btnRight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnRight.Cursor = System.Windows.Forms.Cursors.Default
+        Me.btnRight.FlatAppearance.BorderSize = 0
+        Me.btnRight.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnRight.Image = Global.Pandorian.My.Resources.Resources.right
+        Me.btnRight.Location = New System.Drawing.Point(267, 167)
+        Me.btnRight.Name = "btnRight"
+        Me.btnRight.Size = New System.Drawing.Size(32, 47)
+        Me.btnRight.TabIndex = 22
+        Me.btnRight.UseVisualStyleBackColor = False
+        Me.btnRight.Visible = False
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
         Me.ClientSize = New System.Drawing.Size(317, 463)
+        Me.Controls.Add(Me.btnRight)
+        Me.Controls.Add(Me.btnLeft)
         Me.Controls.Add(Me.Spinner)
         Me.Controls.Add(Me.tbLog)
         Me.Controls.Add(Me.volSlider)
@@ -951,5 +987,6 @@ Partial Class frmMain
     Friend WithEvents tip As System.Windows.Forms.ToolTip
     Friend WithEvents bpmTimer As System.Windows.Forms.Timer
     Friend WithEvents lblBPM As System.Windows.Forms.Label
-
+    Friend WithEvents btnLeft As Button
+    Friend WithEvents btnRight As Button
 End Class
