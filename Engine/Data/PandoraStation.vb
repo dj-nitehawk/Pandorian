@@ -7,7 +7,7 @@ Namespace Data
     <Serializable()>
     Public Class PandoraStation
         Inherits PandoraData
-        <JsonProperty(PropertyName:="stationName")> _
+        <JsonProperty(PropertyName:="stationName")>
         Public Property Name() As String
             Get
                 Return m_Name
@@ -18,7 +18,7 @@ Namespace Data
         End Property
         Private m_Name As String
 
-        <JsonProperty(PropertyName:="stationId")> _
+        <JsonProperty(PropertyName:="stationId")>
         Public Property Id() As String
             Get
                 Return m_Id
@@ -29,7 +29,7 @@ Namespace Data
         End Property
         Private m_Id As String
 
-        <JsonProperty(PropertyName:="stationToken")> _
+        <JsonProperty(PropertyName:="stationToken")>
         Public Property Token() As String
             Get
                 Return m_Token
@@ -40,7 +40,7 @@ Namespace Data
         End Property
         Private m_Token As String
 
-        <JsonProperty(PropertyName:="isQuickMix")> _
+        <JsonProperty(PropertyName:="isQuickMix")>
         Public Property IsQuickMix() As Boolean
             Get
                 Return m_IsQuickMix
@@ -73,6 +73,7 @@ Namespace Data
             End Set
         End Property
 
+        Public Property PlayedSongs As New PastSongs(5)
 
         Public Property CurrentSong As PandoraSong
 
@@ -99,6 +100,8 @@ Namespace Data
 
         Public Function GetNextSong() As PandoraSong
 
+            CurrentSong.ShouldBeReplayed = False
+
             ' load 4 more songs if playlist empty
             If PlayList.Count = 0 Then
                 LoadSongs()
@@ -107,6 +110,7 @@ Namespace Data
             'check if loading songs worked
             If Not PlayList.Count = 0 Then
                 CurrentSong = PlayList.Dequeue()
+                PlayedSongs.Add(CurrentSong)
             Else
                 Throw New PandoraException(ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION, "API didn't return any songs for this station.")
             End If
@@ -140,5 +144,25 @@ Namespace Data
             Next
         End Sub
 
+    End Class
+
+    <Serializable()>
+    Public Class PastSongs
+        Inherits Queue(Of PandoraSong)
+
+        Dim Limit As Integer
+
+        Public Sub New(limit As Integer)
+            MyBase.New(limit)
+            Me.Limit = limit
+        End Sub
+
+        Public Shadows Sub Add(song As PandoraSong)
+            While Count >= Limit
+                Dim s As PandoraSong = Dequeue()
+                IO.File.Delete(s.AudioFileName)
+            End While
+            MyBase.Enqueue(song)
+        End Sub
     End Class
 End Namespace

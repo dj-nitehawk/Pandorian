@@ -37,9 +37,11 @@ Public Class frmMain
     Dim FS As FileStream
     Dim DownloadProc As DOWNLOADPROC = New DOWNLOADPROC(AddressOf DownloadSong)
     Dim Data() As Byte
+
     Private Sub DownloadSong(buffer As IntPtr, length As Integer, user As IntPtr)
         If FS Is Nothing Then
-            FS = File.OpenWrite("current.stream")
+            Pandora.CurrentStation.CurrentSong.SavedToDisk = False
+            FS = File.OpenWrite(Pandora.CurrentStation.CurrentSong.AudioFileName)
             prgDownload.Visible = True
             prgDownload.Value = 0
         End If
@@ -48,6 +50,7 @@ Public Class frmMain
             FS.Flush()
             FS.Close()
             FS = Nothing
+            Pandora.CurrentStation.CurrentSong.SavedToDisk = True
         Else
             If Data Is Nothing OrElse Data.Length < length Then
                 Data = New Byte(length) {}
@@ -75,6 +78,7 @@ Public Class frmMain
             Pandora.ClearSession(Settings.Read("pandoraOne"))
             'File.Delete("api.dat")
             SavePandoraObject()
+            CleanUp()
         End If
     End Sub
 
@@ -235,7 +239,7 @@ Public Class frmMain
                 Return True
             Else
                 MsgBox("Couldn't log in to Pandora. Check pandora a/c details.", MsgBoxStyle.Exclamation)
-        End If
+            End If
         Catch ex As PandoraException
             If ex.ErrorCode = ErrorCodeEnum.LISTENER_NOT_AUTHORIZED Then
                 MsgBox(ex.Message, MsgBoxStyle.Exclamation)
@@ -468,12 +472,18 @@ Public Class frmMain
             Stream = 0
         End If
 
-        Stream = Bass.BASS_StreamCreateURL(
-                Pandora.CurrentStation.CurrentSong.AudioUrlMap(Settings.Read("audioQuality")).Url,
+        Dim song = Pandora.CurrentStation.CurrentSong
+
+        If song.ShouldBeReplayed And File.Exists(song.AudioFileName) Then
+            Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
+        Else
+            Stream = Bass.BASS_StreamCreateURL(
+                song.AudioUrlMap(Settings.Read("audioQuality")).Url,
                 0,
                 BASSFlag.BASS_STREAM_AUTOFREE,
                 DownloadProc,
                 IntPtr.Zero)
+        End If
 
         If Not Stream = 0 Then
             tbLog.AppendText("Playing the song now..." + vbCrLf)
@@ -481,9 +491,9 @@ Public Class frmMain
             Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, volSlider.Value / 100)
 
             DSP.ChannelHandle = Stream
-            DSP.Gain_dBV = Pandora.CurrentStation.CurrentSong.TrackGain
+            DSP.Gain_dBV = song.TrackGain
             DSP.Start()
-            tbLog.AppendText("ReplayGain Applied: " + Pandora.CurrentStation.CurrentSong.TrackGain.ToString + " dB" + vbCrLf)
+            tbLog.AppendText("ReplayGain Applied: " + song.TrackGain.ToString + " dB" + vbCrLf)
 
             If ResumePlaying Then
                 Bass.BASS_ChannelPlay(Stream, False)
@@ -492,8 +502,8 @@ Public Class frmMain
             BPMCounter.Reset(44100)
 
             Application.DoEvents()
-            Pandora.CurrentStation.CurrentSong.PlayingStartTime = Now
-            Pandora.CurrentStation.CurrentSong.AudioDurationSecs = SongDurationSecs()
+            song.PlayingStartTime = Now
+            song.AudioDurationSecs = SongDurationSecs()
             ShareTheLove()
         Else
             If Bass.BASS_ErrorGetCode = BASSError.BASS_ERROR_FILEOPEN Then
@@ -668,7 +678,7 @@ Public Class frmMain
                 TargeFile = downLoc + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
 
                 If Not File.Exists(TargeFile) Then
-                    File.Copy("current.stream", TargeFile)
+                    File.Copy(Pandora.CurrentStation.CurrentSong.AudioFileName, TargeFile)
                     MsgBox("Mp3 File Exported!", MsgBoxStyle.Information)
                 End If
             End If
@@ -693,6 +703,12 @@ Public Class frmMain
         Next
         Return Text
     End Function
+
+    Private Sub CleanUp()
+        For Each f In Directory.GetFiles(Directory.GetCurrentDirectory(), "*.stream")
+            File.Delete(f)
+        Next
+    End Sub
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
         Control.CheckForIllegalCrossThreadCalls = False

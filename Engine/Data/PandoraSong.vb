@@ -149,6 +149,14 @@ Namespace Data
             End Get
         End Property
 
+        Public ReadOnly Property AudioFileName() As String
+            Get
+                Return m_Token + ".stream"
+            End Get
+        End Property
+
+        Public Property SavedToDisk As Boolean
+
         <JsonProperty(PropertyName:="audioUrlMap")> _
         Public Property AudioUrlMap() As Dictionary(Of String, AudioUrlInfo)
             Get
@@ -303,6 +311,8 @@ Namespace Data
                 Return Nothing
             End Try
         End Function
+
+        Public Property ShouldBeReplayed As Boolean = True
 
     End Class
 End Namespace
