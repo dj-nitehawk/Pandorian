@@ -264,7 +264,7 @@ Partial Class frmMain
         Me.pnlSleepTimer.Controls.Add(Me.Label1)
         Me.pnlSleepTimer.Controls.Add(Me.ddSleepTimes)
         Me.pnlSleepTimer.Controls.Add(Me.lblSleepStatus)
-        Me.pnlSleepTimer.Location = New System.Drawing.Point(89, 437)
+        Me.pnlSleepTimer.Location = New System.Drawing.Point(10, 44)
         Me.pnlSleepTimer.Name = "pnlSleepTimer"
         Me.pnlSleepTimer.Size = New System.Drawing.Size(300, 300)
         Me.pnlSleepTimer.TabIndex = 15
@@ -460,7 +460,7 @@ Partial Class frmMain
         Me.pnlHotKeys.Controls.Add(Me.cbModKey)
         Me.pnlHotKeys.Controls.Add(Me.Label3)
         Me.pnlHotKeys.Controls.Add(Me.Label2)
-        Me.pnlHotKeys.Location = New System.Drawing.Point(125, 402)
+        Me.pnlHotKeys.Location = New System.Drawing.Point(10, 44)
         Me.pnlHotKeys.Name = "pnlHotKeys"
         Me.pnlHotKeys.Size = New System.Drawing.Size(300, 300)
         Me.pnlHotKeys.TabIndex = 16
@@ -676,7 +676,7 @@ Partial Class frmMain
         'Label2
         '
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(5, -3)
+        Me.Label2.Location = New System.Drawing.Point(5, -378)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(293, 33)
         Me.Label2.TabIndex = 7
@@ -700,12 +700,12 @@ Partial Class frmMain
         '
         'tbLog
         '
-        Me.tbLog.Location = New System.Drawing.Point(167, 386)
+        Me.tbLog.Location = New System.Drawing.Point(8, 7)
         Me.tbLog.Multiline = True
         Me.tbLog.Name = "tbLog"
         Me.tbLog.ReadOnly = True
         Me.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.tbLog.Size = New System.Drawing.Size(300, 444)
+        Me.tbLog.Size = New System.Drawing.Size(302, 447)
         Me.tbLog.TabIndex = 19
         Me.tbLog.Visible = False
         Me.tbLog.WordWrap = False
@@ -736,7 +736,7 @@ Partial Class frmMain
         Me.Spinner.BackColor = System.Drawing.Color.Black
         Me.Spinner.BackgroundImage = Global.Pandorian.My.Resources.Resources.wait
         Me.Spinner.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.Spinner.Location = New System.Drawing.Point(233, 378)
+        Me.Spinner.Location = New System.Drawing.Point(0, -1)
         Me.Spinner.Name = "Spinner"
         Me.Spinner.Size = New System.Drawing.Size(317, 463)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -817,6 +817,7 @@ Partial Class frmMain
         'SongCoverImage
         '
         Me.SongCoverImage.BackColor = System.Drawing.Color.Black
+        Me.SongCoverImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.SongCoverImage.ContextMenuStrip = Me.MenuStrip
         Me.SongCoverImage.Location = New System.Drawing.Point(9, 44)
         Me.SongCoverImage.Name = "SongCoverImage"
@@ -863,10 +864,8 @@ Partial Class frmMain
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Black
         Me.ClientSize = New System.Drawing.Size(317, 463)
-        Me.Controls.Add(Me.btnRight)
-        Me.Controls.Add(Me.btnLeft)
-        Me.Controls.Add(Me.Spinner)
         Me.Controls.Add(Me.tbLog)
+        Me.Controls.Add(Me.Spinner)
         Me.Controls.Add(Me.volSlider)
         Me.Controls.Add(Me.lblBPM)
         Me.Controls.Add(Me.lblSongName)
@@ -881,8 +880,10 @@ Partial Class frmMain
         Me.Controls.Add(Me.btnLike)
         Me.Controls.Add(Me.lblAlbumName)
         Me.Controls.Add(Me.lblArtistName)
-        Me.Controls.Add(Me.SongCoverImage)
         Me.Controls.Add(Me.ddStations)
+        Me.Controls.Add(Me.btnRight)
+        Me.Controls.Add(Me.btnLeft)
+        Me.Controls.Add(Me.SongCoverImage)
         Me.ForeColor = System.Drawing.Color.White
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)

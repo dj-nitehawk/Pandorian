@@ -312,7 +312,7 @@ Namespace Data
             End Try
         End Function
 
-        Public Property DidntCompletePlaying As Boolean = True
+        Public Property RePlayAllowed As Boolean = True
 
     End Class
 End Namespace

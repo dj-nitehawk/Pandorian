@@ -73,6 +73,40 @@ Namespace Data
             End Set
         End Property
 
+        Dim Position As Integer = 0
+        Public Function LoadPastSong(Direction As PlaylistDirection) As Boolean
+
+            Select Case Direction
+                Case PlaylistDirection.Backward
+                    If PlayedSongs.Count - Position > 1 Then
+                        Position += 1
+                    Else
+                        Return False
+                    End If
+                Case PlaylistDirection.Forward
+                    If PlayedSongs.Count - Position > 0 Then
+                        Position += -1
+                    Else
+                        Return False
+                    End If
+            End Select
+
+            Dim index As Integer = 0
+
+            If Position > 0 Then
+                index = Position - 1
+            End If
+
+            Diagnostics.Debug.WriteLine("pos: " + Position.ToString)
+
+            CurrentSong = PlayedSongs.ToArray(index)
+            CurrentSong.RePlayAllowed = True
+
+            Return True
+
+        End Function
+
+
         Public Property PlayedSongs As New PastSongs(5)
 
         Public Property CurrentSong As PandoraSong
@@ -143,6 +177,11 @@ Namespace Data
         End Sub
 
     End Class
+
+    Public Enum PlaylistDirection
+        Forward = 1
+        Backward = 0
+    End Enum
 
     <Serializable()>
     Public Class PastSongs

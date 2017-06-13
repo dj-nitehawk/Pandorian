@@ -7,7 +7,7 @@ Imports System.IO
 Imports System.Runtime.Serialization.Formatters.Binary
 Imports System.ComponentModel
 Imports Pandorian.Utility.ModifyRegistry
-
+Imports Pandorian.Engine.Data
 
 Public Class frmMain
     Dim Settings As RegistryStore = New RegistryStore()
@@ -287,7 +287,7 @@ Public Class frmMain
         End If
     End Sub
 
-    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/PowerModeChanged/ddStations_SelectedIndexChanged)
+    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 6 REFERENCES (PlayNextSong/RunNow/PowerModeChanged/ddStations_SelectedIndexChanged/btnLeft_Click/btnRight_Click)
         Dim bgwCoverLoader As New BackgroundWorker
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
 
@@ -375,7 +375,7 @@ Public Class frmMain
 
     Sub PlayNextSong()
         If Not IsNothing(Pandora.CurrentStation.CurrentSong) Then
-            Pandora.CurrentStation.CurrentSong.DidntCompletePlaying = False
+            Pandora.CurrentStation.CurrentSong.RePlayAllowed = False
         End If
         Spinner.Visible = True
         Application.DoEvents()
@@ -489,7 +489,7 @@ Public Class frmMain
 
         Dim song = Pandora.CurrentStation.CurrentSong
 
-        If song.DidntCompletePlaying And File.Exists(song.AudioFileName) And song.FinishedDownloading Then
+        If song.RePlayAllowed And File.Exists(song.AudioFileName) And song.FinishedDownloading Then
             tbLog.AppendText("Loaded song from local cache." + vbCrLf)
             Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
         Else
@@ -1564,6 +1564,19 @@ Public Class frmMain
         If MouseOverControl(SongCoverImage) Then
             btnLeft.Visible = True
             btnRight.Visible = True
+
         End If
+    End Sub
+
+    Private Sub btnLeft_Click(sender As Object, e As EventArgs) Handles btnLeft.Click
+        Bass.BASS_StreamFree(Stream)
+        Pandora.CurrentStation.LoadPastSong(PlaylistDirection.Backward)
+        PlayCurrentSong()
+    End Sub
+
+    Private Sub btnRight_Click(sender As Object, e As EventArgs) Handles btnRight.Click
+        Bass.BASS_StreamFree(Stream)
+        Pandora.CurrentStation.LoadPastSong(PlaylistDirection.Forward)
+        PlayCurrentSong()
     End Sub
 End Class
