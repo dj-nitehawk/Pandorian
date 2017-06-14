@@ -375,7 +375,7 @@ Public Class frmMain
         Return True
     End Function
 
-    Sub PlayPreviousSong()
+    Sub PlayPreviousSong(ExpiredTrack As Boolean)
         If Not IsNothing(Pandora.CurrentStation.CurrentSong.PreviousSong) Then
             Spinner.Visible = True
             prgBar.Value = 0
@@ -385,7 +385,9 @@ Public Class frmMain
             Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.PreviousSong
             Execute(Sub() PlayCurrentSong(), "PlayPreviousSong") 'don't ever change this string
         Else
-            PlayNextSong()
+            If ExpiredTrack Then
+                PlayNextSong()
+            End If
         End If
     End Sub
 
@@ -1020,7 +1022,7 @@ Public Class frmMain
                     End If
                     If Caller = "PlayPreviousSong" Then 'don't ever change this string
                         tbLog.AppendText("Song URL expired. Trying the previous song..." + vbCrLf)
-                        PlayPreviousSong()
+                        PlayPreviousSong(True)
                     End If
                 Case ErrorCodeEnum.LICENSE_RESTRICTION
                     MsgBox("Looks like your country is not supported. Try using a proxy...", MsgBoxStyle.Exclamation)
@@ -1100,7 +1102,7 @@ Public Class frmMain
     End Sub
 
     Private Sub btnBack_Click(sender As Object, e As EventArgs) Handles btnPrev.Click
-        PlayPreviousSong()
+        PlayPreviousSong(False)
     End Sub
 
     'Private Sub btnLeft_Click(sender As Object, e As EventArgs)
