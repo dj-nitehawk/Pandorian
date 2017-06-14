@@ -767,7 +767,7 @@ Partial Class frmMain
         Me.btnBlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnBlock.ForeColor = System.Drawing.Color.Black
         Me.btnBlock.Image = CType(resources.GetObject("btnBlock.Image"), System.Drawing.Image)
-        Me.btnBlock.Location = New System.Drawing.Point(264, 421)
+        Me.btnBlock.Location = New System.Drawing.Point(263, 421)
         Me.btnBlock.Name = "btnBlock"
         Me.btnBlock.Size = New System.Drawing.Size(45, 32)
         Me.btnBlock.TabIndex = 12
@@ -812,7 +812,7 @@ Partial Class frmMain
         Me.btnDislike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDislike.ForeColor = System.Drawing.Color.Black
         Me.btnDislike.Image = CType(resources.GetObject("btnDislike.Image"), System.Drawing.Image)
-        Me.btnDislike.Location = New System.Drawing.Point(56, 421)
+        Me.btnDislike.Location = New System.Drawing.Point(57, 421)
         Me.btnDislike.Name = "btnDislike"
         Me.btnDislike.Size = New System.Drawing.Size(45, 32)
         Me.btnDislike.TabIndex = 7
@@ -827,7 +827,7 @@ Partial Class frmMain
         Me.btnLike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLike.ForeColor = System.Drawing.Color.Black
         Me.btnLike.Image = CType(resources.GetObject("btnLike.Image"), System.Drawing.Image)
-        Me.btnLike.Location = New System.Drawing.Point(7, 421)
+        Me.btnLike.Location = New System.Drawing.Point(8, 421)
         Me.btnLike.Name = "btnLike"
         Me.btnLike.Size = New System.Drawing.Size(45, 32)
         Me.btnLike.TabIndex = 6
