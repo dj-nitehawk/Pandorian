@@ -312,8 +312,6 @@ Namespace Data
             End Try
         End Function
 
-        Public Property RePlayAllowed As Boolean = True
-
         Public Property PreviousSong As PandoraSong = Nothing
 
         Public Property NextSong As PandoraSong = Nothing

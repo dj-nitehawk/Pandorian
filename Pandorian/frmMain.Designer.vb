@@ -795,7 +795,7 @@ Partial Class frmMain
         Me.btnPlayPause.FlatAppearance.BorderSize = 0
         Me.btnPlayPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPlayPause.ForeColor = System.Drawing.Color.Black
-        Me.btnPlayPause.Image = CType(resources.GetObject("btnPlayPause.Image"), System.Drawing.Image)
+        Me.btnPlayPause.Image = Global.Pandorian.My.Resources.Resources.play
         Me.btnPlayPause.Location = New System.Drawing.Point(160, 421)
         Me.btnPlayPause.Name = "btnPlayPause"
         Me.btnPlayPause.Size = New System.Drawing.Size(45, 32)

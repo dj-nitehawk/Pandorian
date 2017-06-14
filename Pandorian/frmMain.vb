@@ -287,7 +287,7 @@ Public Class frmMain
         End If
     End Sub
 
-    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 6 REFERENCES (PlayNextSong/RunNow/PowerModeChanged/ddStations_SelectedIndexChanged/btnLeft_Click/btnRight_Click)
+    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 5 REFERENCES (PlayNextSong/PlayPreviousSong/RunNow/PowerModeChanged/ddStations_SelectedIndexChanged)
         Dim bgwCoverLoader As New BackgroundWorker
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
 
@@ -327,7 +327,7 @@ Public Class frmMain
 
         btnPlayPause.Enabled = True
         If ResumePlaying Then
-            btnPlayPause.BackgroundImage = My.Resources.paused
+            btnPlayPause.Image = My.Resources.paused
         End If
 
         If Song.TemporarilyBanned Then
@@ -380,7 +380,7 @@ Public Class frmMain
             Application.DoEvents()
             ResumePlaying = True
             Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.PreviousSong
-            PlayCurrentSong()
+            Execute(Sub() PlayCurrentSong(), "PlayPreviousSong()")
         End If
     End Sub
 
@@ -433,9 +433,7 @@ Public Class frmMain
             End If
         End Try
 
-        Pandora.CurrentStation.CurrentSong.RePlayAllowed = False
-
-        PlayCurrentSong()
+        Execute(Sub() PlayCurrentSong(), "PlayNextSong()")
     End Sub
 
     Private Sub frmMain_Activated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -508,7 +506,7 @@ Public Class frmMain
 
         Dim song = Pandora.CurrentStation.CurrentSong
 
-        If song.RePlayAllowed And File.Exists(song.AudioFileName) And song.FinishedDownloading Then
+        If File.Exists(song.AudioFileName) And song.FinishedDownloading Then
             tbLog.AppendText("Loaded song from local cache." + vbCrLf)
             Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
         Else
@@ -887,6 +885,11 @@ Public Class frmMain
                 InitBass()
 
                 Pandora.SkipLimitReached = False
+
+                If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+                    PlayNextSong()
+                End If
+
                 Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
 
             End If
@@ -916,6 +919,10 @@ Public Class frmMain
 
             tbLog.AppendText("Station changed to: " + Pandora.CurrentStation.Name + vbCrLf)
 
+            If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+                PlayNextSong()
+            End If
+
             Execute(Sub() PlayCurrentSong(), "ddStations_SelectedIndexChanged.PlayCurrentSong")
 
         End If
@@ -929,16 +936,16 @@ Public Class frmMain
 
         If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
             Bass.BASS_ChannelPause(Stream)
-            btnPlayPause.BackgroundImage = My.Resources.play
+            btnPlayPause.Image = My.Resources.play
         ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_PAUSED Then
             Bass.BASS_ChannelPlay(Stream, False)
-            btnPlayPause.BackgroundImage = My.Resources.paused
+            btnPlayPause.Image = My.Resources.paused
         ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_STOPPED And ResumePlaying = False Then
             ResumePlaying = True
             Bass.BASS_ChannelPlay(Stream, False)
             btnPlayPause.Image = My.Resources.paused
         Else
-            btnPlayPause.BackgroundImage = Nothing
+            btnPlayPause.Image = Nothing
             btnPlayPause.Text = ":-("
         End If
     End Sub
@@ -1587,21 +1594,4 @@ Public Class frmMain
         Return (pt.X >= 0 AndAlso pt.Y >= 0 AndAlso pt.X <= control.Width AndAlso pt.Y <= control.Height)
     End Function
 
-    Private Sub SongCoverImage_MouseLeave(sender As Object, e As EventArgs) Handles SongCoverImage.MouseLeave
-        If Not MouseOverControl(SongCoverImage) Then
-            btnLeft.Visible = False
-            btnRight.Visible = False
-        End If
-    End Sub
-
-    Private Sub SongCoverImage_MouseEnter(sender As Object, e As EventArgs) Handles SongCoverImage.MouseMove
-        If MouseOverControl(SongCoverImage) Then
-            btnLeft.Visible = True
-            btnRight.Visible = True
-        End If
-    End Sub
-
-    Private Sub SongCoverImage_MouseEnter(sender As Object, e As MouseEventArgs) Handles SongCoverImage.MouseMove
-
-    End Sub
 End Class

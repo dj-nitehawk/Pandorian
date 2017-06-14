@@ -100,7 +100,9 @@ Namespace Data
                     Continue For
                 End If
                 CheckForStationTags(s)
-                PlayList.LastAddedSong.NextSong = s
+                If Not IsNothing(PlayList.LastAddedSong) Then
+                    PlayList.LastAddedSong.NextSong = s
+                End If
                 s.PreviousSong = PlayList.LastAddedSong
                 PlayList.Add(s)
             Next
