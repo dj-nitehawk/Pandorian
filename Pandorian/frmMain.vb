@@ -292,7 +292,7 @@ Public Class frmMain
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
 
         If IsNothing(Pandora.CurrentStation.CurrentSong) Then
-            Pandora.CurrentStation.LoadNextSong()
+            Pandora.CurrentStation.FetchSongs()
         End If
 
         Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
@@ -390,7 +390,7 @@ Public Class frmMain
         ResumePlaying = True
         Try
             If Pandora.OkToFetchSongs Then
-                Pandora.CurrentStation.LoadNextSong()
+                Pandora.CurrentStation.FetchSongs()
             Else
                 tbLog.AppendText("Waiting few mins before fetching new songs..." + vbCrLf)
                 Bass.BASS_ChannelSetPosition(Stream, 0)
