@@ -263,7 +263,7 @@ Partial Class frmMain
         Me.pnlSleepTimer.Controls.Add(Me.Label1)
         Me.pnlSleepTimer.Controls.Add(Me.ddSleepTimes)
         Me.pnlSleepTimer.Controls.Add(Me.lblSleepStatus)
-        Me.pnlSleepTimer.Location = New System.Drawing.Point(10, 42)
+        Me.pnlSleepTimer.Location = New System.Drawing.Point(9, 44)
         Me.pnlSleepTimer.Name = "pnlSleepTimer"
         Me.pnlSleepTimer.Size = New System.Drawing.Size(300, 300)
         Me.pnlSleepTimer.TabIndex = 15
@@ -459,7 +459,7 @@ Partial Class frmMain
         Me.pnlHotKeys.Controls.Add(Me.cbModKey)
         Me.pnlHotKeys.Controls.Add(Me.Label3)
         Me.pnlHotKeys.Controls.Add(Me.Label2)
-        Me.pnlHotKeys.Location = New System.Drawing.Point(10, 43)
+        Me.pnlHotKeys.Location = New System.Drawing.Point(9, 44)
         Me.pnlHotKeys.Name = "pnlHotKeys"
         Me.pnlHotKeys.Size = New System.Drawing.Size(300, 300)
         Me.pnlHotKeys.TabIndex = 16
@@ -699,7 +699,7 @@ Partial Class frmMain
         '
         'tbLog
         '
-        Me.tbLog.Location = New System.Drawing.Point(7, 7)
+        Me.tbLog.Location = New System.Drawing.Point(7, 8)
         Me.tbLog.Multiline = True
         Me.tbLog.Name = "tbLog"
         Me.tbLog.ReadOnly = True
@@ -751,7 +751,7 @@ Partial Class frmMain
         Me.Spinner.BackColor = System.Drawing.Color.Black
         Me.Spinner.BackgroundImage = Global.Pandorian.My.Resources.Resources.wait
         Me.Spinner.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.Spinner.Location = New System.Drawing.Point(0, -1)
+        Me.Spinner.Location = New System.Drawing.Point(0, 0)
         Me.Spinner.Name = "Spinner"
         Me.Spinner.Size = New System.Drawing.Size(317, 463)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -859,7 +859,6 @@ Partial Class frmMain
         Me.Controls.Add(Me.lblSongName)
         Me.Controls.Add(Me.pnlHotKeys)
         Me.Controls.Add(Me.pnlSleepTimer)
-        Me.Controls.Add(Me.prgDownload)
         Me.Controls.Add(Me.btnBlock)
         Me.Controls.Add(Me.prgBar)
         Me.Controls.Add(Me.btnNext)
@@ -871,6 +870,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.ddStations)
         Me.Controls.Add(Me.SongCoverImage)
         Me.Controls.Add(Me.btnPrev)
+        Me.Controls.Add(Me.prgDownload)
         Me.ForeColor = System.Drawing.Color.White
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
