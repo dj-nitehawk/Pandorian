@@ -97,9 +97,9 @@ Partial Class frmMain
         Me.volSlider = New System.Windows.Forms.TrackBar()
         Me.tbLog = New System.Windows.Forms.TextBox()
         Me.tip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnPrev = New System.Windows.Forms.Button()
         Me.bpmTimer = New System.Windows.Forms.Timer(Me.components)
         Me.lblBPM = New System.Windows.Forms.Label()
-        Me.btnPrev = New System.Windows.Forms.Button()
         Me.Spinner = New System.Windows.Forms.PictureBox()
         Me.btnBlock = New System.Windows.Forms.Button()
         Me.btnNext = New System.Windows.Forms.Button()
@@ -699,7 +699,7 @@ Partial Class frmMain
         '
         'tbLog
         '
-        Me.tbLog.Location = New System.Drawing.Point(8, 8)
+        Me.tbLog.Location = New System.Drawing.Point(7, 7)
         Me.tbLog.Multiline = True
         Me.tbLog.Name = "tbLog"
         Me.tbLog.ReadOnly = True
@@ -713,6 +713,22 @@ Partial Class frmMain
         '
         Me.tip.BackColor = System.Drawing.Color.White
         Me.tip.ForeColor = System.Drawing.Color.Black
+        '
+        'btnPrev
+        '
+        Me.btnPrev.BackColor = System.Drawing.SystemColors.Control
+        Me.btnPrev.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.btnPrev.FlatAppearance.BorderSize = 0
+        Me.btnPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnPrev.ForeColor = System.Drawing.Color.Black
+        Me.btnPrev.Image = CType(resources.GetObject("btnPrev.Image"), System.Drawing.Image)
+        Me.btnPrev.Location = New System.Drawing.Point(111, 421)
+        Me.btnPrev.Name = "btnPrev"
+        Me.btnPrev.Size = New System.Drawing.Size(45, 32)
+        Me.btnPrev.TabIndex = 21
+        Me.btnPrev.TabStop = False
+        Me.tip.SetToolTip(Me.btnPrev, "Skip Back")
+        Me.btnPrev.UseVisualStyleBackColor = False
         '
         'bpmTimer
         '
@@ -730,27 +746,12 @@ Partial Class frmMain
         Me.lblBPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblBPM.Visible = False
         '
-        'btnPrev
-        '
-        Me.btnPrev.BackColor = System.Drawing.SystemColors.Control
-        Me.btnPrev.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.btnPrev.FlatAppearance.BorderSize = 0
-        Me.btnPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnPrev.ForeColor = System.Drawing.Color.Black
-        Me.btnPrev.Image = CType(resources.GetObject("btnPrev.Image"), System.Drawing.Image)
-        Me.btnPrev.Location = New System.Drawing.Point(112, 421)
-        Me.btnPrev.Name = "btnPrev"
-        Me.btnPrev.Size = New System.Drawing.Size(45, 32)
-        Me.btnPrev.TabIndex = 21
-        Me.btnPrev.TabStop = False
-        Me.btnPrev.UseVisualStyleBackColor = False
-        '
         'Spinner
         '
         Me.Spinner.BackColor = System.Drawing.Color.Black
         Me.Spinner.BackgroundImage = Global.Pandorian.My.Resources.Resources.wait
         Me.Spinner.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.Spinner.Location = New System.Drawing.Point(0, 0)
+        Me.Spinner.Location = New System.Drawing.Point(0, -1)
         Me.Spinner.Name = "Spinner"
         Me.Spinner.Size = New System.Drawing.Size(317, 463)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -781,7 +782,7 @@ Partial Class frmMain
         Me.btnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnNext.ForeColor = System.Drawing.Color.Black
         Me.btnNext.Image = CType(resources.GetObject("btnNext.Image"), System.Drawing.Image)
-        Me.btnNext.Location = New System.Drawing.Point(208, 421)
+        Me.btnNext.Location = New System.Drawing.Point(209, 421)
         Me.btnNext.Name = "btnNext"
         Me.btnNext.Size = New System.Drawing.Size(45, 32)
         Me.btnNext.TabIndex = 9
@@ -795,7 +796,7 @@ Partial Class frmMain
         Me.btnPlayPause.FlatAppearance.BorderSize = 0
         Me.btnPlayPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPlayPause.ForeColor = System.Drawing.Color.Black
-        Me.btnPlayPause.Image = Global.Pandorian.My.Resources.Resources.play
+        Me.btnPlayPause.Image = CType(resources.GetObject("btnPlayPause.Image"), System.Drawing.Image)
         Me.btnPlayPause.Location = New System.Drawing.Point(160, 421)
         Me.btnPlayPause.Name = "btnPlayPause"
         Me.btnPlayPause.Size = New System.Drawing.Size(45, 32)
@@ -811,7 +812,7 @@ Partial Class frmMain
         Me.btnDislike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDislike.ForeColor = System.Drawing.Color.Black
         Me.btnDislike.Image = CType(resources.GetObject("btnDislike.Image"), System.Drawing.Image)
-        Me.btnDislike.Location = New System.Drawing.Point(55, 421)
+        Me.btnDislike.Location = New System.Drawing.Point(56, 421)
         Me.btnDislike.Name = "btnDislike"
         Me.btnDislike.Size = New System.Drawing.Size(45, 32)
         Me.btnDislike.TabIndex = 7

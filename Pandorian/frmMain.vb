@@ -332,7 +332,7 @@ Public Class frmMain
 
         If Song.TemporarilyBanned Then
             btnBlock.Enabled = False
-            btnBlock.BackColor = Color.DarkGray
+            btnBlock.BackColor = Color.Pink
         Else
             btnBlock.Enabled = True
             btnBlock.BackColor = Control.DefaultBackColor
@@ -347,7 +347,7 @@ Public Class frmMain
             btnDislike.Enabled = False
             btnPlayPause.Enabled = False
             btnNext.Enabled = False
-            btnNext.BackColor = Color.DarkGray
+            btnPrev.Enabled = False
             btnBlock.Enabled = False
         Else
             lblSongName.Text = Song.GetProperTitle(IndicateLiked)
@@ -384,7 +384,6 @@ Public Class frmMain
         End If
     End Sub
 
-
     Sub PlayNextSong()
 
         Spinner.Visible = True
@@ -419,7 +418,7 @@ Public Class frmMain
                     End If
                     Throw x
                 End Try
-                Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.PlayList.ToArray(0)
+                Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.PlayList.ToArray(Pandora.CurrentStation.PlayList.Count - 4)
             Else
                 tbLog.AppendText("Waiting few mins before fetching new songs..." + vbCrLf)
                 Bass.BASS_ChannelSetPosition(Stream, 0)
@@ -510,6 +509,7 @@ Public Class frmMain
             tbLog.AppendText("Loaded song from local cache." + vbCrLf)
             Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
         Else
+            tbLog.AppendText("Downloading song from pandora." + vbCrLf)
             Stream = Bass.BASS_StreamCreateURL(
                 song.AudioUrlMap(Settings.Read("audioQuality")).Url,
                 0,
@@ -1069,6 +1069,8 @@ Public Class frmMain
         btnPlayPause.Enabled = False
         btnDislike.Enabled = False
         btnLike.Enabled = False
+        btnPrev.Enabled = False
+        btnPrev.BackColor = Control.DefaultBackColor
         btnNext.Enabled = True
         btnNext.BackColor = Control.DefaultBackColor
     End Sub
@@ -1104,7 +1106,7 @@ Public Class frmMain
     Private Sub btnBlock_Click(sender As Object, e As EventArgs) Handles btnBlock.Click
         If btnBlock.Enabled Then
             btnBlock.Enabled = False
-            btnBlock.BackColor = Color.DarkGray
+            btnBlock.BackColor = Color.Pink
             Execute(Sub() Pandora.TemporarilyBanSong(Pandora.CurrentStation.CurrentSong), "btnBlock_Click.TemporarilyBanSong")
 
             If Not Pandora.SkipLimitReached Then

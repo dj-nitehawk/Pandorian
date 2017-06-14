@@ -85,7 +85,7 @@ Namespace Data
 
         Public Property CurrentSong As PandoraSong
 
-        Public Property PlayList As New LimitedSizePlaylist(8)
+        Public Property PlayList As New LimitedSizePlaylist(12)
 
         Public Sub FetchSongs()
             Dim newSongs As New List(Of PandoraSong)()
@@ -134,11 +134,13 @@ Namespace Data
         End Sub
 
         Public Shadows Sub Add(song As PandoraSong)
+
             While Count >= Limit
                 Dim s As PandoraSong = Dequeue()
                 s.NextSong.PreviousSong = Nothing
                 IO.File.Delete(s.AudioFileName)
             End While
+
             MyBase.Enqueue(song)
             LastAddedSong = song
         End Sub
