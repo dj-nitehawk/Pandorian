@@ -234,16 +234,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Pandorian.ico" />
-    <None Include="Resources\right.png" />
-    <None Include="Resources\left.png" />
-    <None Include="Resources\wait.png" />
-    <None Include="Pandorian_TemporaryKey.pfx" />
-    <None Include="Resources\like.png" />
-    <None Include="Resources\dislike.png" />
+    <None Include="Resources\back.png" />
     <None Include="Resources\skip.png" />
     <None Include="Resources\play.png" />
     <None Include="Resources\paused.png" />
+    <None Include="Resources\like.png" />
+    <None Include="Resources\dislike.png" />
     <None Include="Resources\block.png" />
+    <None Include="Resources\wait.png" />
+    <None Include="Pandorian_TemporaryKey.pfx" />
     <None Include="Resources\Icon.png" />
     <None Include="Resources\paypal.gif" />
   </ItemGroup>

@@ -83,15 +83,6 @@ Namespace Data
         End Property
         Private _PandoraIO As PandoraIO
 
-        Public ReadOnly Property SongLoadingOccurred() As Boolean
-            Get
-                Dim r As Boolean = _SongLoadingOccurred
-                _SongLoadingOccurred = False
-                Return r
-            End Get
-        End Property
-        Private _SongLoadingOccurred As Boolean
-
         Public Property CurrentSong As PandoraSong
 
         Public Property PlayList As New LimitedSizePlaylist(8)
@@ -101,7 +92,7 @@ Namespace Data
             newSongs = PandoraIO.GetSongs(Me.m_Token)
 
             If newSongs.Count = 0 Then
-                Throw New PandoraException(ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION, "API didn't return any songs for this station.")
+                Throw New PandoraException(ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION, "Pandora didn't return any songs for this station.")
             End If
 
             For Each s As PandoraSong In newSongs
@@ -113,8 +104,6 @@ Namespace Data
                 s.PreviousSong = PlayList.LastAddedSong
                 PlayList.Add(s)
             Next
-
-            _SongLoadingOccurred = True
         End Sub
 
         Private Sub CheckForStationTags(song As PandoraSong)

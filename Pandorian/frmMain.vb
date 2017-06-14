@@ -291,15 +291,7 @@ Public Class frmMain
         Dim bgwCoverLoader As New BackgroundWorker
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
 
-        If IsNothing(Pandora.CurrentStation.CurrentSong) Then
-            Pandora.CurrentStation.FetchSongs()
-        End If
-
         Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
-
-        If Pandora.CurrentStation.SongLoadingOccurred Then
-            tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
-        End If
 
         tbLog.AppendText("Loading album cover art..." + vbCrLf)
         If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
@@ -312,8 +304,8 @@ Public Class frmMain
         ddStations.Enabled = True
         Timer.Enabled = True
 
-        btnSkip.Enabled = True
-        btnSkip.BackColor = Control.DefaultBackColor
+        btnNext.Enabled = True
+        btnNext.BackColor = Control.DefaultBackColor
 
         Select Case Song.Rating
             Case PandoraRating.Hate
@@ -337,6 +329,7 @@ Public Class frmMain
         If ResumePlaying Then
             btnPlayPause.BackgroundImage = My.Resources.paused
         End If
+
         If Song.TemporarilyBanned Then
             btnBlock.Enabled = False
             btnBlock.BackColor = Color.DarkGray
@@ -346,15 +339,15 @@ Public Class frmMain
         End If
 
         If Pandora.CurrentStation.CurrentSong.AudioDurationSecs < 60 Then
-            lblSongName.Text = "This is a 42 sec blank audio track"
-            lblArtistName.Text = "Pandora is punishing you for excessive skipping :-("
-            lblAlbumName.Text = "This will correct itself in about 24hrs"
+            lblSongName.Text = "Ooops! Something went wrong :-("
+            lblArtistName.Text = "This doesn't seem to be a normal track."
+            lblAlbumName.Text = "Try changing stations or restarting the app."
             SongCoverImage.Image = Nothing
             btnLike.Enabled = False
             btnDislike.Enabled = False
             btnPlayPause.Enabled = False
-            btnSkip.Enabled = False
-            btnSkip.BackColor = Color.DarkGray
+            btnNext.Enabled = False
+            btnNext.BackColor = Color.DarkGray
             btnBlock.Enabled = False
         Else
             lblSongName.Text = Song.GetProperTitle(IndicateLiked)
@@ -379,50 +372,70 @@ Public Class frmMain
         Return True
     End Function
 
-    Sub PlayNextSong()
-        If Not IsNothing(Pandora.CurrentStation.CurrentSong) Then
-            Pandora.CurrentStation.CurrentSong.RePlayAllowed = False
+    Sub PlayPreviousSong()
+        If Not IsNothing(Pandora.CurrentStation.CurrentSong.PreviousSong) Then
+            Spinner.Visible = True
+            prgBar.Value = 0
+            prgBar.Update()
+            Application.DoEvents()
+            ResumePlaying = True
+            Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.PreviousSong
+            PlayCurrentSong()
         End If
+    End Sub
+
+
+    Sub PlayNextSong()
+
         Spinner.Visible = True
-        Application.DoEvents()
         prgBar.Value = 0
         prgBar.Update()
+        Application.DoEvents()
         ResumePlaying = True
+
         Try
+            Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.NextSong
+            If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+                Throw New Exception("no next song")
+            End If
+        Catch ex As Exception
             If Pandora.OkToFetchSongs Then
-                Pandora.CurrentStation.FetchSongs()
+                Try
+                    Pandora.CurrentStation.FetchSongs()
+                    tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
+                Catch x As PandoraException
+                    If x.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
+                        Bass.BASS_ChannelSetPosition(Stream, 0)
+                        Bass.BASS_ChannelPlay(Stream, False)
+                        Spinner.Visible = False
+                        tbLog.AppendText("Global skip limit reached. Replaying current song..." + vbCrLf)
+                        Pandora.SkipLimitReached = True
+                        Pandora.SkipLimitReachedAt = Now
+                        ddStations.Enabled = False
+                        btnNext.Enabled = False
+                        btnNext.BackColor = Color.DarkGray
+                        Application.DoEvents()
+                        Exit Sub
+                    End If
+                    Throw x
+                End Try
+                Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.PlayList.ToArray(0)
             Else
                 tbLog.AppendText("Waiting few mins before fetching new songs..." + vbCrLf)
                 Bass.BASS_ChannelSetPosition(Stream, 0)
                 Bass.BASS_ChannelPlay(Stream, False)
                 Spinner.Visible = False
                 ddStations.Enabled = False
-                btnSkip.Enabled = False
-                btnSkip.BackColor = Color.DarkGray
+                btnNext.Enabled = False
+                btnNext.BackColor = Color.DarkGray
                 Application.DoEvents()
                 Exit Sub
             End If
-            Pandora.SkipLimitReached = False
-            ddStations.Enabled = True
-            btnSkip.Enabled = True
-            btnSkip.BackColor = Control.DefaultBackColor
-            PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
-        Catch ex As PandoraException
-            If ex.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
-                Bass.BASS_ChannelSetPosition(Stream, 0)
-                Bass.BASS_ChannelPlay(Stream, False)
-                Spinner.Visible = False
-                tbLog.AppendText("Global skip limit reached. Replaying current song..." + vbCrLf)
-                Pandora.SkipLimitReached = True
-                Pandora.SkipLimitReachedAt = Now
-                ddStations.Enabled = False
-                btnSkip.Enabled = False
-                btnSkip.BackColor = Color.DarkGray
-                Application.DoEvents()
-                Exit Sub
-            End If
-            Throw ex
         End Try
+
+        Pandora.CurrentStation.CurrentSong.RePlayAllowed = False
+
+        PlayCurrentSong()
     End Sub
 
     Private Sub frmMain_Activated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -923,7 +936,7 @@ Public Class frmMain
         ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_STOPPED And ResumePlaying = False Then
             ResumePlaying = True
             Bass.BASS_ChannelPlay(Stream, False)
-            btnPlayPause.BackgroundImage = My.Resources.paused
+            btnPlayPause.Image = My.Resources.paused
         Else
             btnPlayPause.BackgroundImage = Nothing
             btnPlayPause.Text = ":-("
@@ -997,6 +1010,10 @@ Public Class frmMain
                            "New songs cannot be played until skip limit is lifted by Pandora." + vbCrLf + vbCrLf +
                            "Please quit the app and try again after 10 minutes...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
+                Case ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION
+                    MsgBox("No songs were found for this station." + vbCrLf + vbCrLf +
+                           "Please try adding a few seeds to this station using Pandora website...", MsgBoxStyle.Exclamation)
+                    AfterErrorActions()
                 Case Else
                     ReportError(pex, Caller)
                     AfterErrorActions()
@@ -1045,8 +1062,8 @@ Public Class frmMain
         btnPlayPause.Enabled = False
         btnDislike.Enabled = False
         btnLike.Enabled = False
-        btnSkip.Enabled = True
-        btnSkip.BackColor = Control.DefaultBackColor
+        btnNext.Enabled = True
+        btnNext.BackColor = Control.DefaultBackColor
     End Sub
 
     Private Sub ReLoginToPandora()
@@ -1057,15 +1074,25 @@ Public Class frmMain
         Execute(Sub() RunNow(), "ReLoginToPandora")
     End Sub
 
-    Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
-        If btnSkip.Enabled Then
-            btnSkip.Enabled = False
-            btnSkip.BackColor = Color.DarkGray
-            If Not Pandora.SkipLimitReached Then
-                Execute(Sub() PlayNextSong(), "btnSkip_Click")
-            End If
-        End If
+    Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnNext.Click
+        Execute(Sub() PlayNextSong(), "btnSkip_Click")
     End Sub
+
+    Private Sub btnBack_Click(sender As Object, e As EventArgs) Handles btnPrev.Click
+        PlayPreviousSong()
+    End Sub
+
+    'Private Sub btnLeft_Click(sender As Object, e As EventArgs)
+    '    Bass.BASS_StreamFree(Stream)
+    '    Pandora.CurrentStation.LoadPrevSong()
+    '    PlayCurrentSong()
+    'End Sub
+
+    'Private Sub btnRight_Click(sender As Object, e As EventArgs)
+    '    Bass.BASS_StreamFree(Stream)
+    '    Pandora.CurrentStation.LoadNextSong()
+    '    PlayCurrentSong()
+    'End Sub
 
     Private Sub btnBlock_Click(sender As Object, e As EventArgs) Handles btnBlock.Click
         If btnBlock.Enabled Then
@@ -1354,7 +1381,7 @@ Public Class frmMain
             tmiPlayPause.Enabled = True
             tmiLikeCurrentSong.Enabled = btnLike.Enabled
             tmiDislikeCurrentSong.Enabled = btnDislike.Enabled
-            tmiSkipSong.Enabled = btnSkip.Enabled
+            tmiSkipSong.Enabled = btnNext.Enabled
             tmiBlockSong.Enabled = btnBlock.Enabled
             If frmLockScreen.Visible Then
                 tmiExit.Enabled = False
@@ -1518,8 +1545,8 @@ Public Class frmMain
         tip.Show("Play/Pause Song", btnPlayPause)
     End Sub
 
-    Private Sub btnSkip_MouseHover(sender As Object, e As EventArgs) Handles btnSkip.MouseHover
-        tip.Show("Skip Song", btnSkip)
+    Private Sub btnSkip_MouseHover(sender As Object, e As EventArgs) Handles btnNext.MouseHover
+        tip.Show("Skip Song", btnNext)
     End Sub
 
     Private Sub btnBlock_MouseHover(sender As Object, e As EventArgs) Handles btnBlock.MouseHover
@@ -1574,15 +1601,7 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub btnLeft_Click(sender As Object, e As EventArgs) Handles btnLeft.Click
-        Bass.BASS_StreamFree(Stream)
-        Pandora.CurrentStation.LoadPrevSong()
-        PlayCurrentSong()
-    End Sub
+    Private Sub SongCoverImage_MouseEnter(sender As Object, e As MouseEventArgs) Handles SongCoverImage.MouseMove
 
-    Private Sub btnRight_Click(sender As Object, e As EventArgs) Handles btnRight.Click
-        Bass.BASS_StreamFree(Stream)
-        Pandora.CurrentStation.LoadNextSong()
-        PlayCurrentSong()
     End Sub
 End Class

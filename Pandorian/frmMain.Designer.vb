@@ -99,15 +99,14 @@ Partial Class frmMain
         Me.tip = New System.Windows.Forms.ToolTip(Me.components)
         Me.bpmTimer = New System.Windows.Forms.Timer(Me.components)
         Me.lblBPM = New System.Windows.Forms.Label()
+        Me.btnPrev = New System.Windows.Forms.Button()
         Me.Spinner = New System.Windows.Forms.PictureBox()
         Me.btnBlock = New System.Windows.Forms.Button()
-        Me.btnSkip = New System.Windows.Forms.Button()
+        Me.btnNext = New System.Windows.Forms.Button()
         Me.btnPlayPause = New System.Windows.Forms.Button()
         Me.btnDislike = New System.Windows.Forms.Button()
         Me.btnLike = New System.Windows.Forms.Button()
         Me.SongCoverImage = New System.Windows.Forms.PictureBox()
-        Me.btnLeft = New System.Windows.Forms.Button()
-        Me.btnRight = New System.Windows.Forms.Button()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
         Me.TrayMenu.SuspendLayout()
@@ -264,7 +263,7 @@ Partial Class frmMain
         Me.pnlSleepTimer.Controls.Add(Me.Label1)
         Me.pnlSleepTimer.Controls.Add(Me.ddSleepTimes)
         Me.pnlSleepTimer.Controls.Add(Me.lblSleepStatus)
-        Me.pnlSleepTimer.Location = New System.Drawing.Point(10, 44)
+        Me.pnlSleepTimer.Location = New System.Drawing.Point(10, 42)
         Me.pnlSleepTimer.Name = "pnlSleepTimer"
         Me.pnlSleepTimer.Size = New System.Drawing.Size(300, 300)
         Me.pnlSleepTimer.TabIndex = 15
@@ -460,7 +459,7 @@ Partial Class frmMain
         Me.pnlHotKeys.Controls.Add(Me.cbModKey)
         Me.pnlHotKeys.Controls.Add(Me.Label3)
         Me.pnlHotKeys.Controls.Add(Me.Label2)
-        Me.pnlHotKeys.Location = New System.Drawing.Point(10, 44)
+        Me.pnlHotKeys.Location = New System.Drawing.Point(10, 43)
         Me.pnlHotKeys.Name = "pnlHotKeys"
         Me.pnlHotKeys.Size = New System.Drawing.Size(300, 300)
         Me.pnlHotKeys.TabIndex = 16
@@ -700,7 +699,7 @@ Partial Class frmMain
         '
         'tbLog
         '
-        Me.tbLog.Location = New System.Drawing.Point(8, 7)
+        Me.tbLog.Location = New System.Drawing.Point(8, 8)
         Me.tbLog.Multiline = True
         Me.tbLog.Name = "tbLog"
         Me.tbLog.ReadOnly = True
@@ -731,12 +730,27 @@ Partial Class frmMain
         Me.lblBPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblBPM.Visible = False
         '
+        'btnPrev
+        '
+        Me.btnPrev.BackColor = System.Drawing.SystemColors.Control
+        Me.btnPrev.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.btnPrev.FlatAppearance.BorderSize = 0
+        Me.btnPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnPrev.ForeColor = System.Drawing.Color.Black
+        Me.btnPrev.Image = CType(resources.GetObject("btnPrev.Image"), System.Drawing.Image)
+        Me.btnPrev.Location = New System.Drawing.Point(112, 421)
+        Me.btnPrev.Name = "btnPrev"
+        Me.btnPrev.Size = New System.Drawing.Size(45, 32)
+        Me.btnPrev.TabIndex = 21
+        Me.btnPrev.TabStop = False
+        Me.btnPrev.UseVisualStyleBackColor = False
+        '
         'Spinner
         '
         Me.Spinner.BackColor = System.Drawing.Color.Black
         Me.Spinner.BackgroundImage = Global.Pandorian.My.Resources.Resources.wait
         Me.Spinner.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.Spinner.Location = New System.Drawing.Point(0, -1)
+        Me.Spinner.Location = New System.Drawing.Point(0, 0)
         Me.Spinner.Name = "Spinner"
         Me.Spinner.Size = New System.Drawing.Size(317, 463)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -747,41 +761,44 @@ Partial Class frmMain
         'btnBlock
         '
         Me.btnBlock.BackColor = System.Drawing.SystemColors.Control
-        Me.btnBlock.BackgroundImage = Global.Pandorian.My.Resources.Resources.block
+        Me.btnBlock.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
         Me.btnBlock.FlatAppearance.BorderSize = 0
         Me.btnBlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnBlock.ForeColor = System.Drawing.Color.Black
-        Me.btnBlock.Location = New System.Drawing.Point(256, 421)
+        Me.btnBlock.Image = CType(resources.GetObject("btnBlock.Image"), System.Drawing.Image)
+        Me.btnBlock.Location = New System.Drawing.Point(264, 421)
         Me.btnBlock.Name = "btnBlock"
-        Me.btnBlock.Size = New System.Drawing.Size(53, 32)
+        Me.btnBlock.Size = New System.Drawing.Size(45, 32)
         Me.btnBlock.TabIndex = 12
         Me.btnBlock.TabStop = False
         Me.btnBlock.UseVisualStyleBackColor = False
         '
-        'btnSkip
+        'btnNext
         '
-        Me.btnSkip.BackColor = System.Drawing.SystemColors.Control
-        Me.btnSkip.BackgroundImage = Global.Pandorian.My.Resources.Resources.skip
-        Me.btnSkip.FlatAppearance.BorderSize = 0
-        Me.btnSkip.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnSkip.ForeColor = System.Drawing.Color.Black
-        Me.btnSkip.Location = New System.Drawing.Point(190, 421)
-        Me.btnSkip.Name = "btnSkip"
-        Me.btnSkip.Size = New System.Drawing.Size(53, 32)
-        Me.btnSkip.TabIndex = 9
-        Me.btnSkip.TabStop = False
-        Me.btnSkip.UseVisualStyleBackColor = False
+        Me.btnNext.BackColor = System.Drawing.SystemColors.Control
+        Me.btnNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.btnNext.FlatAppearance.BorderSize = 0
+        Me.btnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnNext.ForeColor = System.Drawing.Color.Black
+        Me.btnNext.Image = CType(resources.GetObject("btnNext.Image"), System.Drawing.Image)
+        Me.btnNext.Location = New System.Drawing.Point(208, 421)
+        Me.btnNext.Name = "btnNext"
+        Me.btnNext.Size = New System.Drawing.Size(45, 32)
+        Me.btnNext.TabIndex = 9
+        Me.btnNext.TabStop = False
+        Me.btnNext.UseVisualStyleBackColor = False
         '
         'btnPlayPause
         '
         Me.btnPlayPause.BackColor = System.Drawing.SystemColors.Control
-        Me.btnPlayPause.BackgroundImage = Global.Pandorian.My.Resources.Resources.play
+        Me.btnPlayPause.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnPlayPause.FlatAppearance.BorderSize = 0
         Me.btnPlayPause.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPlayPause.ForeColor = System.Drawing.Color.Black
-        Me.btnPlayPause.Location = New System.Drawing.Point(133, 421)
+        Me.btnPlayPause.Image = CType(resources.GetObject("btnPlayPause.Image"), System.Drawing.Image)
+        Me.btnPlayPause.Location = New System.Drawing.Point(160, 421)
         Me.btnPlayPause.Name = "btnPlayPause"
-        Me.btnPlayPause.Size = New System.Drawing.Size(53, 32)
+        Me.btnPlayPause.Size = New System.Drawing.Size(45, 32)
         Me.btnPlayPause.TabIndex = 8
         Me.btnPlayPause.TabStop = False
         Me.btnPlayPause.UseVisualStyleBackColor = False
@@ -789,13 +806,14 @@ Partial Class frmMain
         'btnDislike
         '
         Me.btnDislike.BackColor = System.Drawing.SystemColors.Control
-        Me.btnDislike.BackgroundImage = CType(resources.GetObject("btnDislike.BackgroundImage"), System.Drawing.Image)
+        Me.btnDislike.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
         Me.btnDislike.FlatAppearance.BorderSize = 0
         Me.btnDislike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnDislike.ForeColor = System.Drawing.Color.Black
-        Me.btnDislike.Location = New System.Drawing.Point(66, 421)
+        Me.btnDislike.Image = CType(resources.GetObject("btnDislike.Image"), System.Drawing.Image)
+        Me.btnDislike.Location = New System.Drawing.Point(55, 421)
         Me.btnDislike.Name = "btnDislike"
-        Me.btnDislike.Size = New System.Drawing.Size(53, 32)
+        Me.btnDislike.Size = New System.Drawing.Size(45, 32)
         Me.btnDislike.TabIndex = 7
         Me.btnDislike.TabStop = False
         Me.btnDislike.UseVisualStyleBackColor = False
@@ -803,13 +821,14 @@ Partial Class frmMain
         'btnLike
         '
         Me.btnLike.BackColor = System.Drawing.SystemColors.Control
-        Me.btnLike.BackgroundImage = CType(resources.GetObject("btnLike.BackgroundImage"), System.Drawing.Image)
+        Me.btnLike.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
         Me.btnLike.FlatAppearance.BorderSize = 0
         Me.btnLike.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLike.ForeColor = System.Drawing.Color.Black
-        Me.btnLike.Location = New System.Drawing.Point(9, 421)
+        Me.btnLike.Image = CType(resources.GetObject("btnLike.Image"), System.Drawing.Image)
+        Me.btnLike.Location = New System.Drawing.Point(7, 421)
         Me.btnLike.Name = "btnLike"
-        Me.btnLike.Size = New System.Drawing.Size(53, 32)
+        Me.btnLike.Size = New System.Drawing.Size(45, 32)
         Me.btnLike.TabIndex = 6
         Me.btnLike.TabStop = False
         Me.btnLike.UseVisualStyleBackColor = False
@@ -825,38 +844,6 @@ Partial Class frmMain
         Me.SongCoverImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.SongCoverImage.TabIndex = 2
         Me.SongCoverImage.TabStop = False
-        '
-        'btnLeft
-        '
-        Me.btnLeft.BackColor = System.Drawing.Color.White
-        Me.btnLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnLeft.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.btnLeft.FlatAppearance.BorderSize = 0
-        Me.btnLeft.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnLeft.Image = Global.Pandorian.My.Resources.Resources.left
-        Me.btnLeft.Location = New System.Drawing.Point(19, 167)
-        Me.btnLeft.Name = "btnLeft"
-        Me.btnLeft.Size = New System.Drawing.Size(30, 47)
-        Me.btnLeft.TabIndex = 21
-        Me.btnLeft.UseVisualStyleBackColor = False
-        Me.btnLeft.Visible = False
-        '
-        'btnRight
-        '
-        Me.btnRight.BackColor = System.Drawing.Color.White
-        Me.btnRight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnRight.Cursor = System.Windows.Forms.Cursors.Default
-        Me.btnRight.FlatAppearance.BorderSize = 0
-        Me.btnRight.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnRight.Image = Global.Pandorian.My.Resources.Resources.right
-        Me.btnRight.Location = New System.Drawing.Point(267, 167)
-        Me.btnRight.Name = "btnRight"
-        Me.btnRight.Size = New System.Drawing.Size(32, 47)
-        Me.btnRight.TabIndex = 22
-        Me.btnRight.UseVisualStyleBackColor = False
-        Me.btnRight.Visible = False
         '
         'frmMain
         '
@@ -874,16 +861,15 @@ Partial Class frmMain
         Me.Controls.Add(Me.prgDownload)
         Me.Controls.Add(Me.btnBlock)
         Me.Controls.Add(Me.prgBar)
-        Me.Controls.Add(Me.btnSkip)
+        Me.Controls.Add(Me.btnNext)
         Me.Controls.Add(Me.btnPlayPause)
         Me.Controls.Add(Me.btnDislike)
         Me.Controls.Add(Me.btnLike)
         Me.Controls.Add(Me.lblAlbumName)
         Me.Controls.Add(Me.lblArtistName)
         Me.Controls.Add(Me.ddStations)
-        Me.Controls.Add(Me.btnRight)
-        Me.Controls.Add(Me.btnLeft)
         Me.Controls.Add(Me.SongCoverImage)
+        Me.Controls.Add(Me.btnPrev)
         Me.ForeColor = System.Drawing.Color.White
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -913,7 +899,7 @@ Partial Class frmMain
     Friend WithEvents btnLike As System.Windows.Forms.Button
     Friend WithEvents btnDislike As System.Windows.Forms.Button
     Friend WithEvents btnPlayPause As System.Windows.Forms.Button
-    Friend WithEvents btnSkip As System.Windows.Forms.Button
+    Friend WithEvents btnNext As System.Windows.Forms.Button
     Friend WithEvents prgBar As System.Windows.Forms.ProgressBar
     'Friend WithEvents Player As AxWMPLib.AxWindowsMediaPlayer
     Friend WithEvents Timer As System.Windows.Forms.Timer
@@ -988,6 +974,5 @@ Partial Class frmMain
     Friend WithEvents tip As System.Windows.Forms.ToolTip
     Friend WithEvents bpmTimer As System.Windows.Forms.Timer
     Friend WithEvents lblBPM As System.Windows.Forms.Label
-    Friend WithEvents btnLeft As Button
-    Friend WithEvents btnRight As Button
+    Friend WithEvents btnPrev As Button
 End Class
