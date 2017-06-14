@@ -30,6 +30,7 @@ Public Class frmMain
     Dim BPMCounter As New Misc.BPMCounter(20, 44100)
     Dim SongInfo As New frmSongInfo()
     Dim HideSongInfo As Boolean = False
+    Dim APIFile As String = "v1.api"
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(Cover As Image)
@@ -90,7 +91,7 @@ Public Class frmMain
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
             Pandora.ClearSession(Settings.Read("pandoraOne"))
-            'File.Delete("api.dat")
+            'File.Delete(APIFile)
             SavePandoraObject()
             CleanUp()
         End If
@@ -589,7 +590,7 @@ Public Class frmMain
 
         With Settings
             If .ValueCount = 0 Then
-                File.Delete("api.dat")
+                File.Delete(APIFile)
                 .Write("proxyAddress", "http://server:port")
                 .Write("proyxUsername", "")
                 .Write("proxyPassword", "")
@@ -808,7 +809,7 @@ Public Class frmMain
 
     Private Sub SavePandoraObject()
         If Not IsNothing(Pandora) Then
-            Using stream As Stream = File.Create("api.dat")
+            Using stream As Stream = File.Create(APIFile)
                 Try
                     Dim formatter As New BinaryFormatter()
                     formatter.Serialize(stream, Pandora)
@@ -823,11 +824,10 @@ Public Class frmMain
 
     Private Sub RestorePandoraObject()
 
-        'File.Delete("api.dat")
 
-        If File.Exists("api.dat") Then
+        If File.Exists(APIFile) Then
             Try
-                Using stream As Stream = File.Open("api.dat", FileMode.Open, FileAccess.Read)
+                Using stream As Stream = File.Open(APIFile, FileMode.Open, FileAccess.Read)
                     Dim formatter As New BinaryFormatter()
                     Pandora = DirectCast(formatter.Deserialize(stream), API)
                     tbLog.AppendText("Restored the api object from disk..." + vbCrLf)
@@ -835,7 +835,7 @@ Public Class frmMain
                 End Using
                 Exit Sub
             Catch e As Exception
-                File.Delete("api.dat")
+                File.Delete(APIFile)
                 tbLog.AppendText("Failed to restore the api object from disk..." + vbCrLf)
                 ReportError(e, "RestorePandoraObject")
             End Try
