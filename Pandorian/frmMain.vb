@@ -894,11 +894,10 @@ Public Class frmMain
                 Pandora.SkipLimitReached = False
 
                 If IsNothing(Pandora.CurrentStation.CurrentSong) Then
-                    Execute(Sub() PlayNextSong(), "RunNow.PlayCurrentSong()")
-                    Exit Sub
+                    Execute(Sub() PlayNextSong(), "RunNow.PlayNextSong()")
+                Else
+                    Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
                 End If
-
-                Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
 
             End If
         End If
@@ -929,9 +928,9 @@ Public Class frmMain
 
             If IsNothing(Pandora.CurrentStation.CurrentSong) Then
                 Execute(Sub() PlayNextSong(), "ddStations_SelectedIndexChanged.PlayNextSong")
+            Else
+                Execute(Sub() PlayCurrentSong(), "ddStations_SelectedIndexChanged.PlayCurrentSong")
             End If
-
-            Execute(Sub() PlayCurrentSong(), "ddStations_SelectedIndexChanged.PlayCurrentSong")
 
         End If
 
