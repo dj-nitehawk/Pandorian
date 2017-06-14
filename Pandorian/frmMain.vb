@@ -383,7 +383,9 @@ Public Class frmMain
             Application.DoEvents()
             ResumePlaying = True
             Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.PreviousSong
-            Execute(Sub() PlayCurrentSong(), "PlayPreviousSong()")
+            Execute(Sub() PlayCurrentSong(), "PlayPreviousSong") 'don't ever change this string
+        Else
+            PlayNextSong()
         End If
     End Sub
 
@@ -435,7 +437,7 @@ Public Class frmMain
             End If
         End Try
 
-        Execute(Sub() PlayCurrentSong(), "PlayNextSong()")
+        Execute(Sub() PlayCurrentSong(), "PlayNextSong") 'don't ever change this string
     End Sub
 
     Private Sub frmMain_Activated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -894,9 +896,9 @@ Public Class frmMain
                 Pandora.SkipLimitReached = False
 
                 If IsNothing(Pandora.CurrentStation.CurrentSong) Then
-                    Execute(Sub() PlayNextSong(), "RunNow.PlayNextSong()")
+                    Execute(Sub() PlayNextSong(), "RunNow.PlayNextSong")
                 Else
-                    Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
+                    Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong")
                 End If
 
             End If
@@ -975,7 +977,7 @@ Public Class frmMain
     End Sub
 
     Sub SongEnded(ByVal handle As Integer, ByVal channel As Integer, ByVal data As Integer, ByVal user As IntPtr)
-        Execute(Sub() PlayNextSong(), "SongEnded")
+        Execute(Sub() PlayNextSong(), "SongEnded.PlayNextSong")
     End Sub
 
     Private Sub DebugExpireSessionNow()
@@ -1012,11 +1014,11 @@ Public Class frmMain
                         AfterErrorActions()
                     End Try
                 Case ErrorCodeEnum.SONG_URL_NOT_VALID
-                    If Caller = "PlayNextSong()" Then
+                    If Caller = "PlayNextSong" Then 'don't ever change this string
                         tbLog.AppendText("Song URL expired. Trying the next song..." + vbCrLf)
                         PlayNextSong()
                     End If
-                    If Caller = "PlayPreviousSong()" Then
+                    If Caller = "PlayPreviousSong" Then 'don't ever change this string
                         tbLog.AppendText("Song URL expired. Trying the previous song..." + vbCrLf)
                         PlayPreviousSong()
                     End If
@@ -1081,9 +1083,7 @@ Public Class frmMain
         btnDislike.Enabled = False
         btnLike.Enabled = False
         btnPrev.Enabled = False
-        btnPrev.BackColor = Control.DefaultBackColor
         btnNext.Enabled = True
-        btnNext.BackColor = Control.DefaultBackColor
     End Sub
 
     Private Sub ReLoginToPandora()
@@ -1092,11 +1092,11 @@ Public Class frmMain
         Pandora.ClearSession(Settings.Read("pandoraOne"))
         CleanUp()
         SavePandoraObject()
-        Execute(Sub() RunNow(), "ReLoginToPandora")
+        Execute(Sub() RunNow(), "ReLoginToPandora.RunNow")
     End Sub
 
     Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnNext.Click
-        Execute(Sub() PlayNextSong(), "btnSkip_Click")
+        Execute(Sub() PlayNextSong(), "btnSkip_Click.PlayNextSong")
     End Sub
 
     Private Sub btnBack_Click(sender As Object, e As EventArgs) Handles btnPrev.Click
@@ -1141,7 +1141,7 @@ Public Class frmMain
             btnLike.BackColor = Color.PaleGreen
             btnDislike.Enabled = True
             btnDislike.BackColor = Control.DefaultBackColor
-            Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Love), "btnLike_Click")
+            Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Love), "btnLike_Click.Pandora.RateSong")
             lblSongName.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(IndicateLiked)
             RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text)
         End If
@@ -1339,7 +1339,7 @@ Public Class frmMain
                 tbLog.AppendText("Machine woke up from sleep..." + vbCrLf)
                 WaitForNetConnection()
                 InitBass()
-                Execute(Sub() PlayCurrentSong(), "PowerModeChanged.Resume")
+                Execute(Sub() PlayCurrentSong(), "PowerModeChanged.PlayCurrentSong")
             Case PowerModes.Suspend
                 PreSleepActivities()
         End Select
