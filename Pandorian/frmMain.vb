@@ -51,7 +51,9 @@ Public Class frmMain
             FS.Close()
             FS = Nothing
             If Not StreamDownloadedLength() = -1 Then
-                Pandora.CurrentStation.CurrentSong.FinishedDownloading = True
+                If Not IsNothing(Pandora.CurrentStation.CurrentSong) Then
+                    Pandora.CurrentStation.CurrentSong.FinishedDownloading = True
+                End If
             End If
         Else
             If Data Is Nothing OrElse Data.Length < length Then
@@ -288,11 +290,11 @@ Public Class frmMain
     End Sub
 
     Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 5 REFERENCES (PlayNextSong/PlayPreviousSong/RunNow/PowerModeChanged/ddStations_SelectedIndexChanged)
-        Dim bgwCoverLoader As New BackgroundWorker
-        AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
 
         Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
 
+        Dim bgwCoverLoader As New BackgroundWorker
+        AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
         tbLog.AppendText("Loading album cover art..." + vbCrLf)
         If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
             bgwCoverLoader.RunWorkerAsync(Nothing)
@@ -738,8 +740,13 @@ Public Class frmMain
     End Function
 
     Private Sub CleanUp()
+
         For Each f In Directory.GetFiles(Directory.GetCurrentDirectory(), "*.stream")
-            File.Delete(f)
+            Try
+                File.Delete(f)
+            Catch ex As Exception
+                'do null
+            End Try
         Next
     End Sub
 
@@ -887,7 +894,8 @@ Public Class frmMain
                 Pandora.SkipLimitReached = False
 
                 If IsNothing(Pandora.CurrentStation.CurrentSong) Then
-                    PlayNextSong()
+                    Execute(Sub() PlayNextSong(), "RunNow.PlayCurrentSong()")
+                    Exit Sub
                 End If
 
                 Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
@@ -920,7 +928,7 @@ Public Class frmMain
             tbLog.AppendText("Station changed to: " + Pandora.CurrentStation.Name + vbCrLf)
 
             If IsNothing(Pandora.CurrentStation.CurrentSong) Then
-                PlayNextSong()
+                Execute(Sub() PlayNextSong(), "ddStations_SelectedIndexChanged.PlayNextSong")
             End If
 
             Execute(Sub() PlayCurrentSong(), "ddStations_SelectedIndexChanged.PlayCurrentSong")
@@ -972,13 +980,13 @@ Public Class frmMain
     End Sub
 
     Private Sub DebugExpireSessionNow()
-        'Pandora.Session.DebugCorruptAuthToken()
-        'Pandora.Session.User.DebugCorruptAuthToken()
-        Dim quality = Settings.Read("audioQuality")
-        Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(quality)
-        For Each s In Pandora.CurrentStation.PlayList
-            s.DebugCorruptAudioUrl(quality)
-        Next
+        Pandora.Session.DebugCorruptAuthToken()
+        Pandora.Session.User.DebugCorruptAuthToken()
+        'Dim quality = Settings.Read("audioQuality")
+        'Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(quality)
+        'For Each s In Pandora.CurrentStation.PlayList
+        '    s.DebugCorruptAudioUrl(quality)
+        'Next
     End Sub
 
     Private ErrCount As Integer = 0
@@ -1005,10 +1013,14 @@ Public Class frmMain
                         AfterErrorActions()
                     End Try
                 Case ErrorCodeEnum.SONG_URL_NOT_VALID
-                    tbLog.AppendText("Song URL expired. Will fetch new songs..." + vbCrLf)
-                    Pandora.CurrentStation.CurrentSong = Nothing
-                    Pandora.CurrentStation.PlayList.Clear()
-                    Execute(Logic, "SongExpired.ReDoLogic")
+                    If Caller = "PlayNextSong()" Then
+                        tbLog.AppendText("Song URL expired. Trying the next song..." + vbCrLf)
+                        PlayNextSong()
+                    End If
+                    If Caller = "PlayPreviousSong()" Then
+                        tbLog.AppendText("Song URL expired. Trying the previous song..." + vbCrLf)
+                        PlayPreviousSong()
+                    End If
                 Case ErrorCodeEnum.LICENSE_RESTRICTION
                     MsgBox("Looks like your country is not supported. Try using a proxy...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
@@ -1079,6 +1091,7 @@ Public Class frmMain
         Spinner.Visible = True
         Application.DoEvents()
         Pandora.ClearSession(Settings.Read("pandoraOne"))
+        CleanUp()
         SavePandoraObject()
         Execute(Sub() RunNow(), "ReLoginToPandora")
     End Sub
