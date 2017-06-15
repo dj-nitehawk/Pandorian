@@ -354,10 +354,10 @@ Public Class frmMain
     End Sub
 
     Private Function IndicateLiked() As Boolean
-        If Settings.noLiked = 1 Or WindowState = FormWindowState.Normal Then
+        If WindowState = FormWindowState.Normal Then
             Return False
         End If
-        Return True
+        Return Not Settings.noLiked
     End Function
 
     Sub PlayPreviousSong(ExpiredTrack As Boolean)
