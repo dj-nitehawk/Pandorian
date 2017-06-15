@@ -234,7 +234,7 @@ Public Class frmMain
     End Function
     Private Function LoginToPandora() As Boolean
         Try
-            If Pandora.Login(Decrypt(Settings.pandoraUsername), Decrypt(Settings.pandoraPassword), Settings.noQmix)) Then
+            If Pandora.Login(Decrypt(Settings.pandoraUsername), Decrypt(Settings.pandoraPassword), Settings.noQmix) Then
                 tbLog.AppendText("Successfully logged in to pandora..." + vbCrLf)
                 Return True
             Else
@@ -756,8 +756,7 @@ Public Class frmMain
         If Not Debugger.IsAttached Then
             LogAppStartEvent()
         End If
-        Dim launchCount As Integer = Settings.launchCount + 1
-        Settings.launchCount = launchCount
+        Settings.launchCount = Settings.launchCount + 1
         Settings.SaveToRegistry()
         CheckForUpdate()
         registerHotkeys()
@@ -914,6 +913,7 @@ Public Class frmMain
             Next
 
             Settings.lastStationID = Pandora.CurrentStation.Id
+            Settings.SaveToRegistry()
 
             tbLog.AppendText("Station changed to: " + Pandora.CurrentStation.Name + vbCrLf)
 

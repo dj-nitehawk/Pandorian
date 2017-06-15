@@ -33,18 +33,30 @@ Public Class Settings
     Shared Sub SaveToRegistry()
         Dim s As New Settings()
         For Each p In s.GetType.GetProperties
-            Reg.Write(p.Name, p.GetValue(s, Nothing))
+            Dim val = p.GetValue(s, Nothing)
+            If p.PropertyType Is GetType(Boolean) Then
+                If val = True Then
+                    val = 1
+                Else
+                    val = 0
+                End If
+            End If
+            Reg.Write(p.Name, val)
         Next
     End Sub
 
     Shared Sub LoadFromRegistry()
         Dim s As New Settings()
         For Each p In s.GetType.GetProperties
-            Try
-                p.SetValue(s, Reg.Read(p.Name), Nothing)
-            Catch ex As Exception
-                p.SetValue(s, Nothing, Nothing)
-            End Try
+            Dim Val = Reg.Read(p.Name)
+            If p.PropertyType Is GetType(Boolean) Then
+                If Val = 1 Then
+                    Val = True
+                Else
+                    Val = False
+                End If
+            End If
+            p.SetValue(s, Val, Nothing)
         Next
     End Sub
 
