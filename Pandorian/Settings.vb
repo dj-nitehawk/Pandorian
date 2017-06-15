@@ -1,177 +1,67 @@
-﻿
-Imports Microsoft.Win32
+﻿Imports Pandorian.Utility.ModifyRegistry
 
-Namespace Utility.ModifyRegistry
-    ''' <summary>
-    ''' An useful class to read/write/delete/count registry keys
-    ''' </summary>
-    Public Class RegistryStore
-        Private m_showError As Boolean = False
-        ''' <summary>
-        ''' A property to show or hide error messages 
-        ''' (default = false)
-        ''' </summary>
-        Public Property ShowError() As Boolean
-            Get
-                Return m_showError
-            End Get
-            Set
-                m_showError = Value
-            End Set
-        End Property
+Public Class Settings
 
-        Private m_subKey As String = "SOFTWARE\" + Application.ProductName.ToUpper()
-        ''' <summary>
-        ''' A property to set the SubKey value
-        ''' (default = "SOFTWARE\\" + Application.ProductName.ToUpper())
-        ''' </summary>
-        Public Property SubKey() As String
-            Get
-                Return m_subKey
-            End Get
-            Set
-                m_subKey = Value
-            End Set
-        End Property
+    Private Shared Reg As RegistryStore = New RegistryStore()
 
-        Private m_baseRegistryKey As RegistryKey = Registry.CurrentUser
-        ''' <summary>
-        ''' A property to set the BaseRegistryKey value.
-        ''' (default = Registry.CurrentUser)
-        ''' </summary>
-        Public Property BaseRegistryKey() As RegistryKey
-            Get
-                Return m_baseRegistryKey
-            End Get
-            Set
-                m_baseRegistryKey = Value
-            End Set
-        End Property
+    Shared Property audioQuality As String
+    Shared Property downloadLocation As String
+    Shared Property lastStationID As String
+    Shared Property launchCount As Boolean
+    Shared Property noLiked As Boolean
+    Shared Property noProxy As Boolean
+    Shared Property noQmix As Boolean
+    Shared Property pandoraOne As Boolean
+    Shared Property pandoraPassword As String
+    Shared Property pandoraUsername As String
+    Shared Property proxyAddress As String
+    Shared Property proxyPassword As String
+    Shared Property proyxUsername As String
+    Shared Property unlockPassword As String
 
+    Shared Sub SaveToRegistry()
+        Reg.Write(NameOf(audioQuality), audioQuality)
+        Reg.Write(NameOf(downloadLocation), downloadLocation)
+        Reg.Write(NameOf(lastStationID), lastStationID)
+        Reg.Write(NameOf(launchCount), launchCount)
+        Reg.Write(NameOf(noLiked), noLiked)
+        Reg.Write(NameOf(noProxy), noProxy)
+        Reg.Write(NameOf(noQmix), noQmix)
+        Reg.Write(NameOf(pandoraOne), pandoraOne)
+        Reg.Write(NameOf(pandoraPassword), pandoraPassword)
+        Reg.Write(NameOf(pandoraUsername), pandoraUsername)
+        Reg.Write(NameOf(proxyAddress), proxyAddress)
+        Reg.Write(NameOf(proxyPassword), proxyPassword)
+        Reg.Write(NameOf(proyxUsername), proyxUsername)
+        Reg.Write(NameOf(unlockPassword), unlockPassword)
+    End Sub
 
-        ''' <summary>
-        ''' To read a registry key.
-        ''' input: KeyName (string)
-        ''' output: value (string) 
-        ''' </summary>
-        Public Function Read(KeyName As String) As String
-            Dim rk As RegistryKey = m_baseRegistryKey
-            Dim sk1 As RegistryKey = rk.OpenSubKey(m_subKey)
-            If sk1 Is Nothing Then
-                Return Nothing
-            Else
-                Try
-                    Return sk1.GetValue(KeyName)
-                Catch e As Exception
-                    ShowErrorMessage(e, "Reading registry " + KeyName)
-                    Return Nothing
-                End Try
-            End If
-        End Function
+    Shared Sub LoadFromRegistry()
+        audioQuality = Reg.Read(NameOf(audioQuality))
+        downloadLocation = Reg.Read(NameOf(downloadLocation))
+        lastStationID = Reg.Read(NameOf(lastStationID))
+        launchCount = Reg.Read(NameOf(launchCount))
+        noLiked = Reg.Read(NameOf(noLiked))
+        noProxy = Reg.Read(NameOf(noProxy))
+        noQmix = Reg.Read(NameOf(noQmix))
+        pandoraOne = Reg.Read(NameOf(pandoraOne))
+        pandoraPassword = Reg.Read(NameOf(pandoraPassword))
+        pandoraUsername = Reg.Read(NameOf(pandoraUsername))
+        proxyAddress = Reg.Read(NameOf(proxyAddress))
+        proxyPassword = Reg.Read(NameOf(proxyPassword))
+        proyxUsername = Reg.Read(NameOf(proyxUsername))
+        unlockPassword = Reg.Read(NameOf(unlockPassword))
+    End Sub
 
-        ''' <summary>
-        ''' To write into a registry key.
-        ''' input: KeyName (string) , Value (object)
-        ''' output: true or false 
-        ''' </summary>
-        Public Function Write(KeyName As String, Value As Object) As Boolean
-            Try
-                Dim rk As RegistryKey = m_baseRegistryKey
-                Dim sk1 As RegistryKey = rk.CreateSubKey(m_subKey)
-                sk1.SetValue(KeyName, Value)
-                Return True
-            Catch e As Exception
-                ShowErrorMessage(e, "Writing registry " + KeyName)
-                Return False
-            End Try
-        End Function
+    Shared Sub Write(Key As String, Value As Object)
+        Reg.Write(Key, Value)
+    End Sub
 
-        ''' <summary>
-        ''' To delete a registry key.
-        ''' input: KeyName (string)
-        ''' output: true or false 
-        ''' </summary>
-        Public Function DeleteKey(KeyName As String) As Boolean
-            Try
-                Dim rk As RegistryKey = m_baseRegistryKey
-                Dim sk1 As RegistryKey = rk.CreateSubKey(m_subKey)
-                If sk1 Is Nothing Then
-                    Return True
-                Else
-                    sk1.DeleteValue(KeyName)
-                End If
-                Return True
-            Catch e As Exception
-                ShowErrorMessage(e, Convert.ToString("Deleting SubKey ") & m_subKey)
-                Return False
-            End Try
-        End Function
+    Shared Function Read(Key As String) As Object
+        Return Reg.Read(Key)
+    End Function
 
-        ''' <summary>
-        ''' To delete a sub key and any child.
-        ''' input: void
-        ''' output: true or false 
-        ''' </summary>
-        Public Function DeleteSubKeyTree() As Boolean
-            Try
-                Dim rk As RegistryKey = m_baseRegistryKey
-                Dim sk1 As RegistryKey = rk.OpenSubKey(m_subKey)
-                If sk1 IsNot Nothing Then
-                    rk.DeleteSubKeyTree(m_subKey)
-                End If
-                Return True
-            Catch e As Exception
-                ShowErrorMessage(e, Convert.ToString("Deleting SubKey ") & m_subKey)
-                Return False
-            End Try
-        End Function
-
-        ''' <summary>
-        ''' Retrive the count of subkeys at the current key.
-        ''' input: void
-        ''' output: number of subkeys
-        ''' </summary>
-        Public Function SubKeyCount() As Integer
-            Try
-                Dim rk As RegistryKey = m_baseRegistryKey
-                Dim sk1 As RegistryKey = rk.OpenSubKey(m_subKey)
-                If sk1 IsNot Nothing Then
-                    Return sk1.SubKeyCount
-                Else
-                    Return 0
-                End If
-            Catch e As Exception
-                ShowErrorMessage(e, Convert.ToString("Retriving subkeys of ") & m_subKey)
-                Return 0
-            End Try
-        End Function
-
-
-        ''' <summary>
-        ''' Retrive the count of values in the key.
-        ''' input: void
-        ''' output: number of keys
-        ''' </summary>
-        Public Function ValueCount() As Integer
-            Try
-                Dim rk As RegistryKey = m_baseRegistryKey
-                Dim sk1 As RegistryKey = rk.OpenSubKey(m_subKey)
-                If sk1 IsNot Nothing Then
-                    Return sk1.ValueCount
-                Else
-                    Return 0
-                End If
-            Catch e As Exception
-                ShowErrorMessage(e, Convert.ToString("Retriving keys of ") & m_subKey)
-                Return 0
-            End Try
-        End Function
-
-        Private Sub ShowErrorMessage(e As Exception, Title As String)
-            If m_showError = True Then
-                MessageBox.Show(e.Message, Title, MessageBoxButtons.OK, MessageBoxIcon.[Error])
-            End If
-        End Sub
-    End Class
-End Namespace
-
+    Shared Function KeyCount() As Integer
+        Return Reg.ValueCount()
+    End Function
+End Class

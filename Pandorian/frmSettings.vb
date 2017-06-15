@@ -3,7 +3,6 @@
 
 Public Class frmSettings
 
-    Private Settings As New RegistryStore
     Private Qualities As New Dictionary(Of String, String)
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -37,6 +36,9 @@ Public Class frmSettings
 
             Me.Hide()
             frmMain.Show()
+
+            'todo: delte after conversion
+            Settings.LoadFromRegistry()
 
             If frmMain.IsLoggedIn Then
                 MsgBox("Settings saved. Restart app to use new settings.", MsgBoxStyle.Information)

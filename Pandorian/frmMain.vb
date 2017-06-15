@@ -6,11 +6,9 @@ Imports Microsoft.Win32
 Imports System.IO
 Imports System.Runtime.Serialization.Formatters.Binary
 Imports System.ComponentModel
-Imports Pandorian.Utility.ModifyRegistry
 Imports Pandorian.Engine.Data
 
 Public Class frmMain
-    Dim Settings As RegistryStore = New RegistryStore()
     Dim Pandora As API
     Dim Proxy As WebProxy
     Dim BASSReady As Boolean = False
@@ -592,53 +590,52 @@ Public Class frmMain
 
     Public Function HasSettings() As Boolean
 
-        With Settings
-            If .ValueCount = 0 Then
-                File.Delete(APIFile)
-                .Write("proxyAddress", "http://server:port")
-                .Write("proyxUsername", "")
-                .Write("proxyPassword", "")
-                .Write("pandoraUsername", "")
-                .Write("pandoraPassword", "")
-                .Write("lastStationID", 0)
-                .Write("audioQuality", "mediumQuality")
-                .Write("pandoraOne", 0)
-                .Write("downloadLocation", "")
-                .Write("noProxy", 0)
-                .Write("launchCount", 0)
-                .Write("hkModifier", 1)
-                .Write("hkPlayPause", 32)
-                .Write("hkLike", 76)
-                .Write("hkDislike", 68)
-                .Write("hkSkip", 83)
-                .Write("hkShowHide", 80)
-                .Write("hkBlock", 66)
-                .Write("hkSleep", 27)
-                .Write("hkGlobalMenu", 77)
-                .Write("hkLock", 88)
-                .Write("hkVolDown", 40)
-                .Write("hkVolUp", 38)
-                .Write("unlockPassword", "")
-                .Write("noQmix", 0)
-                .Write("noLiked", 0)
-                Return False
-            End If
-        End With
+        If Settings.KeyCount = 0 Then
+            File.Delete(APIFile)
+            Settings.audioQuality = "mediumQuality"
+            Settings.downloadLocation = ""
+            Settings.lastStationID = ""
+            Settings.launchCount = 0
+            Settings.noLiked = 0
+            Settings.noProxy = 0
+            Settings.noQmix = 0
+            Settings.pandoraOne = 0
+            Settings.pandoraPassword = ""
+            Settings.pandoraUsername = ""
+            Settings.proxyAddress = "http://server:port"
+            Settings.proxyPassword = ""
+            Settings.proyxUsername = ""
+            Settings.unlockPassword = ""
+            Settings.SaveToRegistry()
+            Settings.Write("hkModifier", 1)
+            Settings.Write("hkPlayPause", 32)
+            Settings.Write("hkLike", 76)
+            Settings.Write("hkDislike", 68)
+            Settings.Write("hkSkip", 83)
+            Settings.Write("hkShowHide", 80)
+            Settings.Write("hkBlock", 66)
+            Settings.Write("hkSleep", 27)
+            Settings.Write("hkGlobalMenu", 77)
+            Settings.Write("hkLock", 88)
+            Settings.Write("hkVolDown", 40)
+            Settings.Write("hkVolUp", 38)
+        Else
+            Settings.LoadFromRegistry()
+        End If
 
         Dim prxSettingsReqd As Boolean
 
-        Dim noProxy As Boolean = Settings.Read("noProxy")
-        If noProxy = True Then
+        If Settings.noProxy Then
             prxSettingsReqd = False
         Else
-            If Decrypt(Settings.Read("proxyAddress")) = "http://server:port" Then
+            If Decrypt(Settings.proxyAddress) = "http://server:port" Then
                 prxSettingsReqd = True
             End If
         End If
 
         If prxSettingsReqd Or
-            String.IsNullOrEmpty(Decrypt(Settings.Read("pandoraUsername"))) Or
-            String.IsNullOrEmpty(Decrypt(Settings.Read("pandoraPassword"))) Then
+            String.IsNullOrEmpty(Decrypt(Settings.pandoraUsername)) Or
+            String.IsNullOrEmpty(Decrypt(Settings.pandoraPassword)) Then
             Return False
         Else
             Return True
@@ -1520,20 +1517,19 @@ Public Class frmMain
             Exit Sub
         End If
 
-        With Settings
-            .Write("hkModifier", CType(cbModKey.SelectedValue, Integer))
-            .Write("hkBlock", tbHKBlockSong.Tag)
-            .Write("hkDislike", tbHKDislikeSong.Tag)
-            .Write("hkGlobalMenu", tbHKGlobalMenu.Tag)
-            .Write("hkLike", tbHKLikeSong.Tag)
-            .Write("hkPlayPause", tbHKPlayPause.Tag)
-            .Write("hkShowHide", tbHKShowHide.Tag)
-            .Write("hkSkip", tbHKSkipSong.Tag)
-            .Write("hkSleep", tbHKSleepNow.Tag)
-            .Write("hkLock", tbHKLockNow.Tag)
-            .Write("hkVolDown", tbHKVolDown.Tag)
-            .Write("hkVolUp", tbHKVolUp.Tag)
-        End With
+        Settings.Write("hkModifier", CType(cbModKey.SelectedValue, Integer))
+        Settings.Write("hkBlock", tbHKBlockSong.Tag)
+        Settings.Write("hkDislike", tbHKDislikeSong.Tag)
+        Settings.Write("hkGlobalMenu", tbHKGlobalMenu.Tag)
+        Settings.Write("hkLike", tbHKLikeSong.Tag)
+        Settings.Write("hkPlayPause", tbHKPlayPause.Tag)
+        Settings.Write("hkShowHide", tbHKShowHide.Tag)
+        Settings.Write("hkSkip", tbHKSkipSong.Tag)
+        Settings.Write("hkSleep", tbHKSleepNow.Tag)
+        Settings.Write("hkLock", tbHKLockNow.Tag)
+        Settings.Write("hkVolDown", tbHKVolDown.Tag)
+        Settings.Write("hkVolUp", tbHKVolUp.Tag)
+
 
         pnlHotKeys.Visible = False
 
