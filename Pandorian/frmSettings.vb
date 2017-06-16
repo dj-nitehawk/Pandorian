@@ -136,4 +136,8 @@ Public Class frmSettings
         End If
     End Sub
 
+    Private Sub ddQuality_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles ddQuality.SelectionChangeCommitted
+        Settings.audioQuality = ddQuality.SelectedValue
+        Settings.SaveToRegistry()
+    End Sub
 End Class

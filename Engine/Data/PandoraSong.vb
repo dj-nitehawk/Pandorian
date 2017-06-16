@@ -155,9 +155,7 @@ Namespace Data
             End Get
         End Property
 
-        Public Property FinishedDownloading As Boolean = False
-
-        <JsonProperty(PropertyName:="audioUrlMap")> _
+        <JsonProperty(PropertyName:="audioUrlMap")>
         Public Property AudioUrlMap() As Dictionary(Of String, AudioUrlInfo)
             Get
                 Return m_AudioUrlMap
@@ -315,5 +313,8 @@ Namespace Data
         Public Property PreviousSong As PandoraSong = Nothing
 
         Public Property NextSong As PandoraSong = Nothing
+
+        Public Property DownloadedQuality As String
+        Public Property FinishedDownloading As Boolean = False
     End Class
 End Namespace

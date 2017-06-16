@@ -40,6 +40,7 @@ Public Class frmMain
     Private Sub DownloadSong(buffer As IntPtr, length As Integer, user As IntPtr)
         If FS Is Nothing Then
             Pandora.CurrentStation.CurrentSong.FinishedDownloading = False
+            Pandora.CurrentStation.CurrentSong.DownloadedQuality = Settings.audioQuality
             FS = File.OpenWrite(Pandora.CurrentStation.CurrentSong.AudioFileName)
             prgDownload.Visible = True
             prgDownload.Value = 0
@@ -77,9 +78,7 @@ Public Class frmMain
 
     Private Sub UpdateDownloadProgress()
         If prgDownload.Visible Then
-            Dim progress As Single
-            progress = StreamDownloadedLength() * 100.0F / StreamLength()
-            prgDownload.Value = progress
+            prgDownload.Value = StreamDownloadedLength() * 100 / StreamLength()
             If prgDownload.Value = 100 Then
                 prgDownload.Visible = False
             End If
@@ -650,46 +649,11 @@ Public Class frmMain
             End If
         End If
 
-        '192k file download while playing any stream
-        If e.Control And e.Alt And e.KeyCode = Keys.D And
-                            Not IsNothing(Pandora.CurrentStation.CurrentSong) And
-                            prgDownload.Value = 100 And
-                            Pandora.Session.User.PartnerCredentials.AccountType = Engine.Data.AccountType.PANDORA_ONE_USER Then
+        Dim s = sender
 
-            If Not Directory.Exists(downLoc) Then
-                If folderBrowser.ShowDialog = Windows.Forms.DialogResult.OK Then
-                    downLoc = folderBrowser.SelectedPath
-                    Settings.downloadLocation = downLoc
-                    Settings.SaveToRegistry()
-                Else
-                    Exit Sub
-                End If
-            End If
-
-            If Directory.Exists(downLoc) Then
-                TargeFile = downLoc + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
-
-                If Not File.Exists(TargeFile) Then
-                    Downloader = New WebClient
-                    AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
-                    AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
-                    Dim noProxy As Boolean = Settings.noProxy
-                    If Not noProxy Then
-                        Downloader.Proxy = Me.Proxy
-                    End If
-                    Downloader.DownloadFileAsync(
-                            New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargeFile)
-                    prgDownload.Visible = True
-                End If
-            End If
-        End If
-
-        '192k file export while playing 192k stream
-        If e.Control And e.KeyCode = Global.System.Windows.Forms.Keys.D And
-                            Not IsNothing(Pandora.CurrentStation.CurrentSong) And
-                            prgDownload.Value > 99 And
-                            Settings.audioQuality = "highQuality" And
-                            Me.Pandora.Session.User.PartnerCredentials.AccountType = Global.Pandorian.Engine.Data.AccountType.PANDORA_ONE_USER Then
+        If e.Control And e.KeyCode = Keys.D And
+            Not IsNothing(Pandora.CurrentStation.CurrentSong) And
+            Pandora.Session.User.PartnerCredentials.AccountType = Engine.Data.AccountType.PANDORA_ONE_USER Then
 
             If Not Directory.Exists(downLoc) Then
                 If Me.folderBrowser.ShowDialog = Global.System.Windows.Forms.DialogResult.OK Then
@@ -702,14 +666,35 @@ Public Class frmMain
             End If
 
             If Directory.Exists(downLoc) Then
-                TargeFile = downLoc + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
+                TargeFile = downLoc + "\" + CleanUpFileName(Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
 
                 If Not File.Exists(TargeFile) Then
-                    File.Copy(Pandora.CurrentStation.CurrentSong.AudioFileName, TargeFile)
-                    MsgBox("Mp3 File Exported!", MsgBoxStyle.Information)
+                    If e.Alt Then
+                        Downloader = New WebClient
+                        AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
+                        AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
+                        Dim noProxy As Boolean = Settings.noProxy
+                        If Not noProxy Then
+                            Downloader.Proxy = Me.Proxy
+                        End If
+                        Downloader.DownloadFileAsync(
+                                New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargeFile)
+                        prgDownload.Visible = True
+                    Else
+                        If Not prgDownload.Value = 100 Then
+                            Exit Sub
+                        End If
+                        If Pandora.CurrentStation.CurrentSong.DownloadedQuality = "highQuality" Then
+                            File.Copy(Pandora.CurrentStation.CurrentSong.AudioFileName, TargeFile)
+                            MsgBox("Mp3 File Exported!", MsgBoxStyle.Information)
+                        Else
+                            MsgBox("Didn't export song..." + vbCrLf + "Because it wasn't downloaded at 192k!", MsgBoxStyle.Exclamation)
+                        End If
+                    End If
                 End If
             End If
         End If
+
     End Sub
 
     Private Sub FileDownloadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs)
@@ -724,8 +709,8 @@ Public Class frmMain
         prgDownload.Value = e.ProgressPercentage
     End Sub
 
-    Private Function ValidFileName(Text As String) As String
-        For Each c In IO.Path.GetInvalidFileNameChars
+    Private Function CleanUpFileName(Text As String) As String
+        For Each c In Path.GetInvalidFileNameChars
             Text = Text.Replace(c, "_")
         Next
         Return Text
