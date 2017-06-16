@@ -499,6 +499,8 @@ Public Class frmMain
         If File.Exists(song.AudioFileName) And song.FinishedDownloading Then
             tbLog.AppendText("Loaded song from local cache." + vbCrLf)
             Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
+            prgDownload.Value = 0
+            prgDownload.Visible = False
         Else
             tbLog.AppendText("Downloading song from pandora." + vbCrLf)
             Stream = Bass.BASS_StreamCreateURL(

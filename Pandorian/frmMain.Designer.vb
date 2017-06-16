@@ -686,10 +686,10 @@ Partial Class frmMain
         '
         Me.volSlider.AutoSize = False
         Me.volSlider.LargeChange = 10
-        Me.volSlider.Location = New System.Drawing.Point(2, 347)
+        Me.volSlider.Location = New System.Drawing.Point(2, 348)
         Me.volSlider.Maximum = 100
         Me.volSlider.Name = "volSlider"
-        Me.volSlider.Size = New System.Drawing.Size(315, 25)
+        Me.volSlider.Size = New System.Drawing.Size(315, 22)
         Me.volSlider.SmallChange = 5
         Me.volSlider.TabIndex = 18
         Me.volSlider.TabStop = False
@@ -738,9 +738,10 @@ Partial Class frmMain
         '
         Me.lblBPM.BackColor = System.Drawing.Color.Black
         Me.lblBPM.Font = New System.Drawing.Font("Microsoft Sans Serif", 35.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblBPM.Location = New System.Drawing.Point(0, 363)
+        Me.lblBPM.Location = New System.Drawing.Point(0, 365)
+        Me.lblBPM.Margin = New System.Windows.Forms.Padding(0)
         Me.lblBPM.Name = "lblBPM"
-        Me.lblBPM.Size = New System.Drawing.Size(317, 54)
+        Me.lblBPM.Size = New System.Drawing.Size(317, 49)
         Me.lblBPM.TabIndex = 20
         Me.lblBPM.Text = "000"
         Me.lblBPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -855,22 +856,22 @@ Partial Class frmMain
         Me.Controls.Add(Me.tbLog)
         Me.Controls.Add(Me.Spinner)
         Me.Controls.Add(Me.volSlider)
-        Me.Controls.Add(Me.lblBPM)
-        Me.Controls.Add(Me.lblSongName)
         Me.Controls.Add(Me.pnlHotKeys)
         Me.Controls.Add(Me.pnlSleepTimer)
         Me.Controls.Add(Me.btnBlock)
-        Me.Controls.Add(Me.prgBar)
         Me.Controls.Add(Me.btnNext)
         Me.Controls.Add(Me.btnPlayPause)
         Me.Controls.Add(Me.btnDislike)
         Me.Controls.Add(Me.btnLike)
-        Me.Controls.Add(Me.lblAlbumName)
-        Me.Controls.Add(Me.lblArtistName)
         Me.Controls.Add(Me.ddStations)
         Me.Controls.Add(Me.SongCoverImage)
         Me.Controls.Add(Me.btnPrev)
         Me.Controls.Add(Me.prgDownload)
+        Me.Controls.Add(Me.lblBPM)
+        Me.Controls.Add(Me.lblSongName)
+        Me.Controls.Add(Me.lblAlbumName)
+        Me.Controls.Add(Me.lblArtistName)
+        Me.Controls.Add(Me.prgBar)
         Me.ForeColor = System.Drawing.Color.White
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
