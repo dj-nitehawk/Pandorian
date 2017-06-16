@@ -76,7 +76,7 @@ Public Class frmMain
     End Function
 
     Private Sub UpdateDownloadProgress()
-        If BASSReady And prgDownload.Visible Then
+        If prgDownload.Visible Then
             Dim progress As Single
             progress = StreamDownloadedLength() * 100.0F / StreamLength()
             prgDownload.Value = progress
@@ -368,9 +368,10 @@ Public Class frmMain
             Application.DoEvents()
             ResumePlaying = True
             Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.PreviousSong
-            Execute(Sub() PlayCurrentSong(), "PlayPreviousSong") 'don't ever change this string
+            Execute(Sub() PlayCurrentSong(), "PlayPreviousSong") 'don't ever change this string [handling-of-expired-url]
         Else
             If ExpiredTrack Then
+                tbLog.AppendText("No previous track. Trying the next one..." + vbCrLf)
                 PlayNextSong()
             End If
         End If
@@ -424,7 +425,7 @@ Public Class frmMain
             End If
         End Try
 
-        Execute(Sub() PlayCurrentSong(), "PlayNextSong") 'don't ever change this string
+        Execute(Sub() PlayCurrentSong(), "PlayNextSong.PlayCurrentSong")
     End Sub
 
     Private Sub frmMain_Activated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -1003,13 +1004,12 @@ Public Class frmMain
                         AfterErrorActions()
                     End Try
                 Case ErrorCodeEnum.SONG_URL_NOT_VALID
-                    If Caller = "PlayNextSong" Then 'don't ever change this string
-                        tbLog.AppendText("Song URL expired. Trying the next song..." + vbCrLf)
-                        PlayNextSong()
-                    End If
-                    If Caller = "PlayPreviousSong" Then 'don't ever change this string
+                    If Caller = "PlayPreviousSong" Then 'don't ever change this string [handling-of-expired-url]
                         tbLog.AppendText("Song URL expired. Trying the previous song..." + vbCrLf)
                         PlayPreviousSong(True)
+                    Else
+                        tbLog.AppendText("Song URL expired. Trying the next song..." + vbCrLf)
+                        PlayNextSong()
                     End If
                 Case ErrorCodeEnum.LICENSE_RESTRICTION
                     MsgBox("Looks like your country is not supported. Try using a proxy...", MsgBoxStyle.Exclamation)
