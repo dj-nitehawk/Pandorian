@@ -1,9 +1,6 @@
-﻿Imports Pandorian.Utility.ModifyRegistry
-
-
+﻿
 Public Class frmSettings
 
-    Private Settings As New RegistryStore
     Private Qualities As New Dictionary(Of String, String)
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -20,19 +17,20 @@ Public Class frmSettings
 
         If Not String.IsNullOrEmpty(pnUsername.Text) And Not String.IsNullOrEmpty(pnPassword.Text) Then
 
-            Settings.Write("proxyAddress", Encrypt(prxAddress.Text))
-            Settings.Write("proxyPassword", Encrypt(prxPassword.Text))
-            Settings.Write("proyxUsername", Encrypt(prxUserName.Text))
-            Settings.Write("noProxy", Convert.ToInt32(chkNoProxy.Checked))
-            Settings.Write("pandoraUsername", Encrypt(pnUsername.Text))
-            Settings.Write("pandoraPassword", Encrypt(pnPassword.Text))
-            Settings.Write("pandoraOne", Convert.ToInt32(chkPandoraOne.Checked))
-            Settings.Write("noQmix", Convert.ToInt32(chkNoQMix.Checked))
-            Settings.Write("noLiked", Convert.ToInt32(chkNoLiked.Checked))
-            Settings.Write("audioQuality", ddQuality.SelectedValue)
+            Settings.proxyAddress = Encrypt(prxAddress.Text)
+            Settings.proxyPassword = Encrypt(prxPassword.Text)
+            Settings.proyxUsername = Encrypt(prxUserName.Text)
+            Settings.noProxy = chkNoProxy.Checked
+            Settings.pandoraUsername = Encrypt(pnUsername.Text)
+            Settings.pandoraPassword = Encrypt(pnPassword.Text)
+            Settings.pandoraOne = chkPandoraOne.Checked
+            Settings.noQmix = chkNoQMix.Checked
+            Settings.noLiked = chkNoLiked.Checked
+            Settings.audioQuality = ddQuality.SelectedValue
             If Not String.IsNullOrEmpty(unlockCode.Text) And Not unlockCode.Text = "secret" Then
-                Settings.Write("unlockPassword", Encrypt(getMD5Hash(unlockCode.Text)))
+                Settings.unlockPassword = Encrypt(getMD5Hash(unlockCode.Text))
             End If
+            Settings.SaveToRegistry()
             frmMain.ClearSession()
 
             Me.Hide()
@@ -56,24 +54,24 @@ Public Class frmSettings
     End Sub
 
     Private Sub frmSettings_Load(sender As Object, e As EventArgs) Handles Me.Load
-        prxAddress.Text = Decrypt(Settings.Read("proxyAddress"))
-        prxUserName.Text = Decrypt(Settings.Read("proyxUsername"))
-        prxPassword.Text = Decrypt(Settings.Read("proxyPassword"))
-        chkNoProxy.Checked = Settings.Read("noProxy")
-        pnUsername.Text = Decrypt(Settings.Read("pandoraUsername"))
-        pnPassword.Text = Decrypt(Settings.Read("pandoraPassword"))
-        chkPandoraOne.Checked = Settings.Read("pandoraOne")
-        chkNoProxy.Checked = Settings.Read("noProxy")
-        chkNoQMix.Checked = Settings.Read("noQmix")
-        chkNoLiked.Checked = Settings.Read("noLiked")
-        If Not String.IsNullOrEmpty(Settings.Read("unlockPassword")) Then
+        prxAddress.Text = Decrypt(Settings.proxyAddress)
+        prxUserName.Text = Decrypt(Settings.proyxUsername)
+        prxPassword.Text = Decrypt(Settings.proxyPassword)
+        chkNoProxy.Checked = Settings.noProxy
+        pnUsername.Text = Decrypt(Settings.pandoraUsername)
+        pnPassword.Text = Decrypt(Settings.pandoraPassword)
+        chkPandoraOne.Checked = Settings.pandoraOne
+        chkNoProxy.Checked = Settings.noProxy
+        chkNoQMix.Checked = Settings.noQmix
+        chkNoLiked.Checked = Settings.noLiked
+        If Not String.IsNullOrEmpty(Settings.unlockPassword) Then
             unlockCode.Text = "secret"
         End If
 
-        PopulateQualityList(Settings.Read("pandoraOne"))
+        PopulateQualityList(Settings.pandoraOne)
 
         For Each i As KeyValuePair(Of String, String) In ddQuality.Items
-            If i.Value = Settings.Read("audioQuality") Then
+            If i.Value = Settings.audioQuality Then
                 ddQuality.SelectedIndex = ddQuality.FindStringExact(i.Key)
                 Exit For
             End If
@@ -106,7 +104,7 @@ Public Class frmSettings
 
     Private Sub chkNoProxy_CheckedChanged(sender As Object, e As EventArgs) Handles chkNoProxy.CheckedChanged
         If chkNoProxy.Checked Then
-            Settings.Write("noProxy", 1)
+            Settings.noProxy = True
             lblProxyAddre.Enabled = False
             lblProxyPass.Enabled = False
             lblProxyUser.Enabled = False
@@ -114,7 +112,7 @@ Public Class frmSettings
             prxPassword.Enabled = False
             prxUserName.Enabled = False
         Else
-            Settings.Write("noProxy", 0)
+            Settings.noProxy = 0
             lblProxyAddre.Enabled = True
             lblProxyPass.Enabled = True
             lblProxyUser.Enabled = True
@@ -138,4 +136,8 @@ Public Class frmSettings
         End If
     End Sub
 
+    Private Sub ddQuality_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles ddQuality.SelectionChangeCommitted
+        Settings.audioQuality = ddQuality.SelectedValue
+        Settings.SaveToRegistry()
+    End Sub
 End Class

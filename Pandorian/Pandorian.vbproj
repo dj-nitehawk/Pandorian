@@ -34,6 +34,7 @@
     <ApplicationVersion>2.7.0.%2a</ApplicationVersion>
     <ApplicationVersion>2.7.1.%2a</ApplicationVersion>
     <ApplicationVersion>2.7.2.%2a</ApplicationVersion>
+    <ApplicationVersion>2.8.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -179,6 +180,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="RegistryStore.vb" />
     <Compile Include="Settings.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -238,14 +240,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Pandorian.ico" />
-    <None Include="Resources\wait.png" />
-    <None Include="Pandorian_TemporaryKey.pfx" />
-    <None Include="Resources\like.png" />
-    <None Include="Resources\dislike.png" />
+    <None Include="Resources\back.png" />
     <None Include="Resources\skip.png" />
     <None Include="Resources\play.png" />
     <None Include="Resources\paused.png" />
+    <None Include="Resources\like.png" />
+    <None Include="Resources\dislike.png" />
     <None Include="Resources\block.png" />
+    <None Include="Resources\wait.png" />
+    <None Include="Pandorian_TemporaryKey.pfx" />
     <None Include="Resources\Icon.png" />
     <None Include="Resources\paypal.gif" />
   </ItemGroup>

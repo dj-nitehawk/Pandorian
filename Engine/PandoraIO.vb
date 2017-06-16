@@ -63,12 +63,12 @@ Public Class PandoraIO
         Return response.Stations
     End Function
 
-    Public Function GetSongs(station As PandoraStation) As List(Of PandoraSong)
+    Public Function GetSongs(stationToken As String) As List(Of PandoraSong)
         If Session Is Nothing OrElse Session.User Is Nothing Then
             Throw New PandoraException("User must be logged in to make this request.")
         End If
 
-        Dim response As GetPlaylistResponse = DirectCast(ExecuteRequest(New GetPlaylistRequest(Session, station.Token)), GetPlaylistResponse)
+        Dim response As GetPlaylistResponse = DirectCast(ExecuteRequest(New GetPlaylistRequest(Session, stationToken)), GetPlaylistResponse)
 
         For Each s As PandoraSong In response.Songs
             If Not String.IsNullOrEmpty(s.AdditionalAudioUrl) Then

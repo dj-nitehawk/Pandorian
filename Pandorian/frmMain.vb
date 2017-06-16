@@ -6,11 +6,9 @@ Imports Microsoft.Win32
 Imports System.IO
 Imports System.Runtime.Serialization.Formatters.Binary
 Imports System.ComponentModel
-Imports Pandorian.Utility.ModifyRegistry
-
+Imports Pandorian.Engine.Data
 
 Public Class frmMain
-    Dim Settings As RegistryStore = New RegistryStore()
     Dim Pandora As API
     Dim Proxy As WebProxy
     Dim BASSReady As Boolean = False
@@ -30,6 +28,7 @@ Public Class frmMain
     Dim BPMCounter As New Misc.BPMCounter(20, 44100)
     Dim SongInfo As New frmSongInfo()
     Dim HideSongInfo As Boolean = False
+    Dim APIFile As String = "v1.api"
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(Cover As Image)
@@ -37,9 +36,12 @@ Public Class frmMain
     Dim FS As FileStream
     Dim DownloadProc As DOWNLOADPROC = New DOWNLOADPROC(AddressOf DownloadSong)
     Dim Data() As Byte
+
     Private Sub DownloadSong(buffer As IntPtr, length As Integer, user As IntPtr)
         If FS Is Nothing Then
-            FS = File.OpenWrite("current.stream")
+            Pandora.CurrentStation.CurrentSong.FinishedDownloading = False
+            Pandora.CurrentStation.CurrentSong.DownloadedQuality = Settings.audioQuality
+            FS = File.OpenWrite(Pandora.CurrentStation.CurrentSong.AudioFileName)
             prgDownload.Visible = True
             prgDownload.Value = 0
         End If
@@ -48,6 +50,11 @@ Public Class frmMain
             FS.Flush()
             FS.Close()
             FS = Nothing
+            If Not StreamDownloadedLength() = -1 Then
+                If Not IsNothing(Pandora.CurrentStation.CurrentSong) Then
+                    Pandora.CurrentStation.CurrentSong.FinishedDownloading = True
+                End If
+            End If
         Else
             If Data Is Nothing OrElse Data.Length < length Then
                 Data = New Byte(length) {}
@@ -57,13 +64,21 @@ Public Class frmMain
         End If
     End Sub
 
+    Private Function StreamTotalLength() As Long
+        Return Bass.BASS_ChannelGetLength(Stream)
+    End Function
+
+    Private Function StreamLength() As Long
+        Return Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
+    End Function
+
+    Private Function StreamDownloadedLength() As Long
+        Return Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_DOWNLOAD)
+    End Function
+
     Private Sub UpdateDownloadProgress()
-        If BASSReady Then
-            Dim progress As Single
-            Dim len As Integer = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
-            Dim down As Integer = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_DOWNLOAD)
-            progress = down * 100.0F / len
-            prgDownload.Value = progress
+        If prgDownload.Visible Then
+            prgDownload.Value = StreamDownloadedLength() * 100 / StreamLength()
             If prgDownload.Value = 100 Then
                 prgDownload.Visible = False
             End If
@@ -72,9 +87,10 @@ Public Class frmMain
 
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
-            Pandora.ClearSession(Settings.Read("pandoraOne"))
-            'File.Delete("api.dat")
+            Pandora.ClearSession(Settings.pandoraOne)
+            'File.Delete(APIFile)
             SavePandoraObject()
+            CleanUp()
         End If
     End Sub
 
@@ -119,7 +135,7 @@ Public Class frmMain
                 End If
             Case 9
                 If Not frmLockScreen.Visible Then
-                    If Not String.IsNullOrEmpty(Settings.Read("unlockPassword")) Then
+                    If Not String.IsNullOrEmpty(Settings.unlockPassword) Then
                         frmLockScreen.Show()
                     Else
                         MsgBox("You have not set an unlock password in Pandorian settings." + vbCrLf +
@@ -149,19 +165,6 @@ Public Class frmMain
 
     Private Sub registerHotkeys()
 
-        Dim hkPlayPause As Integer = Settings.Read("hkPlayPause")
-        Dim hkLike As Integer = Settings.Read("hkLike")
-        Dim hkDislike As Integer = Settings.Read("hkDislike")
-        Dim hkSkip As Integer = Settings.Read("hkSkip")
-        Dim hkBlock As Integer = Settings.Read("hkBlock")
-        Dim hkShowHide As Integer = Settings.Read("hkShowHide")
-        Dim hkGlobalMenu As Integer = Settings.Read("hkGlobalMenu")
-        Dim hkSleep As Integer = Settings.Read("hkSleep")
-        Dim hkLock As Integer = Settings.Read("hkLock")
-        Dim hkVolDown As Integer = Settings.Read("hkVolDown")
-        Dim hkVolUp As Integer = Settings.Read("hkVolUp")
-        Dim hkModifier As Integer = Settings.Read("hkModifier")
-
         Dim modKeys As New Dictionary(Of String, Integer)
         For Each k As Hotkeys.KeyModifier In [Enum].GetValues(GetType(Hotkeys.KeyModifier))
             modKeys.Add(k.ToString, k)
@@ -169,41 +172,41 @@ Public Class frmMain
         cbModKey.DisplayMember = "Key"
         cbModKey.ValueMember = "Value"
         cbModKey.DataSource = New BindingSource(modKeys, Nothing)
-        cbModKey.SelectedIndex = cbModKey.FindStringExact(CType(hkModifier, Hotkeys.KeyModifier).ToString)
-        tbHKPlayPause.Text = [Enum].GetName(GetType(Keys), hkPlayPause)
-        tbHKPlayPause.Tag = hkPlayPause
-        tbHKLikeSong.Text = [Enum].GetName(GetType(Keys), hkLike)
-        tbHKLikeSong.Tag = hkLike
-        tbHKDislikeSong.Text = [Enum].GetName(GetType(Keys), hkDislike)
-        tbHKDislikeSong.Tag = hkDislike
-        tbHKSkipSong.Text = [Enum].GetName(GetType(Keys), hkSkip)
-        tbHKSkipSong.Tag = hkSkip
-        tbHKBlockSong.Text = [Enum].GetName(GetType(Keys), hkBlock)
-        tbHKBlockSong.Tag = hkBlock
-        tbHKShowHide.Text = [Enum].GetName(GetType(Keys), hkShowHide)
-        tbHKShowHide.Tag = hkShowHide
-        tbHKGlobalMenu.Text = [Enum].GetName(GetType(Keys), hkGlobalMenu)
-        tbHKGlobalMenu.Tag = hkGlobalMenu
-        tbHKSleepNow.Text = [Enum].GetName(GetType(Keys), hkSleep)
-        tbHKSleepNow.Tag = hkSleep
-        tbHKLockNow.Text = [Enum].GetName(GetType(Keys), hkLock)
-        tbHKLockNow.Tag = hkLock
-        tbHKVolDown.Text = [Enum].GetName(GetType(Keys), hkVolDown)
-        tbHKVolDown.Tag = hkVolDown
-        tbHKVolUp.Text = [Enum].GetName(GetType(Keys), hkVolUp)
-        tbHKVolUp.Tag = hkVolUp
+        cbModKey.SelectedIndex = cbModKey.FindStringExact(CType(Settings.hkModifier, Hotkeys.KeyModifier).ToString)
+        tbHKPlayPause.Text = [Enum].GetName(GetType(Keys), Settings.hkPlayPause)
+        tbHKPlayPause.Tag = Settings.hkPlayPause
+        tbHKLikeSong.Text = [Enum].GetName(GetType(Keys), Settings.hkLike)
+        tbHKLikeSong.Tag = Settings.hkLike
+        tbHKDislikeSong.Text = [Enum].GetName(GetType(Keys), Settings.hkDislike)
+        tbHKDislikeSong.Tag = Settings.hkDislike
+        tbHKSkipSong.Text = [Enum].GetName(GetType(Keys), Settings.hkSkip)
+        tbHKSkipSong.Tag = Settings.hkSkip
+        tbHKBlockSong.Text = [Enum].GetName(GetType(Keys), Settings.hkBlock)
+        tbHKBlockSong.Tag = Settings.hkBlock
+        tbHKShowHide.Text = [Enum].GetName(GetType(Keys), Settings.hkShowHide)
+        tbHKShowHide.Tag = Settings.hkShowHide
+        tbHKGlobalMenu.Text = [Enum].GetName(GetType(Keys), Settings.hkGlobalMenu)
+        tbHKGlobalMenu.Tag = Settings.hkGlobalMenu
+        tbHKSleepNow.Text = [Enum].GetName(GetType(Keys), Settings.hkSleep)
+        tbHKSleepNow.Tag = Settings.hkSleep
+        tbHKLockNow.Text = [Enum].GetName(GetType(Keys), Settings.hkLock)
+        tbHKLockNow.Tag = Settings.hkLock
+        tbHKVolDown.Text = [Enum].GetName(GetType(Keys), Settings.hkVolDown)
+        tbHKVolDown.Tag = Settings.hkVolDown
+        tbHKVolUp.Text = [Enum].GetName(GetType(Keys), Settings.hkVolUp)
+        tbHKVolUp.Tag = Settings.hkVolUp
 
-        Hotkeys.registerHotkey(Me, 1, hkPlayPause, hkModifier) 'play/pause
-        Hotkeys.registerHotkey(Me, 2, hkLike, hkModifier) 'like
-        Hotkeys.registerHotkey(Me, 3, hkDislike, hkModifier) 'dislike
-        Hotkeys.registerHotkey(Me, 4, hkSkip, hkModifier) 'skip
-        Hotkeys.registerHotkey(Me, 5, hkShowHide, hkModifier) 'show/hide pandorian
-        Hotkeys.registerHotkey(Me, 6, hkBlock, hkModifier) 'block
-        Hotkeys.registerHotkey(Me, 7, hkSleep, hkModifier) 'sleep
-        Hotkeys.registerHotkey(Me, 8, hkGlobalMenu, hkModifier) 'show tray menu
-        Hotkeys.registerHotkey(Me, 9, hkLock, hkModifier) 'show lock screen
-        Hotkeys.registerHotkey(Me, 10, hkVolDown, hkModifier) 'vol down
-        Hotkeys.registerHotkey(Me, 11, hkVolUp, hkModifier) 'vol up
+        Hotkeys.registerHotkey(Me, 1, Settings.hkPlayPause, Settings.hkModifier) 'play/pause
+        Hotkeys.registerHotkey(Me, 2, Settings.hkLike, Settings.hkModifier) 'like
+        Hotkeys.registerHotkey(Me, 3, Settings.hkDislike, Settings.hkModifier) 'dislike
+        Hotkeys.registerHotkey(Me, 4, Settings.hkSkip, Settings.hkModifier) 'skip
+        Hotkeys.registerHotkey(Me, 5, Settings.hkShowHide, Settings.hkModifier) 'show/hide pandorian
+        Hotkeys.registerHotkey(Me, 6, Settings.hkBlock, Settings.hkModifier) 'block
+        Hotkeys.registerHotkey(Me, 7, Settings.hkSleep, Settings.hkModifier) 'sleep
+        Hotkeys.registerHotkey(Me, 8, Settings.hkGlobalMenu, Settings.hkModifier) 'show tray menu
+        Hotkeys.registerHotkey(Me, 9, Settings.hkLock, Settings.hkModifier) 'show lock screen
+        Hotkeys.registerHotkey(Me, 10, Settings.hkVolDown, Settings.hkModifier) 'vol down
+        Hotkeys.registerHotkey(Me, 11, Settings.hkVolUp, Settings.hkModifier) 'vol up
     End Sub
     Private Sub unRegisterHotkeys()
         Dim i As Integer = 1
@@ -230,12 +233,12 @@ Public Class frmMain
     End Function
     Private Function LoginToPandora() As Boolean
         Try
-            If Pandora.Login(Decrypt(Settings.Read("pandoraUsername")), Decrypt(Settings.Read("pandoraPassword")), Settings.Read("noQmix")) Then
+            If Pandora.Login(Decrypt(Settings.pandoraUsername), Decrypt(Settings.pandoraPassword), Settings.noQmix) Then
                 tbLog.AppendText("Successfully logged in to pandora..." + vbCrLf)
                 Return True
             Else
                 MsgBox("Couldn't log in to Pandora. Check pandora a/c details.", MsgBoxStyle.Exclamation)
-        End If
+            End If
         Catch ex As PandoraException
             If ex.ErrorCode = ErrorCodeEnum.LISTENER_NOT_AUTHORIZED Then
                 MsgBox(ex.Message, MsgBoxStyle.Exclamation)
@@ -243,7 +246,7 @@ Public Class frmMain
                 MsgBox(ex.Message + ". Please check your internet/proxy settings and try again." + vbCrLf + vbCr + "Error Code: " + ex.ErrorCode.ToString, MsgBoxStyle.Critical)
             End If
         End Try
-        Pandora.ClearSession(Settings.Read("pandoraOne"))
+        Pandora.ClearSession(Settings.pandoraOne)
         Return False
     End Function
     Sub LoadStationList()
@@ -252,7 +255,7 @@ Public Class frmMain
             Dim Stations As New SortedDictionary(Of String, String)
             For Each Station In Pandora.AvailableStations
                 Stations.Add(Station.Name, Station.Id)
-                If Settings.Read("lastStationID") = Station.Id Then
+                If Settings.lastStationID = Station.Id Then
                     Pandora.CurrentStation = Station
                     FoundLastPlayedStation = True
                 End If
@@ -271,21 +274,12 @@ Public Class frmMain
         End If
     End Sub
 
-    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 4 REFERENCES (PlayNextSong/RunNow/PowerModeChanged/ddStations_SelectedIndexChanged)
+    Sub PlayCurrentSong() ' THIS SHOULD ONLY HAVE 5 REFERENCES (PlayNextSong/PlayPreviousSong/RunNow/PowerModeChanged/ddStations_SelectedIndexChanged)
+
+        Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
+
         Dim bgwCoverLoader As New BackgroundWorker
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
-
-        Dim Song As New Data.PandoraSong
-        If IsNothing(Pandora.CurrentStation.CurrentSong) Then
-            Song = Pandora.CurrentStation.GetNextSong()
-        Else
-            Song = Pandora.CurrentStation.CurrentSong
-        End If
-
-        If Pandora.CurrentStation.SongLoadingOccurred Then
-            tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
-        End If
-
         tbLog.AppendText("Loading album cover art..." + vbCrLf)
         If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
             bgwCoverLoader.RunWorkerAsync(Nothing)
@@ -297,8 +291,8 @@ Public Class frmMain
         ddStations.Enabled = True
         Timer.Enabled = True
 
-        btnSkip.Enabled = True
-        btnSkip.BackColor = Control.DefaultBackColor
+        btnNext.Enabled = True
+        btnNext.BackColor = Control.DefaultBackColor
 
         Select Case Song.Rating
             Case PandoraRating.Hate
@@ -320,29 +314,30 @@ Public Class frmMain
 
         btnPlayPause.Enabled = True
         If ResumePlaying Then
-            btnPlayPause.BackgroundImage = My.Resources.paused
+            btnPlayPause.Image = My.Resources.paused
         End If
+
         If Song.TemporarilyBanned Then
             btnBlock.Enabled = False
-            btnBlock.BackColor = Color.DarkGray
+            btnBlock.BackColor = Color.Pink
         Else
             btnBlock.Enabled = True
             btnBlock.BackColor = Control.DefaultBackColor
         End If
 
         If Pandora.CurrentStation.CurrentSong.AudioDurationSecs < 60 Then
-            lblSongName.Text = "This is a 42 sec blank audio track"
-            lblArtistName.Text = "Pandora is punishing you for excessive skipping :-("
-            lblAlbumName.Text = "This will correct itself in about 24hrs"
+            lblSongName.Text = "Ooops! Something went wrong :-("
+            lblArtistName.Text = "This doesn't seem to be a normal track."
+            lblAlbumName.Text = "Try changing stations or restarting the app."
             SongCoverImage.Image = Nothing
             btnLike.Enabled = False
             btnDislike.Enabled = False
             btnPlayPause.Enabled = False
-            btnSkip.Enabled = False
-            btnSkip.BackColor = Color.DarkGray
+            btnNext.Enabled = False
+            btnPrev.Enabled = False
             btnBlock.Enabled = False
         Else
-            lblSongName.Text = Song.GetProperTitle(Settings.Read("noLiked"))
+            lblSongName.Text = Song.GetProperTitle(IndicateLiked)
             lblArtistName.Text = Song.Artist
             lblAlbumName.Text = Song.Album
         End If
@@ -357,47 +352,79 @@ Public Class frmMain
         Application.DoEvents()
     End Sub
 
+    Private Function IndicateLiked() As Boolean
+        If WindowState = FormWindowState.Normal Then
+            Return False
+        End If
+        Return Not Settings.noLiked
+    End Function
+
+    Sub PlayPreviousSong(ExpiredTrack As Boolean)
+        If Not IsNothing(Pandora.CurrentStation.CurrentSong.PreviousSong) Then
+            Spinner.Visible = True
+            prgBar.Value = 0
+            prgBar.Update()
+            Application.DoEvents()
+            ResumePlaying = True
+            Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.PreviousSong
+            Execute(Sub() PlayCurrentSong(), "PlayPreviousSong") 'don't ever change this string [handling-of-expired-url]
+        Else
+            If ExpiredTrack Then
+                tbLog.AppendText("No previous track. Trying the next one..." + vbCrLf)
+                PlayNextSong()
+            End If
+        End If
+    End Sub
+
     Sub PlayNextSong()
+
         Spinner.Visible = True
-        Application.DoEvents()
         prgBar.Value = 0
         prgBar.Update()
+        Application.DoEvents()
         ResumePlaying = True
+
         Try
+            Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.NextSong
+            If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+                Throw New Exception("no next song")
+            End If
+        Catch ex As Exception
             If Pandora.OkToFetchSongs Then
-                Pandora.CurrentStation.GetNextSong()
+                Try
+                    Pandora.CurrentStation.FetchSongs()
+                    tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
+                Catch x As PandoraException
+                    If x.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
+                        Bass.BASS_ChannelSetPosition(Stream, 0)
+                        Bass.BASS_ChannelPlay(Stream, False)
+                        Spinner.Visible = False
+                        tbLog.AppendText("Global skip limit reached. Replaying current song..." + vbCrLf)
+                        Pandora.SkipLimitReached = True
+                        Pandora.SkipLimitReachedAt = Now
+                        ddStations.Enabled = False
+                        btnNext.Enabled = False
+                        btnNext.BackColor = Color.DarkGray
+                        Application.DoEvents()
+                        Exit Sub
+                    End If
+                    Throw x
+                End Try
+                Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.PlayList.ToArray(Pandora.CurrentStation.PlayList.Count - 4)
             Else
                 tbLog.AppendText("Waiting few mins before fetching new songs..." + vbCrLf)
                 Bass.BASS_ChannelSetPosition(Stream, 0)
                 Bass.BASS_ChannelPlay(Stream, False)
                 Spinner.Visible = False
                 ddStations.Enabled = False
-                btnSkip.Enabled = False
-                btnSkip.BackColor = Color.DarkGray
+                btnNext.Enabled = False
+                btnNext.BackColor = Color.DarkGray
                 Application.DoEvents()
                 Exit Sub
             End If
-            Pandora.SkipLimitReached = False
-            ddStations.Enabled = True
-            btnSkip.Enabled = True
-            btnSkip.BackColor = Control.DefaultBackColor
-            PlayCurrentSong() 'no need to use executedelegate as parent uses delegate
-        Catch ex As PandoraException
-            If ex.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
-                Bass.BASS_ChannelSetPosition(Stream, 0)
-                Bass.BASS_ChannelPlay(Stream, False)
-                Spinner.Visible = False
-                tbLog.AppendText("Global skip limit reached. Replaying current song..." + vbCrLf)
-                Pandora.SkipLimitReached = True
-                Pandora.SkipLimitReachedAt = Now
-                ddStations.Enabled = False
-                btnSkip.Enabled = False
-                btnSkip.BackColor = Color.DarkGray
-                Application.DoEvents()
-                Exit Sub
-            End If
-            Throw ex
         End Try
+
+        Execute(Sub() PlayCurrentSong(), "PlayNextSong.PlayCurrentSong")
     End Sub
 
     Private Sub frmMain_Activated(sender As Object, e As EventArgs) Handles Me.Activated
@@ -437,11 +464,10 @@ Public Class frmMain
                        "Please double check your gear and restart Pandorian...", MsgBoxStyle.Critical)
             End If
 
-            Dim noProxy As Boolean = Settings.Read("noProxy")
-            If Not noProxy Then
-                Dim proxy As String = Decrypt(Settings.Read("proyxUsername")) + ":" +
-                                      Decrypt(Settings.Read("proxyPassword")) + "@" +
-                                      Decrypt(Settings.Read("proxyAddress")).Replace("http://", "")
+            If Not Settings.noProxy Then
+                Dim proxy As String = Decrypt(Settings.proyxUsername) + ":" +
+                                      Decrypt(Settings.proxyPassword) + "@" +
+                                      Decrypt(Settings.proxyAddress).Replace("http://", "")
                 ProxyPtr = Marshal.StringToHGlobalAnsi(proxy)
                 Bass.BASS_SetConfigPtr(BASSConfig.BASS_CONFIG_NET_PROXY, ProxyPtr)
             End If
@@ -468,12 +494,22 @@ Public Class frmMain
             Stream = 0
         End If
 
-        Stream = Bass.BASS_StreamCreateURL(
-                Pandora.CurrentStation.CurrentSong.AudioUrlMap(Settings.Read("audioQuality")).Url,
+        Dim song = Pandora.CurrentStation.CurrentSong
+
+        If File.Exists(song.AudioFileName) And song.FinishedDownloading Then
+            tbLog.AppendText("Loaded song from local cache." + vbCrLf)
+            Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
+            prgDownload.Value = 0
+            prgDownload.Visible = False
+        Else
+            tbLog.AppendText("Downloading song from pandora." + vbCrLf)
+            Stream = Bass.BASS_StreamCreateURL(
+                song.AudioUrlMap(Settings.audioQuality).Url,
                 0,
                 BASSFlag.BASS_STREAM_AUTOFREE,
                 DownloadProc,
                 IntPtr.Zero)
+        End If
 
         If Not Stream = 0 Then
             tbLog.AppendText("Playing the song now..." + vbCrLf)
@@ -481,9 +517,9 @@ Public Class frmMain
             Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, volSlider.Value / 100)
 
             DSP.ChannelHandle = Stream
-            DSP.Gain_dBV = Pandora.CurrentStation.CurrentSong.TrackGain
+            DSP.Gain_dBV = song.TrackGain
             DSP.Start()
-            tbLog.AppendText("ReplayGain Applied: " + Pandora.CurrentStation.CurrentSong.TrackGain.ToString + " dB" + vbCrLf)
+            tbLog.AppendText("ReplayGain Applied: " + song.TrackGain.ToString + " dB" + vbCrLf)
 
             If ResumePlaying Then
                 Bass.BASS_ChannelPlay(Stream, False)
@@ -492,8 +528,8 @@ Public Class frmMain
             BPMCounter.Reset(44100)
 
             Application.DoEvents()
-            Pandora.CurrentStation.CurrentSong.PlayingStartTime = Now
-            Pandora.CurrentStation.CurrentSong.AudioDurationSecs = SongDurationSecs()
+            song.PlayingStartTime = Now
+            song.AudioDurationSecs = SongDurationSecs()
             ShareTheLove()
         Else
             If Bass.BASS_ErrorGetCode = BASSError.BASS_ERROR_FILEOPEN Then
@@ -518,7 +554,7 @@ Public Class frmMain
     End Sub
 
     Private Sub ShareTheLove()
-        Dim launchCount = Settings.Read("launchCount")
+        Dim launchCount = Settings.launchCount
         Dim triggers As Integer() = {3, 10, 20, 30, 40}
         For Each t In triggers
             If t = launchCount And NagShown = False Then
@@ -536,59 +572,59 @@ Public Class frmMain
         Next
 
         If launchCount >= 90 Then
-            Settings.Write("launchCount", 39)
+            Settings.launchCount = 39
+            Settings.SaveToRegistry()
         End If
     End Sub
 
     Public Function HasSettings() As Boolean
 
-        With Settings
-            If .ValueCount = 0 Then
-                File.Delete("api.dat")
-                .Write("proxyAddress", "http://server:port")
-                .Write("proyxUsername", "")
-                .Write("proxyPassword", "")
-                .Write("pandoraUsername", "")
-                .Write("pandoraPassword", "")
-                .Write("lastStationID", 0)
-                .Write("audioQuality", "mediumQuality")
-                .Write("pandoraOne", 0)
-                .Write("downloadLocation", "")
-                .Write("noProxy", 0)
-                .Write("launchCount", 0)
-                .Write("hkModifier", 1)
-                .Write("hkPlayPause", 32)
-                .Write("hkLike", 76)
-                .Write("hkDislike", 68)
-                .Write("hkSkip", 83)
-                .Write("hkShowHide", 80)
-                .Write("hkBlock", 66)
-                .Write("hkSleep", 27)
-                .Write("hkGlobalMenu", 77)
-                .Write("hkLock", 88)
-                .Write("hkVolDown", 40)
-                .Write("hkVolUp", 38)
-                .Write("unlockPassword", "")
-                .Write("noQmix", 0)
-                .Write("noLiked", 0)
-                Return False
-            End If
-        End With
+        If Settings.KeyCount = 0 Then
+            File.Delete(APIFile)
+            Settings.audioQuality = "mediumQuality"
+            Settings.downloadLocation = ""
+            Settings.lastStationID = ""
+            Settings.launchCount = 0
+            Settings.noLiked = 0
+            Settings.noProxy = 0
+            Settings.noQmix = 0
+            Settings.pandoraOne = 0
+            Settings.pandoraPassword = ""
+            Settings.pandoraUsername = ""
+            Settings.proxyAddress = "http://server:port"
+            Settings.proxyPassword = ""
+            Settings.proyxUsername = ""
+            Settings.unlockPassword = ""
+            Settings.hkModifier = 1
+            Settings.hkPlayPause = 32
+            Settings.hkLike = 76
+            Settings.hkDislike = 68
+            Settings.hkSkip = 83
+            Settings.hkShowHide = 80
+            Settings.hkBlock = 66
+            Settings.hkSleep = 27
+            Settings.hkGlobalMenu = 77
+            Settings.hkLock = 88
+            Settings.hkVolDown = 40
+            Settings.hkVolUp = 38
+            Settings.SaveToRegistry()
+        Else
+            Settings.LoadFromRegistry()
+        End If
 
         Dim prxSettingsReqd As Boolean
 
-        Dim noProxy As Boolean = Settings.Read("noProxy")
-        If noProxy = True Then
+        If Settings.noProxy Then
             prxSettingsReqd = False
         Else
-            If Decrypt(Settings.Read("proxyAddress")) = "http://server:port" Then
+            If Decrypt(Settings.proxyAddress) = "http://server:port" Then
                 prxSettingsReqd = True
             End If
         End If
 
         If prxSettingsReqd Or
-            String.IsNullOrEmpty(Decrypt(Settings.Read("pandoraUsername"))) Or
-            String.IsNullOrEmpty(Decrypt(Settings.Read("pandoraPassword"))) Then
+            String.IsNullOrEmpty(Decrypt(Settings.pandoraUsername)) Or
+            String.IsNullOrEmpty(Decrypt(Settings.pandoraPassword)) Then
             Return False
         Else
             Return True
@@ -597,7 +633,7 @@ Public Class frmMain
 
     Private Sub frmMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
 
-        Dim downLoc = Settings.Read("downloadLocation")
+        Dim downLoc = Settings.downloadLocation
 
         If Debugger.IsAttached Then
             If e.Control And e.Alt And e.KeyCode = Keys.E Then
@@ -615,64 +651,52 @@ Public Class frmMain
             End If
         End If
 
-        '192k file download while playing any stream
-        If e.Control And e.Alt And e.KeyCode = Keys.D And
-                            Not IsNothing(Pandora.CurrentStation.CurrentSong) And
-                            prgDownload.Value = 100 And
-                            Pandora.Session.User.PartnerCredentials.AccountType = Engine.Data.AccountType.PANDORA_ONE_USER Then
+        Dim s = sender
 
-            If Not Directory.Exists(downLoc) Then
-                If folderBrowser.ShowDialog = Windows.Forms.DialogResult.OK Then
-                    downLoc = folderBrowser.SelectedPath
-                    Settings.Write("downloadLocation", downLoc)
-                Else
-                    Exit Sub
-                End If
-            End If
-
-            If Directory.Exists(downLoc) Then
-                TargeFile = downLoc + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
-
-                If Not File.Exists(TargeFile) Then
-                    Downloader = New WebClient
-                    AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
-                    AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
-                    Dim noProxy As Boolean = Settings.Read("noProxy")
-                    If Not noProxy Then
-                        Downloader.Proxy = Me.Proxy
-                    End If
-                    Downloader.DownloadFileAsync(
-                            New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargeFile)
-                    prgDownload.Visible = True
-                End If
-            End If
-        End If
-
-        '192k file export while playing 192k stream
-        If e.Control And e.KeyCode = Global.System.Windows.Forms.Keys.D And
-                            Not IsNothing(Pandora.CurrentStation.CurrentSong) And
-                            prgDownload.Value > 99 And
-                            Settings.Read("audioQuality") = "highQuality" And
-                            Me.Pandora.Session.User.PartnerCredentials.AccountType = Global.Pandorian.Engine.Data.AccountType.PANDORA_ONE_USER Then
+        If e.Control And e.KeyCode = Keys.D And
+            Not IsNothing(Pandora.CurrentStation.CurrentSong) And
+            Pandora.Session.User.PartnerCredentials.AccountType = Engine.Data.AccountType.PANDORA_ONE_USER Then
 
             If Not Directory.Exists(downLoc) Then
                 If Me.folderBrowser.ShowDialog = Global.System.Windows.Forms.DialogResult.OK Then
                     downLoc = folderBrowser.SelectedPath
-                    Settings.Write("downloadLocation", downLoc)
+                    Settings.downloadLocation = downLoc
+                    Settings.SaveToRegistry()
                 Else
                     Exit Sub
                 End If
             End If
 
             If Directory.Exists(downLoc) Then
-                TargeFile = downLoc + "\" + ValidFileName(Pandora.CurrentStation.CurrentSong.Artist) + " - " + ValidFileName(Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
+                TargeFile = downLoc + "\" + CleanUpFileName(Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
 
                 If Not File.Exists(TargeFile) Then
-                    File.Copy("current.stream", TargeFile)
-                    MsgBox("Mp3 File Exported!", MsgBoxStyle.Information)
+                    If e.Alt Then
+                        Downloader = New WebClient
+                        AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
+                        AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
+                        Dim noProxy As Boolean = Settings.noProxy
+                        If Not noProxy Then
+                            Downloader.Proxy = Me.Proxy
+                        End If
+                        Downloader.DownloadFileAsync(
+                                New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargeFile)
+                        prgDownload.Visible = True
+                    Else
+                        If Not prgDownload.Value = 100 Then
+                            Exit Sub
+                        End If
+                        If Pandora.CurrentStation.CurrentSong.DownloadedQuality = "highQuality" Then
+                            File.Copy(Pandora.CurrentStation.CurrentSong.AudioFileName, TargeFile)
+                            MsgBox("Mp3 File Exported!", MsgBoxStyle.Information)
+                        Else
+                            MsgBox("Didn't export song..." + vbCrLf + "Because it wasn't downloaded at 192k!", MsgBoxStyle.Exclamation)
+                        End If
+                    End If
                 End If
             End If
         End If
+
     End Sub
 
     Private Sub FileDownloadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs)
@@ -687,12 +711,23 @@ Public Class frmMain
         prgDownload.Value = e.ProgressPercentage
     End Sub
 
-    Private Function ValidFileName(Text As String) As String
-        For Each c In IO.Path.GetInvalidFileNameChars
+    Private Function CleanUpFileName(Text As String) As String
+        For Each c In Path.GetInvalidFileNameChars
             Text = Text.Replace(c, "_")
         Next
         Return Text
     End Function
+
+    Private Sub CleanUp()
+
+        For Each f In Directory.GetFiles(Directory.GetCurrentDirectory(), "*.stream")
+            Try
+                File.Delete(f)
+            Catch ex As Exception
+                'do null
+            End Try
+        Next
+    End Sub
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
         Control.CheckForIllegalCrossThreadCalls = False
@@ -709,8 +744,8 @@ Public Class frmMain
         If Not Debugger.IsAttached Then
             LogAppStartEvent()
         End If
-        Dim launchCount As Integer = Settings.Read("launchCount") + 1
-        Settings.Write("launchCount", launchCount)
+        Settings.launchCount = Settings.launchCount + 1
+        Settings.SaveToRegistry()
         CheckForUpdate()
         registerHotkeys()
         populateSleepTimes()
@@ -729,6 +764,7 @@ Public Class frmMain
             SongInfo.Hide()
         End If
     End Sub
+
     Private Sub frmMain_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 
         If WindowState = FormWindowState.Normal Or Me.Visible = True Then
@@ -751,7 +787,7 @@ Public Class frmMain
 
     Private Sub SavePandoraObject()
         If Not IsNothing(Pandora) Then
-            Using stream As Stream = File.Create("api.dat")
+            Using stream As Stream = File.Create(APIFile)
                 Try
                     Dim formatter As New BinaryFormatter()
                     formatter.Serialize(stream, Pandora)
@@ -766,11 +802,10 @@ Public Class frmMain
 
     Private Sub RestorePandoraObject()
 
-        'File.Delete("api.dat")
 
-        If File.Exists("api.dat") Then
+        If File.Exists(APIFile) Then
             Try
-                Using stream As Stream = File.Open("api.dat", FileMode.Open, FileAccess.Read)
+                Using stream As Stream = File.Open(APIFile, FileMode.Open, FileAccess.Read)
                     Dim formatter As New BinaryFormatter()
                     Pandora = DirectCast(formatter.Deserialize(stream), API)
                     tbLog.AppendText("Restored the api object from disk..." + vbCrLf)
@@ -778,12 +813,12 @@ Public Class frmMain
                 End Using
                 Exit Sub
             Catch e As Exception
-                File.Delete("api.dat")
+                File.Delete(APIFile)
                 tbLog.AppendText("Failed to restore the api object from disk..." + vbCrLf)
                 ReportError(e, "RestorePandoraObject")
             End Try
         End If
-        Pandora = New API(Settings.Read("pandoraOne"))
+        Pandora = New API(Settings.pandoraOne)
     End Sub
 
     Sub RunNow()
@@ -799,11 +834,11 @@ Public Class frmMain
 
         RestorePandoraObject()
 
-        Dim noProxy As Boolean = Settings.Read("noProxy")
+        Dim noProxy As Boolean = Settings.noProxy
         If Not noProxy Then
-            Dim prxUser = Settings.Read("proyxUsername")
-            Dim prxPass = Settings.Read("proxyPassword")
-            Me.Proxy = New WebProxy(Decrypt(Settings.Read("proxyAddress")))
+            Dim prxUser = Settings.proyxUsername
+            Dim prxPass = Settings.proxyPassword
+            Me.Proxy = New WebProxy(Decrypt(Settings.proxyAddress))
             If Not String.IsNullOrEmpty(Decrypt(prxUser)) And Not String.IsNullOrEmpty(Decrypt(prxPass)) Then
                 Me.Proxy.Credentials = New NetworkCredential(Decrypt(prxUser), Decrypt(prxPass))
             End If
@@ -835,7 +870,12 @@ Public Class frmMain
                 InitBass()
 
                 Pandora.SkipLimitReached = False
-                Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong()")
+
+                If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+                    Execute(Sub() PlayNextSong(), "RunNow.PlayNextSong")
+                Else
+                    Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong")
+                End If
 
             End If
         End If
@@ -860,11 +900,16 @@ Public Class frmMain
                 End If
             Next
 
-            Settings.Write("lastStationID", Pandora.CurrentStation.Id)
+            Settings.lastStationID = Pandora.CurrentStation.Id
+            Settings.SaveToRegistry()
 
             tbLog.AppendText("Station changed to: " + Pandora.CurrentStation.Name + vbCrLf)
 
-            Execute(Sub() PlayCurrentSong(), "ddStations_SelectedIndexChanged.PlayCurrentSong")
+            If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+                Execute(Sub() PlayNextSong(), "ddStations_SelectedIndexChanged.PlayNextSong")
+            Else
+                Execute(Sub() PlayCurrentSong(), "ddStations_SelectedIndexChanged.PlayCurrentSong")
+            End If
 
         End If
 
@@ -877,16 +922,16 @@ Public Class frmMain
 
         If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
             Bass.BASS_ChannelPause(Stream)
-            btnPlayPause.BackgroundImage = My.Resources.play
+            btnPlayPause.Image = My.Resources.play
         ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_PAUSED Then
             Bass.BASS_ChannelPlay(Stream, False)
-            btnPlayPause.BackgroundImage = My.Resources.paused
+            btnPlayPause.Image = My.Resources.paused
         ElseIf BASSChannelState() = BASSActive.BASS_ACTIVE_STOPPED And ResumePlaying = False Then
             ResumePlaying = True
             Bass.BASS_ChannelPlay(Stream, False)
-            btnPlayPause.BackgroundImage = My.Resources.paused
+            btnPlayPause.Image = My.Resources.paused
         Else
-            btnPlayPause.BackgroundImage = Nothing
+            btnPlayPause.Image = Nothing
             btnPlayPause.Text = ":-("
         End If
     End Sub
@@ -909,17 +954,17 @@ Public Class frmMain
     End Sub
 
     Sub SongEnded(ByVal handle As Integer, ByVal channel As Integer, ByVal data As Integer, ByVal user As IntPtr)
-        Execute(Sub() PlayNextSong(), "SongEnded")
+        Execute(Sub() PlayNextSong(), "SongEnded.PlayNextSong")
     End Sub
 
     Private Sub DebugExpireSessionNow()
-        'Pandora.Session.DebugCorruptAuthToken()
-        'Pandora.Session.User.DebugCorruptAuthToken()
-        Dim quality = Settings.Read("audioQuality")
-        Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(quality)
-        For Each s In Pandora.CurrentStation.PlayList
-            s.DebugCorruptAudioUrl(quality)
-        Next
+        Pandora.Session.DebugCorruptAuthToken()
+        Pandora.Session.User.DebugCorruptAuthToken()
+        'Dim quality = Settings.audioQuality
+        'Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(quality)
+        'For Each s In Pandora.CurrentStation.PlayList
+        '    s.DebugCorruptAudioUrl(quality)
+        'Next
     End Sub
 
     Private ErrCount As Integer = 0
@@ -946,10 +991,13 @@ Public Class frmMain
                         AfterErrorActions()
                     End Try
                 Case ErrorCodeEnum.SONG_URL_NOT_VALID
-                    tbLog.AppendText("Song URL expired. Will fetch new songs..." + vbCrLf)
-                    Pandora.CurrentStation.CurrentSong = Nothing
-                    Pandora.CurrentStation.PlayList.Clear()
-                    Execute(Logic, "SongExpired.ReDoLogic")
+                    If Caller = "PlayPreviousSong" Then 'don't ever change this string [handling-of-expired-url]
+                        tbLog.AppendText("Song URL expired. Trying the previous song..." + vbCrLf)
+                        PlayPreviousSong(True)
+                    Else
+                        tbLog.AppendText("Song URL expired. Trying the next song..." + vbCrLf)
+                        PlayNextSong()
+                    End If
                 Case ErrorCodeEnum.LICENSE_RESTRICTION
                     MsgBox("Looks like your country is not supported. Try using a proxy...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
@@ -957,6 +1005,10 @@ Public Class frmMain
                     MsgBox("Global song skip limit reached." + vbCrLf + vbCrLf +
                            "New songs cannot be played until skip limit is lifted by Pandora." + vbCrLf + vbCrLf +
                            "Please quit the app and try again after 10 minutes...", MsgBoxStyle.Exclamation)
+                    AfterErrorActions()
+                Case ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION
+                    MsgBox("No songs were found for this station." + vbCrLf + vbCrLf +
+                           "Please try adding a few seeds to this station using Pandora website...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
                 Case Else
                     ReportError(pex, Caller)
@@ -1006,32 +1058,43 @@ Public Class frmMain
         btnPlayPause.Enabled = False
         btnDislike.Enabled = False
         btnLike.Enabled = False
-        btnSkip.Enabled = True
-        btnSkip.BackColor = Control.DefaultBackColor
+        btnPrev.Enabled = False
+        btnNext.Enabled = True
     End Sub
 
     Private Sub ReLoginToPandora()
         Spinner.Visible = True
         Application.DoEvents()
-        Pandora.ClearSession(Settings.Read("pandoraOne"))
+        Pandora.ClearSession(Settings.pandoraOne)
+        CleanUp()
         SavePandoraObject()
-        Execute(Sub() RunNow(), "ReLoginToPandora")
+        Execute(Sub() RunNow(), "ReLoginToPandora.RunNow")
     End Sub
 
-    Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
-        If btnSkip.Enabled Then
-            btnSkip.Enabled = False
-            btnSkip.BackColor = Color.DarkGray
-            If Not Pandora.SkipLimitReached Then
-                Execute(Sub() PlayNextSong(), "btnSkip_Click")
-            End If
-        End If
+    Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnNext.Click
+        Execute(Sub() PlayNextSong(), "btnSkip_Click.PlayNextSong")
     End Sub
+
+    Private Sub btnBack_Click(sender As Object, e As EventArgs) Handles btnPrev.Click
+        PlayPreviousSong(False)
+    End Sub
+
+    'Private Sub btnLeft_Click(sender As Object, e As EventArgs)
+    '    Bass.BASS_StreamFree(Stream)
+    '    Pandora.CurrentStation.LoadPrevSong()
+    '    PlayCurrentSong()
+    'End Sub
+
+    'Private Sub btnRight_Click(sender As Object, e As EventArgs)
+    '    Bass.BASS_StreamFree(Stream)
+    '    Pandora.CurrentStation.LoadNextSong()
+    '    PlayCurrentSong()
+    'End Sub
 
     Private Sub btnBlock_Click(sender As Object, e As EventArgs) Handles btnBlock.Click
         If btnBlock.Enabled Then
             btnBlock.Enabled = False
-            btnBlock.BackColor = Color.DarkGray
+            btnBlock.BackColor = Color.Pink
             Execute(Sub() Pandora.TemporarilyBanSong(Pandora.CurrentStation.CurrentSong), "btnBlock_Click.TemporarilyBanSong")
 
             If Not Pandora.SkipLimitReached Then
@@ -1039,9 +1102,9 @@ Public Class frmMain
             End If
         End If
     End Sub
+
     Function SongDurationSecs() As Double
-        Dim len As Long = Bass.BASS_ChannelGetLength(Stream)
-        Return Bass.BASS_ChannelBytes2Seconds(Stream, len)
+        Return Bass.BASS_ChannelBytes2Seconds(Stream, StreamTotalLength())
     End Function
     Function CurrentPositionSecs() As Double
         Dim pos As Long = Bass.BASS_ChannelGetPosition(Stream)
@@ -1054,8 +1117,8 @@ Public Class frmMain
             btnLike.BackColor = Color.PaleGreen
             btnDislike.Enabled = True
             btnDislike.BackColor = Control.DefaultBackColor
-            Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Love), "btnLike_Click")
-            lblSongName.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(Settings.Read("noLiked"))
+            Execute(Sub() Pandora.RateSong(Pandora.CurrentStation.CurrentSong, PandoraRating.Love), "btnLike_Click.Pandora.RateSong")
+            lblSongName.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(IndicateLiked)
             RaiseEvent SongInfoUpdated(lblSongName.Text, lblArtistName.Text, lblAlbumName.Text)
         End If
     End Sub
@@ -1081,7 +1144,7 @@ Public Class frmMain
         Else
             Dim url As String = e.Argument
             Dim web As New WebClient()
-            Dim noProxy As Boolean = Settings.Read("noProxy")
+            Dim noProxy As Boolean = Settings.noProxy
             If Not noProxy Then
                 web.Proxy = Me.Proxy
             End If
@@ -1252,7 +1315,7 @@ Public Class frmMain
                 tbLog.AppendText("Machine woke up from sleep..." + vbCrLf)
                 WaitForNetConnection()
                 InitBass()
-                Execute(Sub() PlayCurrentSong(), "PowerModeChanged.Resume")
+                Execute(Sub() PlayCurrentSong(), "PowerModeChanged.PlayCurrentSong")
             Case PowerModes.Suspend
                 PreSleepActivities()
         End Select
@@ -1297,7 +1360,7 @@ Public Class frmMain
                 tmiStationTitle.Text = Pandora.CurrentStation.Name.Replace("&", "&&")
                 If Pandora.CurrentStation.CurrentSong.AudioDurationSecs > 60 Then
                     tmiArtistTitle.Text = Pandora.CurrentStation.CurrentSong.Artist.Replace("&", "&&")
-                    tmiSongTitle.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(Settings.Read("noLiked")).Replace("&", "&&")
+                    tmiSongTitle.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(IndicateLiked).Replace("&", "&&")
                 Else
                     tmiArtistTitle.Text = "Pandora The Punisher"
                     tmiSongTitle.Text = "42 Sec Blank Audio"
@@ -1315,7 +1378,7 @@ Public Class frmMain
             tmiPlayPause.Enabled = True
             tmiLikeCurrentSong.Enabled = btnLike.Enabled
             tmiDislikeCurrentSong.Enabled = btnDislike.Enabled
-            tmiSkipSong.Enabled = btnSkip.Enabled
+            tmiSkipSong.Enabled = btnNext.Enabled
             tmiBlockSong.Enabled = btnBlock.Enabled
             If frmLockScreen.Visible Then
                 tmiExit.Enabled = False
@@ -1431,20 +1494,20 @@ Public Class frmMain
             Exit Sub
         End If
 
-        With Settings
-            .Write("hkModifier", CType(cbModKey.SelectedValue, Integer))
-            .Write("hkBlock", tbHKBlockSong.Tag)
-            .Write("hkDislike", tbHKDislikeSong.Tag)
-            .Write("hkGlobalMenu", tbHKGlobalMenu.Tag)
-            .Write("hkLike", tbHKLikeSong.Tag)
-            .Write("hkPlayPause", tbHKPlayPause.Tag)
-            .Write("hkShowHide", tbHKShowHide.Tag)
-            .Write("hkSkip", tbHKSkipSong.Tag)
-            .Write("hkSleep", tbHKSleepNow.Tag)
-            .Write("hkLock", tbHKLockNow.Tag)
-            .Write("hkVolDown", tbHKVolDown.Tag)
-            .Write("hkVolUp", tbHKVolUp.Tag)
-        End With
+        Settings.hkModifier = CType(cbModKey.SelectedValue, Integer)
+        Settings.hkBlock = tbHKBlockSong.Tag
+        Settings.hkDislike = tbHKDislikeSong.Tag
+        Settings.hkGlobalMenu = tbHKGlobalMenu.Tag
+        Settings.hkLike = tbHKLikeSong.Tag
+        Settings.hkPlayPause = tbHKPlayPause.Tag
+        Settings.hkShowHide = tbHKShowHide.Tag
+        Settings.hkSkip = tbHKSkipSong.Tag
+        Settings.hkSleep = tbHKSleepNow.Tag
+        Settings.hkLock = tbHKLockNow.Tag
+        Settings.hkVolDown = tbHKVolDown.Tag
+        Settings.hkVolUp = tbHKVolUp.Tag
+        Settings.SaveToRegistry()
+
 
         pnlHotKeys.Visible = False
 
@@ -1479,8 +1542,8 @@ Public Class frmMain
         tip.Show("Play/Pause Song", btnPlayPause)
     End Sub
 
-    Private Sub btnSkip_MouseHover(sender As Object, e As EventArgs) Handles btnSkip.MouseHover
-        tip.Show("Skip Song", btnSkip)
+    Private Sub btnSkip_MouseHover(sender As Object, e As EventArgs) Handles btnNext.MouseHover
+        tip.Show("Skip Song", btnNext)
     End Sub
 
     Private Sub btnBlock_MouseHover(sender As Object, e As EventArgs) Handles btnBlock.MouseHover
@@ -1509,11 +1572,16 @@ Public Class frmMain
         If SongInfo.Visible = False And HideSongInfo = False Then
             With SongInfo
                 .artist.Text = Pandora.CurrentStation.CurrentSong.Artist.Replace("&", "&&")
-                .track.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(Settings.Read("noLiked")).Replace("&", "&&")
+                .track.Text = Pandora.CurrentStation.CurrentSong.GetProperTitle(IndicateLiked).Replace("&", "&&")
                 .station.Text = Pandora.CurrentStation.Name.Replace("&", "&&")
             End With
             SongInfo.Show()
         End If
     End Sub
+
+    Private Function MouseOverControl(control As Control) As Boolean
+        Dim pt As Point = control.PointToClient(Control.MousePosition)
+        Return (pt.X >= 0 AndAlso pt.Y >= 0 AndAlso pt.X <= control.Width AndAlso pt.Y <= control.Height)
+    End Function
 
 End Class

@@ -7,7 +7,7 @@ Namespace Data
     <Serializable()>
     Public Class PandoraStation
         Inherits PandoraData
-        <JsonProperty(PropertyName:="stationName")> _
+        <JsonProperty(PropertyName:="stationName")>
         Public Property Name() As String
             Get
                 Return m_Name
@@ -18,7 +18,7 @@ Namespace Data
         End Property
         Private m_Name As String
 
-        <JsonProperty(PropertyName:="stationId")> _
+        <JsonProperty(PropertyName:="stationId")>
         Public Property Id() As String
             Get
                 Return m_Id
@@ -29,7 +29,7 @@ Namespace Data
         End Property
         Private m_Id As String
 
-        <JsonProperty(PropertyName:="stationToken")> _
+        <JsonProperty(PropertyName:="stationToken")>
         Public Property Token() As String
             Get
                 Return m_Token
@@ -40,7 +40,7 @@ Namespace Data
         End Property
         Private m_Token As String
 
-        <JsonProperty(PropertyName:="isQuickMix")> _
+        <JsonProperty(PropertyName:="isQuickMix")>
         Public Property IsQuickMix() As Boolean
             Get
                 Return m_IsQuickMix
@@ -73,11 +73,6 @@ Namespace Data
             End Set
         End Property
 
-
-        Public Property CurrentSong As PandoraSong
-
-        Public Property PlayList As New Queue(Of PandoraSong)
-
         Public Property PandoraIO() As PandoraIO
             Get
                 Return _PandoraIO
@@ -88,46 +83,29 @@ Namespace Data
         End Property
         Private _PandoraIO As PandoraIO
 
-        Public ReadOnly Property SongLoadingOccurred() As Boolean
-            Get
-                Dim r As Boolean = _SongLoadingOccurred
-                _SongLoadingOccurred = False
-                Return r
-            End Get
-        End Property
-        Private _SongLoadingOccurred As Boolean
+        Public Property CurrentSong As PandoraSong
 
-        Public Function GetNextSong() As PandoraSong
+        Public Property PlayList As New LimitedSizePlaylist(12)
 
-            ' load 4 more songs if playlist empty
-            If PlayList.Count = 0 Then
-                LoadSongs()
-            End If
-
-            'check if loading songs worked
-            If Not PlayList.Count = 0 Then
-                CurrentSong = PlayList.Dequeue()
-            Else
-                Throw New PandoraException(ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION, "API didn't return any songs for this station.")
-            End If
-
-            Return CurrentSong
-        End Function
-
-        Public Sub LoadSongs()
+        Public Sub FetchSongs()
             Dim newSongs As New List(Of PandoraSong)()
-            newSongs = PandoraIO.GetSongs(Me)
-            PlayList.Clear()
+            newSongs = PandoraIO.GetSongs(Me.m_Token)
+
+            If newSongs.Count = 0 Then
+                Throw New PandoraException(ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION, "Pandora didn't return any songs for this station.")
+            End If
 
             For Each s As PandoraSong In newSongs
                 If s.Token Is Nothing Then
                     Continue For
                 End If
                 CheckForStationTags(s)
-                PlayList.Enqueue(s)
+                If Not IsNothing(PlayList.LastAddedSong) Then
+                    PlayList.LastAddedSong.NextSong = s
+                End If
+                s.PreviousSong = PlayList.LastAddedSong
+                PlayList.Add(s)
             Next
-
-            _SongLoadingOccurred = True
         End Sub
 
         Private Sub CheckForStationTags(song As PandoraSong)
@@ -140,5 +118,31 @@ Namespace Data
             Next
         End Sub
 
+    End Class
+
+    <Serializable()>
+    Public Class LimitedSizePlaylist
+        Inherits Queue(Of PandoraSong)
+
+        Public Property LastAddedSong As PandoraSong = Nothing
+
+        Dim Limit As Integer
+
+        Public Sub New(limit As Integer)
+            MyBase.New(limit)
+            Me.Limit = limit
+        End Sub
+
+        Public Shadows Sub Add(song As PandoraSong)
+
+            While Count >= Limit
+                Dim s As PandoraSong = Dequeue()
+                s.NextSong.PreviousSong = Nothing
+                IO.File.Delete(s.AudioFileName)
+            End While
+
+            MyBase.Enqueue(song)
+            LastAddedSong = song
+        End Sub
     End Class
 End Namespace

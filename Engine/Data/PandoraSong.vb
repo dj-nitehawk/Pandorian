@@ -108,8 +108,8 @@ Namespace Data
         End Property
         Private m_Title As String
 
-        Public Function GetProperTitle(DontIndicateLiked As Boolean)
-            If Not DontIndicateLiked Then
+        Public Function GetProperTitle(IndicateLiked As Boolean)
+            If IndicateLiked Then
                 If m_Rating = PandoraRating.Love Then
                     Return m_Title + " ✔"
                 End If
@@ -149,7 +149,13 @@ Namespace Data
             End Get
         End Property
 
-        <JsonProperty(PropertyName:="audioUrlMap")> _
+        Public ReadOnly Property AudioFileName() As String
+            Get
+                Return m_Token + ".stream"
+            End Get
+        End Property
+
+        <JsonProperty(PropertyName:="audioUrlMap")>
         Public Property AudioUrlMap() As Dictionary(Of String, AudioUrlInfo)
             Get
                 Return m_AudioUrlMap
@@ -304,5 +310,11 @@ Namespace Data
             End Try
         End Function
 
+        Public Property PreviousSong As PandoraSong = Nothing
+
+        Public Property NextSong As PandoraSong = Nothing
+
+        Public Property DownloadedQuality As String
+        Public Property FinishedDownloading As Boolean = False
     End Class
 End Namespace
