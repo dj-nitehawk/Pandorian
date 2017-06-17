@@ -1206,7 +1206,7 @@ Public Class frmMain
     End Sub
     Private Sub MenuStrip_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MenuStrip.Opening
         Try
-            miVersion.Text = "Pandorian v" + System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString
+            miVersion.Text = "Pandorian v" + Application.ProductVersion
         Catch ex As Exception
             miVersion.Text = "www.djnitehawk.com"
         End Try
@@ -1220,8 +1220,7 @@ Public Class frmMain
 
     Private Sub CheckForUpdateCompleted(sender As Object, e As DownloadStringCompletedEventArgs)
         Try
-
-            Dim currVer As New Version(System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString)
+            Dim currVer As New Version(Application.ProductVersion)
             Dim newVer As New Version(e.Result)
 
             If currVer < newVer Then
@@ -1231,7 +1230,6 @@ Public Class frmMain
                     Process.Start("http://pandorian.djnitehawk.com/?utm_source=pandorian.app&utm_medium=direct.link&utm_campaign=download.update")
                 End If
             End If
-
         Catch ex As Exception
             'do none
         End Try

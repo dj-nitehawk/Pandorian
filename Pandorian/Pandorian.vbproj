@@ -38,6 +38,8 @@
     <ApplicationVersion>2.7.2.%2a</ApplicationVersion>
     <ApplicationVersion>2.8.0.%2a</ApplicationVersion>
     <ApplicationVersion>2.8.1.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>0.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>false</BootstrapperEnabled>
