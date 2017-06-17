@@ -280,8 +280,9 @@ Public Class frmMain
 
         If File.Exists(Song.CoverFileName) Then
             tbLog.AppendText("Loading album cover from cache..." + vbCrLf)
-            SongCoverImage.ImageLocation = Song.CoverFileName
-            RaiseEvent CoverImageUpdated(SongCoverImage.Image)
+            Dim img = Image.FromFile(Song.CoverFileName)
+            SongCoverImage.Image = img
+            RaiseEvent CoverImageUpdated(img)
         Else
             Dim bgwCoverLoader As New BackgroundWorker
             AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
