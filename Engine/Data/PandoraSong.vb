@@ -156,6 +156,12 @@ Namespace Data
             End Get
         End Property
 
+        Public ReadOnly Property CoverFileName() As String
+            Get
+                Return TempPath + m_Token + ".cover"
+            End Get
+        End Property
+
         <JsonProperty(PropertyName:="audioUrlMap")>
         Public Property AudioUrlMap() As Dictionary(Of String, AudioUrlInfo)
             Get
@@ -169,7 +175,6 @@ Namespace Data
 
         <JsonProperty(PropertyName:="additionalAudioUrl")>
         Public Property AdditionalAudioUrl As String
-
 
         <JsonProperty(PropertyName:="albumArtUrl")> _
         Public Property AlbumArtLargeURL() As String

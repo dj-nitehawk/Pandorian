@@ -278,13 +278,19 @@ Public Class frmMain
 
         Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
 
-        Dim bgwCoverLoader As New BackgroundWorker
-        AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
-        tbLog.AppendText("Loading album cover art..." + vbCrLf)
-        If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
-            bgwCoverLoader.RunWorkerAsync(Nothing)
+        If File.Exists(Song.CoverFileName) Then
+            tbLog.AppendText("Loading album cover from cache..." + vbCrLf)
+            SongCoverImage.ImageLocation = Song.CoverFileName
+            RaiseEvent CoverImageUpdated(SongCoverImage.Image)
         Else
-            bgwCoverLoader.RunWorkerAsync(Song.AlbumArtLargeURL)
+            Dim bgwCoverLoader As New BackgroundWorker
+            AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
+            tbLog.AppendText("Downloading album cover art..." + vbCrLf)
+            If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
+                bgwCoverLoader.RunWorkerAsync(Nothing)
+            Else
+                bgwCoverLoader.RunWorkerAsync(Song.AlbumArtLargeURL)
+            End If
         End If
 
         PlayCurrentSongWithBASS()
@@ -719,7 +725,13 @@ Public Class frmMain
     End Function
 
     Private Sub CleanUp()
-
+        For Each f In Directory.GetFiles(Path.GetTempPath, "*.cover")
+            Try
+                File.Delete(f)
+            Catch ex As Exception
+                'do null
+            End Try
+        Next
         For Each f In Directory.GetFiles(Path.GetTempPath, "*.stream")
             Try
                 File.Delete(f)
@@ -1147,8 +1159,9 @@ Public Class frmMain
                 web.Proxy = Me.Proxy
             End If
             Try
-                Using strm As New IO.MemoryStream(web.DownloadData(url))
+                Using strm As New MemoryStream(web.DownloadData(url))
                     SongCoverImage.Image = Image.FromStream(strm)
+                    Image.FromStream(strm).Save(Pandora.CurrentStation.CurrentSong.CoverFileName)
                 End Using
             Catch ex As Exception
                 SongCoverImage.Image = My.Resources.logo
