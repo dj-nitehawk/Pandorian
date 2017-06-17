@@ -149,9 +149,10 @@ Namespace Data
             End Get
         End Property
 
+        Dim TempPath As String = IO.Path.GetTempPath()
         Public ReadOnly Property AudioFileName() As String
             Get
-                Return m_Token + ".stream"
+                Return TempPath + m_Token + ".stream"
             End Get
         End Property
 

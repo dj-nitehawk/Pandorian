@@ -1,9 +1,5 @@
 ﻿
-Imports Pandorian.Utility.ModifyRegistry
-
 Public Class frmLockScreen
-
-    Private Settings As New RegistryStore
 
     Private Sub frmLockScreen_Deactivate(sender As Object, e As EventArgs) Handles Me.Deactivate
         Me.TopMost = True
@@ -21,7 +17,7 @@ Public Class frmLockScreen
 
     Private Sub tbPassword_TextChanged(sender As Object, e As EventArgs) Handles tbPassword.TextChanged
 
-        Dim pass = Settings.Read("unlockPassword")
+        Dim pass = Settings.unlockPassword
 
         If Not String.IsNullOrEmpty(pass) Then
             If Not getMD5Hash(tbPassword.Text) = Decrypt(pass) Then
