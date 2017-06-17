@@ -65,11 +65,11 @@ Public Class frmLockScreen
             Case True
                 lockTimer.Enabled = True
                 KeyboardJammer.Jam()
-                Windows.Forms.Cursor.Hide()
+                Cursor.Hide()
             Case False
                 lockTimer.Enabled = False
                 KeyboardJammer.UnJam()
-                Windows.Forms.Cursor.Show()
+                Cursor.Show()
         End Select
     End Sub
 
@@ -79,8 +79,9 @@ Public Class frmLockScreen
         lblAlbum.Text = Album
     End Sub
 
-    Private Sub RefreshCover(Cover As Image)
-        CoverImage.Image = Cover
+    Private Sub RefreshCover(FileName As String)
+        CoverImage.ImageLocation = FileName
+
     End Sub
 
 End Class

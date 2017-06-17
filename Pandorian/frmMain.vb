@@ -31,7 +31,7 @@ Public Class frmMain
     Dim APIFile As String = Path.GetTempPath + "pandorian.v1.api"
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
-    Public Event CoverImageUpdated(Cover As Image)
+    Public Event CoverImageUpdated(FileName As String)
 
     Dim FS As FileStream
     Dim DownloadProc As DOWNLOADPROC = New DOWNLOADPROC(AddressOf DownloadSong)
@@ -280,10 +280,10 @@ Public Class frmMain
 
         If File.Exists(Song.CoverFileName) Then
             tbLog.AppendText("Loading album cover from cache..." + vbCrLf)
-            Dim img = Image.FromFile(Song.CoverFileName)
-            SongCoverImage.Image = img
-            RaiseEvent CoverImageUpdated(img)
+            SongCoverImage.ImageLocation = Song.CoverFileName
+            RaiseEvent CoverImageUpdated(Song.CoverFileName)
         Else
+            SongCoverImage.ImageLocation = ""
             Dim bgwCoverLoader As New BackgroundWorker
             AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
             tbLog.AppendText("Downloading album cover art..." + vbCrLf)
@@ -1149,26 +1149,28 @@ Public Class frmMain
     End Sub
 
     Private Sub DownloadCoverImage(sender As Object, e As DoWorkEventArgs)
-        SongCoverImage.Image = Nothing
+
+        Dim coverFile = Pandora.CurrentStation.CurrentSong.CoverFileName
+
         If IsNothing(e.Argument) Then
-            SongCoverImage.Image = My.Resources.logo
+            My.Resources.logo.Save(coverFile)
         Else
-            Dim url As String = e.Argument
             Dim web As New WebClient()
             Dim noProxy As Boolean = Settings.noProxy
             If Not noProxy Then
                 web.Proxy = Me.Proxy
             End If
             Try
-                Using strm As New MemoryStream(web.DownloadData(url))
-                    SongCoverImage.Image = Image.FromStream(strm)
-                    Image.FromStream(strm).Save(Pandora.CurrentStation.CurrentSong.CoverFileName)
+                Using strm As New MemoryStream(web.DownloadData(e.Argument.ToString))
+                    Image.FromStream(strm).Save(coverFile)
                 End Using
             Catch ex As Exception
-                SongCoverImage.Image = My.Resources.logo
+                My.Resources.logo.Save(coverFile)
             End Try
         End If
-        RaiseEvent CoverImageUpdated(SongCoverImage.Image)
+
+        SongCoverImage.ImageLocation = coverFile
+        RaiseEvent CoverImageUpdated(coverFile)
     End Sub
 
     Sub LogAppStartEvent()
