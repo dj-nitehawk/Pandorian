@@ -29,7 +29,7 @@
     <PublisherName>DJ NiteHawk</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>7</ApplicationRevision>
     <ApplicationVersion>2.8.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -163,11 +163,11 @@
     </Compile>
     <Compile Include="Hotkeys.vb" />
     <Compile Include="KeyBoardJammer.vb" />
-    <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -209,9 +209,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="My Project\app.manifest" />
-    <None Include="My Project\Application.myapp">
-      <Generator>MyApplicationCodeGenerator</Generator>
-    </None>
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CustomToolNamespace>My</CustomToolNamespace>
@@ -237,6 +234,10 @@
     <Content Include="bass_aac.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
     <Content Include="Pandorian.ico" />
     <None Include="Resources\back.png" />
     <None Include="Resources\skip.png" />
@@ -246,7 +247,6 @@
     <None Include="Resources\dislike.png" />
     <None Include="Resources\block.png" />
     <None Include="Resources\wait.png" />
-    <None Include="Pandorian_TemporaryKey.pfx" />
     <None Include="Resources\Icon.png" />
     <None Include="Resources\paypal.gif" />
   </ItemGroup>
