@@ -18,7 +18,7 @@ Public Class frmMain
     Dim Sync As SYNCPROC = New SYNCPROC(AddressOf SongEnded)
     Dim DSP As Misc.DSP_Gain = New Misc.DSP_Gain()
     Dim Downloader As WebClient
-    Dim TargeFile As String
+    Dim TargetFile As String
     Dim IsActiveForm As Boolean
     Dim SleepAt As Date
     Dim SleepNow As Boolean
@@ -28,7 +28,8 @@ Public Class frmMain
     Dim BPMCounter As New Misc.BPMCounter(20, 44100)
     Dim SongInfo As New frmSongInfo()
     Dim HideSongInfo As Boolean = False
-    Dim APIFile As String = "v1.api"
+    Dim TempPath As String = Path.GetTempPath
+    Dim APIFile As String = "pandorian.v1.api"
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(Cover As Image)
@@ -41,7 +42,7 @@ Public Class frmMain
         If FS Is Nothing Then
             Pandora.CurrentStation.CurrentSong.FinishedDownloading = False
             Pandora.CurrentStation.CurrentSong.DownloadedQuality = Settings.audioQuality
-            FS = File.OpenWrite(Pandora.CurrentStation.CurrentSong.AudioFileName)
+            FS = File.OpenWrite(TempPath + Pandora.CurrentStation.CurrentSong.AudioFileName)
             prgDownload.Visible = True
             prgDownload.Value = 0
         End If
@@ -88,7 +89,7 @@ Public Class frmMain
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
             Pandora.ClearSession(Settings.pandoraOne)
-            'File.Delete(APIFile)
+            'File.Delete(TempPath + APIFile)
             SavePandoraObject()
             CleanUp()
         End If
@@ -496,7 +497,7 @@ Public Class frmMain
 
         Dim song = Pandora.CurrentStation.CurrentSong
 
-        If File.Exists(song.AudioFileName) And song.FinishedDownloading Then
+        If File.Exists(TempPath + song.AudioFileName) And song.FinishedDownloading Then
             tbLog.AppendText("Loaded song from local cache." + vbCrLf)
             Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
             prgDownload.Value = 100
@@ -580,7 +581,7 @@ Public Class frmMain
     Public Function HasSettings() As Boolean
 
         If Settings.KeyCount = 0 Then
-            File.Delete(APIFile)
+            File.Delete(TempPath + APIFile)
             Settings.audioQuality = "mediumQuality"
             Settings.downloadLocation = ""
             Settings.lastStationID = ""
@@ -668,9 +669,9 @@ Public Class frmMain
             End If
 
             If Directory.Exists(downLoc) Then
-                TargeFile = downLoc + "\" + CleanUpFileName(Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
+                TargetFile = downLoc + "\" + CleanUpFileName(Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
 
-                If Not File.Exists(TargeFile) Then
+                If Not File.Exists(TargetFile) Then
                     If e.Alt Then
                         Downloader = New WebClient
                         AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
@@ -680,14 +681,14 @@ Public Class frmMain
                             Downloader.Proxy = Me.Proxy
                         End If
                         Downloader.DownloadFileAsync(
-                                New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargeFile)
+                                New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargetFile)
                         prgDownload.Visible = True
                     Else
                         If Not prgDownload.Value = 100 Then
                             Exit Sub
                         End If
                         If Pandora.CurrentStation.CurrentSong.DownloadedQuality = "highQuality" Then
-                            File.Copy(Pandora.CurrentStation.CurrentSong.AudioFileName, TargeFile)
+                            File.Copy(TempPath + Pandora.CurrentStation.CurrentSong.AudioFileName, TargetFile)
                             MsgBox("Mp3 File Exported!", MsgBoxStyle.Information)
                         Else
                             MsgBox("Didn't export song..." + vbCrLf + "Because it wasn't downloaded at 192k!", MsgBoxStyle.Exclamation)
@@ -703,7 +704,7 @@ Public Class frmMain
         prgDownload.Visible = False
         prgDownload.Value = 0
         If Not IsNothing(e.Error) Then
-            File.Delete(TargeFile)
+            File.Delete(TargetFile)
             MsgBox(e.Error.Message, MsgBoxStyle.Critical)
         End If
     End Sub
@@ -720,7 +721,7 @@ Public Class frmMain
 
     Private Sub CleanUp()
 
-        For Each f In Directory.GetFiles(Directory.GetCurrentDirectory(), "*.stream")
+        For Each f In Directory.GetFiles(TempPath, "*.stream")
             Try
                 File.Delete(f)
             Catch ex As Exception
@@ -787,7 +788,7 @@ Public Class frmMain
 
     Private Sub SavePandoraObject()
         If Not IsNothing(Pandora) Then
-            Using stream As Stream = File.Create(APIFile)
+            Using stream As Stream = File.Create(TempPath + APIFile)
                 Try
                     Dim formatter As New BinaryFormatter()
                     formatter.Serialize(stream, Pandora)
@@ -801,11 +802,9 @@ Public Class frmMain
     End Sub
 
     Private Sub RestorePandoraObject()
-
-
-        If File.Exists(APIFile) Then
+        If File.Exists(TempPath + APIFile) Then
             Try
-                Using stream As Stream = File.Open(APIFile, FileMode.Open, FileAccess.Read)
+                Using stream As Stream = File.Open(TempPath + APIFile, FileMode.Open, FileAccess.Read)
                     Dim formatter As New BinaryFormatter()
                     Pandora = DirectCast(formatter.Deserialize(stream), API)
                     tbLog.AppendText("Restored the api object from disk..." + vbCrLf)
@@ -813,7 +812,7 @@ Public Class frmMain
                 End Using
                 Exit Sub
             Catch e As Exception
-                File.Delete(APIFile)
+                File.Delete(TempPath + APIFile)
                 tbLog.AppendText("Failed to restore the api object from disk..." + vbCrLf)
                 ReportError(e, "RestorePandoraObject")
             End Try
