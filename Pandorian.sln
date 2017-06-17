@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Pandorian", "Pandorian\Pandorian.vbproj", "{65EAF21A-E7B1-40B6-9248-BA6A86D44FD9}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,6 +9,9 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Pandorian", "Pandorian\Pand
 	EndProjectSection
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Engine", "Engine\Engine.vbproj", "{9CB9994B-4B1E-4EF2-8491-C242564350E2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{33BA7144-6EB6-49D5-B711-6475EE248A8D} = {33BA7144-6EB6-49D5-B711-6475EE248A8D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blowfish", "Blowfish\Blowfish.csproj", "{33BA7144-6EB6-49D5-B711-6475EE248A8D}"
 EndProject

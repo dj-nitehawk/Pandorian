@@ -1,6 +1,4 @@
 ﻿Imports Microsoft.Win32
-Imports Pandorian.Utility.ModifyRegistry
-
 
 Public Class frmBrowser
 
@@ -17,24 +15,21 @@ Public Class frmBrowser
                           11001,
                           RegistryValueKind.DWord)
 
-        Dim Settings As New RegistryStore
-
-        If Not Settings.Read("noProxy") Then
+        If Not Settings.noProxy Then
             Dim p As New InternetProxy
             With p
-                .Address = Decrypt(Settings.Read("proxyAddress"))
-                .UserName = Decrypt(Settings.Read("proyxUsername"))
-                .Password = Decrypt(Settings.Read("proxyPassword"))
+                .Address = Decrypt(Settings.proxyAddress)
+                .UserName = Decrypt(Settings.proyxUsername)
+                .Password = Decrypt(Settings.proxyPassword)
             End With
             wBrowser.Proxy = p
         End If
 
         wBrowser.Goto(frmMain.GetStationURL)
-        'wBrowser.Goto("https://pandora.com")
     End Sub
 
     Private Sub wBrowser_DocumentCompleted(sender As Object, e As WebBrowserDocumentCompletedEventArgs) Handles wBrowser.DocumentCompleted
-        'wBrowser.ScriptErrorsSuppressed = True
+        wBrowser.ScriptErrorsSuppressed = True
         'wBrowser.Document.InvokeScript("eval", {"try { $.jPlayer.pause(); } catch (e) {};"})
     End Sub
 End Class

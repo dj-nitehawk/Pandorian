@@ -18,7 +18,7 @@ Public Class frmMain
     Dim Sync As SYNCPROC = New SYNCPROC(AddressOf SongEnded)
     Dim DSP As Misc.DSP_Gain = New Misc.DSP_Gain()
     Dim Downloader As WebClient
-    Dim TargeFile As String
+    Dim TargetFile As String
     Dim IsActiveForm As Boolean
     Dim SleepAt As Date
     Dim SleepNow As Boolean
@@ -28,10 +28,10 @@ Public Class frmMain
     Dim BPMCounter As New Misc.BPMCounter(20, 44100)
     Dim SongInfo As New frmSongInfo()
     Dim HideSongInfo As Boolean = False
-    Dim APIFile As String = "v1.api"
+    Dim APIFile As String = Path.GetTempPath + "pandorian.v1.api"
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
-    Public Event CoverImageUpdated(Cover As Image)
+    Public Event CoverImageUpdated(FileName As String)
 
     Dim FS As FileStream
     Dim DownloadProc As DOWNLOADPROC = New DOWNLOADPROC(AddressOf DownloadSong)
@@ -88,7 +88,7 @@ Public Class frmMain
     Public Sub ClearSession()
         If Not IsNothing(Pandora) Then
             Pandora.ClearSession(Settings.pandoraOne)
-            'File.Delete(APIFile)
+            'File.Delete(TempPath + APIFile)
             SavePandoraObject()
             CleanUp()
         End If
@@ -278,13 +278,20 @@ Public Class frmMain
 
         Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
 
-        Dim bgwCoverLoader As New BackgroundWorker
-        AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
-        tbLog.AppendText("Loading album cover art..." + vbCrLf)
-        If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
-            bgwCoverLoader.RunWorkerAsync(Nothing)
+        If File.Exists(Song.CoverFileName) Then
+            tbLog.AppendText("Loading album cover from cache..." + vbCrLf)
+            SongCoverImage.ImageLocation = Song.CoverFileName
+            RaiseEvent CoverImageUpdated(Song.CoverFileName)
         Else
-            bgwCoverLoader.RunWorkerAsync(Song.AlbumArtLargeURL)
+            SongCoverImage.ImageLocation = ""
+            Dim bgwCoverLoader As New BackgroundWorker
+            AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
+            tbLog.AppendText("Downloading album cover art..." + vbCrLf)
+            If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
+                bgwCoverLoader.RunWorkerAsync(Nothing)
+            Else
+                bgwCoverLoader.RunWorkerAsync(Song.AlbumArtLargeURL)
+            End If
         End If
 
         PlayCurrentSongWithBASS()
@@ -499,7 +506,7 @@ Public Class frmMain
         If File.Exists(song.AudioFileName) And song.FinishedDownloading Then
             tbLog.AppendText("Loaded song from local cache." + vbCrLf)
             Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
-            prgDownload.Value = 0
+            prgDownload.Value = 100
             prgDownload.Visible = False
         Else
             tbLog.AppendText("Downloading song from pandora." + vbCrLf)
@@ -668,9 +675,9 @@ Public Class frmMain
             End If
 
             If Directory.Exists(downLoc) Then
-                TargeFile = downLoc + "\" + CleanUpFileName(Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
+                TargetFile = downLoc + "\" + CleanUpFileName(Pandora.CurrentStation.CurrentSong.Artist + " - " + Pandora.CurrentStation.CurrentSong.Title) + ".mp3"
 
-                If Not File.Exists(TargeFile) Then
+                If Not File.Exists(TargetFile) Then
                     If e.Alt Then
                         Downloader = New WebClient
                         AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
@@ -680,14 +687,14 @@ Public Class frmMain
                             Downloader.Proxy = Me.Proxy
                         End If
                         Downloader.DownloadFileAsync(
-                                New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargeFile)
+                                New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargetFile)
                         prgDownload.Visible = True
                     Else
                         If Not prgDownload.Value = 100 Then
                             Exit Sub
                         End If
                         If Pandora.CurrentStation.CurrentSong.DownloadedQuality = "highQuality" Then
-                            File.Copy(Pandora.CurrentStation.CurrentSong.AudioFileName, TargeFile)
+                            File.Copy(Pandora.CurrentStation.CurrentSong.AudioFileName, TargetFile)
                             MsgBox("Mp3 File Exported!", MsgBoxStyle.Information)
                         Else
                             MsgBox("Didn't export song..." + vbCrLf + "Because it wasn't downloaded at 192k!", MsgBoxStyle.Exclamation)
@@ -703,7 +710,7 @@ Public Class frmMain
         prgDownload.Visible = False
         prgDownload.Value = 0
         If Not IsNothing(e.Error) Then
-            File.Delete(TargeFile)
+            File.Delete(TargetFile)
             MsgBox(e.Error.Message, MsgBoxStyle.Critical)
         End If
     End Sub
@@ -719,8 +726,14 @@ Public Class frmMain
     End Function
 
     Private Sub CleanUp()
-
-        For Each f In Directory.GetFiles(Directory.GetCurrentDirectory(), "*.stream")
+        For Each f In Directory.GetFiles(Path.GetTempPath, "*.cover")
+            Try
+                File.Delete(f)
+            Catch ex As Exception
+                'do null
+            End Try
+        Next
+        For Each f In Directory.GetFiles(Path.GetTempPath, "*.stream")
             Try
                 File.Delete(f)
             Catch ex As Exception
@@ -801,8 +814,6 @@ Public Class frmMain
     End Sub
 
     Private Sub RestorePandoraObject()
-
-
         If File.Exists(APIFile) Then
             Try
                 Using stream As Stream = File.Open(APIFile, FileMode.Open, FileAccess.Read)
@@ -1138,25 +1149,28 @@ Public Class frmMain
     End Sub
 
     Private Sub DownloadCoverImage(sender As Object, e As DoWorkEventArgs)
-        SongCoverImage.Image = Nothing
+
+        Dim coverFile = Pandora.CurrentStation.CurrentSong.CoverFileName
+
         If IsNothing(e.Argument) Then
-            SongCoverImage.Image = My.Resources.logo
+            My.Resources.logo.Save(coverFile)
         Else
-            Dim url As String = e.Argument
             Dim web As New WebClient()
             Dim noProxy As Boolean = Settings.noProxy
             If Not noProxy Then
                 web.Proxy = Me.Proxy
             End If
             Try
-                Using strm As New IO.MemoryStream(web.DownloadData(url))
-                    SongCoverImage.Image = Image.FromStream(strm)
+                Using strm As New MemoryStream(web.DownloadData(e.Argument.ToString))
+                    Image.FromStream(strm).Save(coverFile)
                 End Using
             Catch ex As Exception
-                SongCoverImage.Image = My.Resources.logo
+                My.Resources.logo.Save(coverFile)
             End Try
         End If
-        RaiseEvent CoverImageUpdated(SongCoverImage.Image)
+
+        SongCoverImage.ImageLocation = coverFile
+        RaiseEvent CoverImageUpdated(coverFile)
     End Sub
 
     Sub LogAppStartEvent()

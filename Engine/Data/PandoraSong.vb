@@ -149,9 +149,16 @@ Namespace Data
             End Get
         End Property
 
+        Dim TempPath As String = IO.Path.GetTempPath()
         Public ReadOnly Property AudioFileName() As String
             Get
-                Return m_Token + ".stream"
+                Return TempPath + m_Token + ".stream"
+            End Get
+        End Property
+
+        Public ReadOnly Property CoverFileName() As String
+            Get
+                Return TempPath + m_Token + ".cover"
             End Get
         End Property
 
@@ -168,7 +175,6 @@ Namespace Data
 
         <JsonProperty(PropertyName:="additionalAudioUrl")>
         Public Property AdditionalAudioUrl As String
-
 
         <JsonProperty(PropertyName:="albumArtUrl")> _
         Public Property AlbumArtLargeURL() As String
