@@ -42,8 +42,6 @@ Public Class frmMain
             Pandora.CurrentStation.CurrentSong.FinishedDownloading = False
             Pandora.CurrentStation.CurrentSong.DownloadedQuality = Settings.audioQuality
             FS = File.OpenWrite(Pandora.CurrentStation.CurrentSong.AudioFileName)
-            prgDownload.Visible = True
-            prgDownload.Value = 0
         End If
 
         If buffer = IntPtr.Zero Then
@@ -68,17 +66,14 @@ Public Class frmMain
         Return Bass.BASS_ChannelGetLength(Stream)
     End Function
 
-    Private Function StreamLength() As Long
-        Return Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
-    End Function
-
     Private Function StreamDownloadedLength() As Long
         Return Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_DOWNLOAD)
     End Function
 
     Private Sub UpdateDownloadProgress()
-        If prgDownload.Visible Then
-            prgDownload.Value = StreamDownloadedLength() * 100 / StreamLength()
+        Dim len = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
+        If len > 0 Then
+            prgDownload.Value = StreamDownloadedLength() * 100 / len
             If prgDownload.Value = 100 Then
                 prgDownload.Visible = False
             End If
@@ -283,7 +278,7 @@ Public Class frmMain
             SongCoverImage.ImageLocation = Song.CoverFileName
             RaiseEvent CoverImageUpdated(Song.CoverFileName)
         Else
-            SongCoverImage.ImageLocation = ""
+            SongCoverImage.Image = Nothing
             Dim bgwCoverLoader As New BackgroundWorker
             AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
             tbLog.AppendText("Downloading album cover art..." + vbCrLf)
@@ -300,6 +295,8 @@ Public Class frmMain
 
         btnNext.Enabled = True
         btnNext.BackColor = Control.DefaultBackColor
+        btnPrev.Enabled = True
+        btnPrev.BackColor = Control.DefaultBackColor
 
         Select Case Song.Rating
             Case PandoraRating.Hate
@@ -367,6 +364,10 @@ Public Class frmMain
     End Function
 
     Sub PlayPreviousSong(ExpiredTrack As Boolean)
+        If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+            Exit Sub
+        End If
+
         If Not IsNothing(Pandora.CurrentStation.CurrentSong.PreviousSong) Then
             Spinner.Visible = True
             prgBar.Value = 0
@@ -510,6 +511,8 @@ Public Class frmMain
             prgDownload.Visible = False
         Else
             tbLog.AppendText("Downloading song from pandora." + vbCrLf)
+            prgDownload.Value = 0
+            prgDownload.Visible = True
             Stream = Bass.BASS_StreamCreateURL(
                 song.AudioUrlMap(Settings.audioQuality).Url,
                 0,
@@ -539,12 +542,16 @@ Public Class frmMain
             song.AudioDurationSecs = SongDurationSecs()
             ShareTheLove()
         Else
-            If Bass.BASS_ErrorGetCode = BASSError.BASS_ERROR_FILEOPEN Then
-                Throw New PandoraException(ErrorCodeEnum.SONG_URL_NOT_VALID, "Audio URL has probably expired...")
-            Else
-                MsgBox("Couldn't open stream: " + Bass.BASS_ErrorGetCode().ToString + vbCr +
+            Dim errCode = Bass.BASS_ErrorGetCode
+            Select Case errCode
+                Case BASSError.BASS_ERROR_FILEOPEN
+                    Throw New PandoraException(ErrorCodeEnum.SONG_URL_NOT_VALID, "Audio URL has probably expired...")
+                Case BASSError.BASS_ERROR_NONET, BASSError.BASS_ERROR_TIMEOUT
+                    Throw New PandoraException(ErrorCodeEnum.NO_NET_FOR_BASS, "Bass.Net can't download audio stream...")
+                Case Else
+                    MsgBox("Couldn't open stream: " + errCode.ToString + vbCr +
                        "Try restarting the app...", MsgBoxStyle.Critical)
-            End If
+            End Select
         End If
 
     End Sub
@@ -595,6 +602,7 @@ Public Class frmMain
             Settings.noLiked = 0
             Settings.noProxy = 0
             Settings.noQmix = 0
+            Settings.enableBPMCounter = 0
             Settings.pandoraOne = 0
             Settings.pandoraPassword = ""
             Settings.pandoraUsername = ""
@@ -707,13 +715,13 @@ Public Class frmMain
     End Sub
 
     Private Sub FileDownloadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs)
-        prgDownload.Visible = False
-        prgDownload.Value = 0
+        prgDownload.Value = 100
         If Not IsNothing(e.Error) Then
             File.Delete(TargetFile)
             MsgBox(e.Error.Message, MsgBoxStyle.Critical)
         End If
     End Sub
+
     Private Sub FileDownloadProgressChanged(sender As Object, e As DownloadProgressChangedEventArgs)
         prgDownload.Value = e.ProgressPercentage
     End Sub
@@ -929,6 +937,7 @@ Public Class frmMain
     Function BASSChannelState() As BASSActive
         Return Bass.BASS_ChannelIsActive(Stream)
     End Function
+
     Private Sub btnPlayPause_Click(sender As Object, e As EventArgs) Handles btnPlayPause.Click
 
         If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
@@ -946,6 +955,7 @@ Public Class frmMain
             btnPlayPause.Text = ":-("
         End If
     End Sub
+
     Sub UpdatePlayPosition()
         Dim pos As Double = (CurrentPositionSecs() / SongDurationSecs() * 100)
         If pos >= 1 And pos <= 100 Then
@@ -1021,6 +1031,8 @@ Public Class frmMain
                     MsgBox("No songs were found for this station." + vbCrLf + vbCrLf +
                            "Please try adding a few seeds to this station using Pandora website...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
+                Case ErrorCodeEnum.NO_NET_FOR_BASS
+                    PlayPreviousSong(False)
                 Case Else
                     ReportError(pex, Caller)
                     AfterErrorActions()
@@ -1034,6 +1046,11 @@ Public Class frmMain
     End Sub
 
     Private Sub ReportError(Exception As Exception, Caller As String)
+
+        If Exception.GetType() Is GetType(ObjectDisposedException) Then
+            Exit Sub
+        End If
+
 
         Dim msg As String
 
@@ -1069,7 +1086,7 @@ Public Class frmMain
         btnPlayPause.Enabled = False
         btnDislike.Enabled = False
         btnLike.Enabled = False
-        btnPrev.Enabled = False
+        btnPrev.Enabled = True
         btnNext.Enabled = True
     End Sub
 
@@ -1117,6 +1134,7 @@ Public Class frmMain
     Function SongDurationSecs() As Double
         Return Bass.BASS_ChannelBytes2Seconds(Stream, StreamTotalLength())
     End Function
+
     Function CurrentPositionSecs() As Double
         Dim pos As Long = Bass.BASS_ChannelGetPosition(Stream)
         Return Bass.BASS_ChannelBytes2Seconds(Stream, pos)
@@ -1528,11 +1546,6 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub prgBar_Click(sender As Object, e As EventArgs) Handles prgBar.Click
-        volSlider.Visible = True
-        VolLastChangedOn = Now
-    End Sub
-
     Private Sub volSlider_ValueChanged(sender As Object, e As EventArgs) Handles volSlider.ValueChanged
         If volSlider.Value >= 0 <= 100 Then
             If BASSReady Then
@@ -1569,14 +1582,16 @@ Public Class frmMain
     End Sub
 
     Private Sub SongCoverImage_Click(sender As Object, e As EventArgs) Handles SongCoverImage.Click
-        If lblBPM.Visible Then
-            lblBPM.Visible = False
-            bpmTimer.Stop()
-            BPMCounter.Reset(44100)
-            lblBPM.Text = "000"
-        Else
-            lblBPM.Visible = True
-            bpmTimer.Start()
+        If Settings.enableBPMCounter Then
+            If lblBPM.Visible Then
+                lblBPM.Visible = False
+                bpmTimer.Stop()
+                BPMCounter.Reset(44100)
+                lblBPM.Text = "000"
+            Else
+                lblBPM.Visible = True
+                bpmTimer.Start()
+            End If
         End If
     End Sub
 
@@ -1596,4 +1611,19 @@ Public Class frmMain
         Return (pt.X >= 0 AndAlso pt.Y >= 0 AndAlso pt.X <= control.Width AndAlso pt.Y <= control.Height)
     End Function
 
+    Private Sub prgBar_MouseClick(sender As Object, e As MouseEventArgs) Handles prgBar.MouseClick
+        If (e.Button = MouseButtons.Right) Then
+            volSlider.Visible = True
+            VolLastChangedOn = Now
+            Exit Sub
+        End If
+
+        Dim absoluteMouse As Single = (PointToClient(MousePosition).X - prgBar.Bounds.X)
+        Dim calcFactor As Single = prgBar.Width / CSng(100)
+        Dim relativeMouse As Single = absoluteMouse / calcFactor
+        prgBar.Value = Convert.ToInt32(relativeMouse)
+        Bass.BASS_ChannelSetPosition(Stream,
+                                         Bass.BASS_ChannelSeconds2Bytes(Stream, prgBar.Value / 100 * SongDurationSecs()),
+                                         BASSMode.BASS_POS_BYTES)
+    End Sub
 End Class

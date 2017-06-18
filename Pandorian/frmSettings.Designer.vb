@@ -44,6 +44,7 @@ Partial Class frmSettings
         Me.Button2 = New System.Windows.Forms.Button()
         Me.chkNoQMix = New System.Windows.Forms.CheckBox()
         Me.chkNoLiked = New System.Windows.Forms.CheckBox()
+        Me.chkBPMCounter = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'lblProxyAddre
@@ -137,7 +138,7 @@ Partial Class frmSettings
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(50, 355)
+        Me.Button1.Location = New System.Drawing.Point(50, 359)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(82, 26)
         Me.Button1.TabIndex = 13
@@ -150,7 +151,7 @@ Partial Class frmSettings
         Me.btnPayPal.FlatAppearance.BorderSize = 0
         Me.btnPayPal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPayPal.Image = Global.Pandorian.My.Resources.Resources.paypal
-        Me.btnPayPal.Location = New System.Drawing.Point(59, 287)
+        Me.btnPayPal.Location = New System.Drawing.Point(59, 297)
         Me.btnPayPal.Name = "btnPayPal"
         Me.btnPayPal.Size = New System.Drawing.Size(155, 56)
         Me.btnPayPal.TabIndex = 12
@@ -216,7 +217,7 @@ Partial Class frmSettings
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(144, 355)
+        Me.Button2.Location = New System.Drawing.Point(144, 359)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(82, 26)
         Me.Button2.TabIndex = 14
@@ -226,7 +227,7 @@ Partial Class frmSettings
         'chkNoQMix
         '
         Me.chkNoQMix.AutoSize = True
-        Me.chkNoQMix.Location = New System.Drawing.Point(38, 235)
+        Me.chkNoQMix.Location = New System.Drawing.Point(25, 231)
         Me.chkNoQMix.Name = "chkNoQMix"
         Me.chkNoQMix.Size = New System.Drawing.Size(226, 17)
         Me.chkNoQMix.TabIndex = 15
@@ -236,19 +237,30 @@ Partial Class frmSettings
         'chkNoLiked
         '
         Me.chkNoLiked.AutoSize = True
-        Me.chkNoLiked.Location = New System.Drawing.Point(38, 258)
+        Me.chkNoLiked.Location = New System.Drawing.Point(25, 254)
         Me.chkNoLiked.Name = "chkNoLiked"
         Me.chkNoLiked.Size = New System.Drawing.Size(190, 17)
         Me.chkNoLiked.TabIndex = 16
         Me.chkNoLiked.Text = "Don't indicate liked songs with a ✔"
         Me.chkNoLiked.UseVisualStyleBackColor = True
         '
+        'chkBPMCounter
+        '
+        Me.chkBPMCounter.AutoSize = True
+        Me.chkBPMCounter.Location = New System.Drawing.Point(25, 277)
+        Me.chkBPMCounter.Name = "chkBPMCounter"
+        Me.chkBPMCounter.Size = New System.Drawing.Size(239, 17)
+        Me.chkBPMCounter.TabIndex = 17
+        Me.chkBPMCounter.Text = "Show BPM of song when album art is clicked"
+        Me.chkBPMCounter.UseVisualStyleBackColor = True
+        '
         'frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 390)
+        Me.ClientSize = New System.Drawing.Size(284, 391)
         Me.ControlBox = False
+        Me.Controls.Add(Me.chkBPMCounter)
         Me.Controls.Add(Me.chkNoLiked)
         Me.Controls.Add(Me.chkNoQMix)
         Me.Controls.Add(Me.Button2)
@@ -301,4 +313,5 @@ Partial Class frmSettings
     Friend WithEvents Button2 As System.Windows.Forms.Button
     Friend WithEvents chkNoQMix As CheckBox
     Friend WithEvents chkNoLiked As CheckBox
+    Friend WithEvents chkBPMCounter As CheckBox
 End Class

@@ -21,6 +21,7 @@ Public Enum ErrorCodeEnum
     INSUFFICIENT_CONNECTIVITY = 13
     PLAYLIST_EMPTY_FOR_STATION = 14 ' custom error for when no songs returned by api
     SONG_URL_NOT_VALID = 15 ' custom error for expired song urls
+    NO_NET_FOR_BASS = 16 ' custom error when bass.net fails to download audio stream
     READONLY_MODE = 1000
 	AUTH_INVALID_TOKEN = 1001
 	AUTH_INVALID_USERNAME_PASSWORD = 1002

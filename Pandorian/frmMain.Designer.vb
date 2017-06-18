@@ -175,7 +175,7 @@ Partial Class frmMain
         '
         'Timer
         '
-        Me.Timer.Interval = 1000
+        Me.Timer.Interval = 500
         '
         'MenuStrip
         '
