@@ -300,6 +300,8 @@ Public Class frmMain
 
         btnNext.Enabled = True
         btnNext.BackColor = Control.DefaultBackColor
+        btnPrev.Enabled = True
+        btnPrev.BackColor = Control.DefaultBackColor
 
         Select Case Song.Rating
             Case PandoraRating.Hate
@@ -367,6 +369,10 @@ Public Class frmMain
     End Function
 
     Sub PlayPreviousSong(ExpiredTrack As Boolean)
+        If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+            Exit Sub
+        End If
+
         If Not IsNothing(Pandora.CurrentStation.CurrentSong.PreviousSong) Then
             Spinner.Visible = True
             prgBar.Value = 0
@@ -539,12 +545,16 @@ Public Class frmMain
             song.AudioDurationSecs = SongDurationSecs()
             ShareTheLove()
         Else
-            If Bass.BASS_ErrorGetCode = BASSError.BASS_ERROR_FILEOPEN Then
-                Throw New PandoraException(ErrorCodeEnum.SONG_URL_NOT_VALID, "Audio URL has probably expired...")
-            Else
-                MsgBox("Couldn't open stream: " + Bass.BASS_ErrorGetCode().ToString + vbCr +
+            Dim errCode = Bass.BASS_ErrorGetCode
+            Select Case errCode
+                Case BASSError.BASS_ERROR_FILEOPEN
+                    Throw New PandoraException(ErrorCodeEnum.SONG_URL_NOT_VALID, "Audio URL has probably expired...")
+                Case BASSError.BASS_ERROR_NONET
+                    Throw New PandoraException(ErrorCodeEnum.NO_NET_FOR_BASS, "Bass.Net can't download audio stream...")
+                Case Else
+                    MsgBox("Couldn't open stream: " + errCode.ToString + vbCr +
                        "Try restarting the app...", MsgBoxStyle.Critical)
-            End If
+            End Select
         End If
 
     End Sub
@@ -1021,6 +1031,8 @@ Public Class frmMain
                     MsgBox("No songs were found for this station." + vbCrLf + vbCrLf +
                            "Please try adding a few seeds to this station using Pandora website...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
+                Case ErrorCodeEnum.NO_NET_FOR_BASS
+                    PlayPreviousSong(False)
                 Case Else
                     ReportError(pex, Caller)
                     AfterErrorActions()
@@ -1034,6 +1046,11 @@ Public Class frmMain
     End Sub
 
     Private Sub ReportError(Exception As Exception, Caller As String)
+
+        If Exception.GetType() Is GetType(ObjectDisposedException) Then
+            Exit Sub
+        End If
+
 
         Dim msg As String
 
@@ -1069,7 +1086,7 @@ Public Class frmMain
         btnPlayPause.Enabled = False
         btnDislike.Enabled = False
         btnLike.Enabled = False
-        btnPrev.Enabled = False
+        btnPrev.Enabled = True
         btnNext.Enabled = True
     End Sub
 
