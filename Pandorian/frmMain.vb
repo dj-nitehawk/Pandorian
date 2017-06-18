@@ -283,7 +283,7 @@ Public Class frmMain
             SongCoverImage.ImageLocation = Song.CoverFileName
             RaiseEvent CoverImageUpdated(Song.CoverFileName)
         Else
-            SongCoverImage.ImageLocation = ""
+            SongCoverImage.Image = Nothing
             Dim bgwCoverLoader As New BackgroundWorker
             AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
             tbLog.AppendText("Downloading album cover art..." + vbCrLf)
