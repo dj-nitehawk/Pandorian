@@ -43,7 +43,6 @@ Public Class frmMain
             Pandora.CurrentStation.CurrentSong.DownloadedQuality = Settings.audioQuality
             FS = File.OpenWrite(Pandora.CurrentStation.CurrentSong.AudioFileName)
             prgDownload.Visible = True
-            prgDownload.Value = 0
         End If
 
         If buffer = IntPtr.Zero Then
@@ -516,6 +515,7 @@ Public Class frmMain
             prgDownload.Visible = False
         Else
             tbLog.AppendText("Downloading song from pandora." + vbCrLf)
+            prgDownload.Visible = True
             Stream = Bass.BASS_StreamCreateURL(
                 song.AudioUrlMap(Settings.audioQuality).Url,
                 0,
@@ -718,13 +718,13 @@ Public Class frmMain
     End Sub
 
     Private Sub FileDownloadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs)
-        prgDownload.Visible = False
-        prgDownload.Value = 0
+        prgDownload.Value = 100
         If Not IsNothing(e.Error) Then
             File.Delete(TargetFile)
             MsgBox(e.Error.Message, MsgBoxStyle.Critical)
         End If
     End Sub
+
     Private Sub FileDownloadProgressChanged(sender As Object, e As DownloadProgressChangedEventArgs)
         prgDownload.Value = e.ProgressPercentage
     End Sub
@@ -940,6 +940,7 @@ Public Class frmMain
     Function BASSChannelState() As BASSActive
         Return Bass.BASS_ChannelIsActive(Stream)
     End Function
+
     Private Sub btnPlayPause_Click(sender As Object, e As EventArgs) Handles btnPlayPause.Click
 
         If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
@@ -957,6 +958,7 @@ Public Class frmMain
             btnPlayPause.Text = ":-("
         End If
     End Sub
+
     Sub UpdatePlayPosition()
         Dim pos As Double = (CurrentPositionSecs() / SongDurationSecs() * 100)
         If pos >= 1 And pos <= 100 Then
@@ -1135,6 +1137,7 @@ Public Class frmMain
     Function SongDurationSecs() As Double
         Return Bass.BASS_ChannelBytes2Seconds(Stream, StreamTotalLength())
     End Function
+
     Function CurrentPositionSecs() As Double
         Dim pos As Long = Bass.BASS_ChannelGetPosition(Stream)
         Return Bass.BASS_ChannelBytes2Seconds(Stream, pos)
@@ -1546,11 +1549,6 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub prgBar_Click(sender As Object, e As EventArgs) Handles prgBar.Click
-        volSlider.Visible = True
-        VolLastChangedOn = Now
-    End Sub
-
     Private Sub volSlider_ValueChanged(sender As Object, e As EventArgs) Handles volSlider.ValueChanged
         If volSlider.Value >= 0 <= 100 Then
             If BASSReady Then
@@ -1616,4 +1614,19 @@ Public Class frmMain
         Return (pt.X >= 0 AndAlso pt.Y >= 0 AndAlso pt.X <= control.Width AndAlso pt.Y <= control.Height)
     End Function
 
+    Private Sub prgBar_MouseClick(sender As Object, e As MouseEventArgs) Handles prgBar.MouseClick
+        If (e.Button = MouseButtons.Right) Then
+            volSlider.Visible = True
+            VolLastChangedOn = Now
+            Exit Sub
+        End If
+
+        Dim absoluteMouse As Single = (PointToClient(MousePosition).X - prgBar.Bounds.X)
+        Dim calcFactor As Single = prgBar.Width / CSng(100)
+        Dim relativeMouse As Single = absoluteMouse / calcFactor
+        prgBar.Value = Convert.ToInt32(relativeMouse)
+        Bass.BASS_ChannelSetPosition(Stream,
+                                         Bass.BASS_ChannelSeconds2Bytes(Stream, prgBar.Value / 100 * SongDurationSecs()),
+                                         BASSMode.BASS_POS_BYTES)
+    End Sub
 End Class
