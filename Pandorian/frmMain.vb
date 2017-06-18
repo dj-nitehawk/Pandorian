@@ -42,7 +42,6 @@ Public Class frmMain
             Pandora.CurrentStation.CurrentSong.FinishedDownloading = False
             Pandora.CurrentStation.CurrentSong.DownloadedQuality = Settings.audioQuality
             FS = File.OpenWrite(Pandora.CurrentStation.CurrentSong.AudioFileName)
-            prgDownload.Visible = True
         End If
 
         If buffer = IntPtr.Zero Then
@@ -67,17 +66,14 @@ Public Class frmMain
         Return Bass.BASS_ChannelGetLength(Stream)
     End Function
 
-    Private Function StreamLength() As Long
-        Return Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
-    End Function
-
     Private Function StreamDownloadedLength() As Long
         Return Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_DOWNLOAD)
     End Function
 
     Private Sub UpdateDownloadProgress()
-        If prgDownload.Visible Then
-            prgDownload.Value = StreamDownloadedLength() * 100 / StreamLength()
+        Dim len = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
+        If len > 0 Then
+            prgDownload.Value = StreamDownloadedLength() * 100 / len
             If prgDownload.Value = 100 Then
                 prgDownload.Visible = False
             End If
@@ -515,6 +511,7 @@ Public Class frmMain
             prgDownload.Visible = False
         Else
             tbLog.AppendText("Downloading song from pandora." + vbCrLf)
+            prgDownload.Value = 0
             prgDownload.Visible = True
             Stream = Bass.BASS_StreamCreateURL(
                 song.AudioUrlMap(Settings.audioQuality).Url,
