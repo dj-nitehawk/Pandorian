@@ -605,6 +605,7 @@ Public Class frmMain
             Settings.noLiked = 0
             Settings.noProxy = 0
             Settings.noQmix = 0
+            Settings.enableBPMCounter = 0
             Settings.pandoraOne = 0
             Settings.pandoraPassword = ""
             Settings.pandoraUsername = ""
@@ -1586,14 +1587,16 @@ Public Class frmMain
     End Sub
 
     Private Sub SongCoverImage_Click(sender As Object, e As EventArgs) Handles SongCoverImage.Click
-        If lblBPM.Visible Then
-            lblBPM.Visible = False
-            bpmTimer.Stop()
-            BPMCounter.Reset(44100)
-            lblBPM.Text = "000"
-        Else
-            lblBPM.Visible = True
-            bpmTimer.Start()
+        If Settings.enableBPMCounter Then
+            If lblBPM.Visible Then
+                lblBPM.Visible = False
+                bpmTimer.Stop()
+                BPMCounter.Reset(44100)
+                lblBPM.Text = "000"
+            Else
+                lblBPM.Visible = True
+                bpmTimer.Start()
+            End If
         End If
     End Sub
 

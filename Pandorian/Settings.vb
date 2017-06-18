@@ -11,6 +11,7 @@ Public Class Settings
     Shared Property noProxy As Boolean
     Shared Property noQmix As Boolean
     Shared Property pandoraOne As Boolean
+    Shared Property enableBPMCounter As Boolean
     Shared Property pandoraPassword As String
     Shared Property pandoraUsername As String
     Shared Property proxyAddress As String
