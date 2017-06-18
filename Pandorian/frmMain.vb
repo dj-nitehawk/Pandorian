@@ -72,11 +72,14 @@ Public Class frmMain
 
     Private Sub UpdateDownloadProgress()
         Dim len = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
-        If len > 0 Then
-            prgDownload.Value = StreamDownloadedLength() * 100 / len
-            If prgDownload.Value = 100 Then
-                prgDownload.Visible = False
-            End If
+        Dim prg = StreamDownloadedLength() * 100 / len
+        If prg > 0 Then
+            prgDownload.Value = prg
+        End If
+        If prgDownload.Value = 100 Then
+            prgDownload.Visible = False
+        Else
+            prgDownload.Visible = True
         End If
     End Sub
 
@@ -508,11 +511,9 @@ Public Class frmMain
             tbLog.AppendText("Loaded song from local cache." + vbCrLf)
             Stream = Bass.BASS_StreamCreateFile(song.AudioFileName, 0, 0, BASSFlag.BASS_STREAM_AUTOFREE)
             prgDownload.Value = 100
-            prgDownload.Visible = False
         Else
             tbLog.AppendText("Downloading song from pandora." + vbCrLf)
             prgDownload.Value = 0
-            prgDownload.Visible = True
             Stream = Bass.BASS_StreamCreateURL(
                 song.AudioUrlMap(Settings.audioQuality).Url,
                 0,
@@ -696,7 +697,7 @@ Public Class frmMain
                         End If
                         Downloader.DownloadFileAsync(
                                 New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargetFile)
-                        prgDownload.Visible = True
+                        'prgDownload.Visible = True
                     Else
                         If Not prgDownload.Value = 100 Then
                             Exit Sub
