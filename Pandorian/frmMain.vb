@@ -549,7 +549,7 @@ Public Class frmMain
             Select Case errCode
                 Case BASSError.BASS_ERROR_FILEOPEN
                     Throw New PandoraException(ErrorCodeEnum.SONG_URL_NOT_VALID, "Audio URL has probably expired...")
-                Case BASSError.BASS_ERROR_NONET
+                Case BASSError.BASS_ERROR_NONET, BASSError.BASS_ERROR_TIMEOUT
                     Throw New PandoraException(ErrorCodeEnum.NO_NET_FOR_BASS, "Bass.Net can't download audio stream...")
                 Case Else
                     MsgBox("Couldn't open stream: " + errCode.ToString + vbCr +
