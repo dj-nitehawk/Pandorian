@@ -18,6 +18,7 @@ Public Class frmMain
     Dim Sync As SYNCPROC = New SYNCPROC(AddressOf SongEnded)
     Dim DSP As Misc.DSP_Gain = New Misc.DSP_Gain()
     Dim Downloader As WebClient
+    Dim PendingExport As Boolean
     Dim TargetFile As String
     Dim IsActiveForm As Boolean
     Dim SleepAt As Date
@@ -71,15 +72,21 @@ Public Class frmMain
     End Function
 
     Private Sub UpdateDownloadProgress()
-        Dim len = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
-        Dim prg = StreamDownloadedLength() * 100 / len
-        If prg > 0 Then
-            prgDownload.Value = prg
-        End If
-        If prgDownload.Value = 100 Then
-            prgDownload.Visible = False
-        Else
-            prgDownload.Visible = True
+        If Not PendingExport Then
+            Dim len = Bass.BASS_StreamGetFilePosition(Stream, BASSStreamFilePosition.BASS_FILEPOS_END)
+            Dim prg = StreamDownloadedLength() * 100 / len
+            If prg > 0 Then
+                prgDownload.Value = prg
+            End If
+            If prgDownload.Value = 100 Then
+                If prgDownload.Visible Then
+                    prgDownload.Visible = False
+                End If
+            Else
+                If Not prgDownload.Visible Then
+                    prgDownload.Visible = True
+                End If
+            End If
         End If
     End Sub
 
@@ -282,6 +289,8 @@ Public Class frmMain
             RaiseEvent CoverImageUpdated(Song.CoverFileName)
         Else
             SongCoverImage.Image = Nothing
+            SongCoverImage.Refresh()
+            Application.DoEvents()
             Dim bgwCoverLoader As New BackgroundWorker
             AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
             tbLog.AppendText("Downloading album cover art..." + vbCrLf)
@@ -695,9 +704,11 @@ Public Class frmMain
                         If Not noProxy Then
                             Downloader.Proxy = Me.Proxy
                         End If
+                        prgDownload.Value = 0
+                        prgDownload.Visible = True
+                        PendingExport = True
                         Downloader.DownloadFileAsync(
                                 New Uri(Pandora.CurrentStation.CurrentSong.AudioUrlMap("highQuality").Url), TargetFile)
-                        'prgDownload.Visible = True
                     Else
                         If Not prgDownload.Value = 100 Then
                             Exit Sub
@@ -716,10 +727,14 @@ Public Class frmMain
     End Sub
 
     Private Sub FileDownloadCompleted(sender As Object, e As System.ComponentModel.AsyncCompletedEventArgs)
+        PendingExport = False
         prgDownload.Value = 100
+        prgDownload.Visible = False
         If Not IsNothing(e.Error) Then
             File.Delete(TargetFile)
             MsgBox(e.Error.Message, MsgBoxStyle.Critical)
+        Else
+            MsgBox("Mp3 File Exported!", MsgBoxStyle.Information)
         End If
     End Sub
 
