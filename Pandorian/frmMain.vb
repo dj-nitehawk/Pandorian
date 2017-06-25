@@ -283,20 +283,9 @@ Public Class frmMain
 
         Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
 
-        If File.Exists(Song.CoverFileName) Then
-            tbLog.AppendText("Loading album cover from cache..." + vbCrLf)
-            SongCoverImage.ImageLocation = Song.CoverFileName
-            RaiseEvent CoverImageUpdated(Song.CoverFileName)
-        Else
-            Dim bgwCoverLoader As New BackgroundWorker
-            AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
-            tbLog.AppendText("Downloading album cover art..." + vbCrLf)
-            If String.IsNullOrEmpty(Song.AlbumArtLargeURL) Then
-                bgwCoverLoader.RunWorkerAsync(Nothing)
-            Else
-                bgwCoverLoader.RunWorkerAsync(Song.AlbumArtLargeURL)
-            End If
-        End If
+        Dim bgwCoverLoader As New BackgroundWorker
+        AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
+        bgwCoverLoader.RunWorkerAsync()
 
         PlayCurrentSongWithBASS()
         ddStations.Enabled = True
@@ -1181,27 +1170,45 @@ Public Class frmMain
 
     Private Sub DownloadCoverImage(sender As Object, e As DoWorkEventArgs)
 
-        Dim coverFile = Pandora.CurrentStation.CurrentSong.CoverFileName
+        Dim song = Pandora.CurrentStation.CurrentSong
 
-        If IsNothing(e.Argument) Then
-            My.Resources.logo.Save(coverFile)
+        If File.Exists(song.CoverFileName) Then
+            tbLog.AppendText("Loading album cover from cache..." + vbCrLf)
+            SongCoverImage.ImageLocation = song.CoverFileName
         Else
-            Dim web As New WebClient()
-            Dim noProxy As Boolean = Settings.noProxy
-            If Not noProxy Then
-                web.Proxy = Me.Proxy
+            tbLog.AppendText("Downloading album cover art..." + vbCrLf)
+            DownloadImage(song.AlbumArtLargeURL, song.CoverFileName)
+            SongCoverImage.ImageLocation = song.CoverFileName
+        End If
+        RaiseEvent CoverImageUpdated(song.CoverFileName)
+
+        If Not IsNothing(song.NextSong) Then
+            If Not File.Exists(song.NextSong.CoverFileName) Then
+                tbLog.AppendText("Pre-fetching next song's album cover art..." + vbCrLf)
+                DownloadImage(song.NextSong.AlbumArtLargeURL, song.NextSong.CoverFileName)
             End If
-            Try
-                Using strm As New MemoryStream(web.DownloadData(e.Argument.ToString))
-                    Image.FromStream(strm).Save(coverFile)
-                End Using
-            Catch ex As Exception
-                My.Resources.logo.Save(coverFile)
-            End Try
+        End If
+    End Sub
+
+    Private Sub DownloadImage(ImageURL As String, FileName As String)
+
+        If String.IsNullOrEmpty(ImageURL) Then
+            My.Resources.logo.Save(FileName)
+            Exit Sub
         End If
 
-        SongCoverImage.ImageLocation = coverFile
-        RaiseEvent CoverImageUpdated(coverFile)
+        Dim web As New WebClient()
+        Dim noProxy As Boolean = Settings.noProxy
+        If Not noProxy Then
+            web.Proxy = Me.Proxy
+        End If
+        Try
+            Using strm As New MemoryStream(web.DownloadData(ImageURL))
+                Image.FromStream(strm).Save(FileName)
+            End Using
+        Catch ex As Exception
+            My.Resources.logo.Save(FileName)
+        End Try
     End Sub
 
     Sub LogAppStartEvent()
