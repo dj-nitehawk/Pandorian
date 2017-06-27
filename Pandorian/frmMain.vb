@@ -283,6 +283,7 @@ Public Class frmMain
 
         Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
 
+        SongCoverImage.Visible = False
         Dim bgwCoverLoader As New BackgroundWorker
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
         bgwCoverLoader.RunWorkerAsync()
@@ -1095,6 +1096,7 @@ Public Class frmMain
         btnLike.Enabled = False
         btnPrev.Enabled = True
         btnNext.Enabled = True
+        SongCoverImage.Visible = True
     End Sub
 
     Private Sub ReLoginToPandora()
@@ -1185,6 +1187,7 @@ Public Class frmMain
             DownloadImage(song.AlbumArtLargeURL, song.CoverFileName)
             SongCoverImage.ImageLocation = song.CoverFileName
         End If
+        SongCoverImage.Visible = True
         RaiseEvent CoverImageUpdated(song.CoverFileName)
 
         If Not IsNothing(song.NextSong) Then
