@@ -96,7 +96,7 @@ Namespace Data
             End If
 
             For Each s As PandoraSong In newSongs
-                If s.Token Is Nothing Then
+                If String.IsNullOrEmpty(s.Token) Then
                     Continue For
                 End If
                 CheckForStationTags(s)
@@ -104,6 +104,7 @@ Namespace Data
                     PlayList.LastAddedSong.NextSong = s
                 End If
                 s.PreviousSong = PlayList.LastAddedSong
+                s.FetchedAt = Now
                 PlayList.Add(s)
             Next
         End Sub
@@ -143,6 +144,17 @@ Namespace Data
 
             MyBase.Enqueue(song)
             LastAddedSong = song
+        End Sub
+
+        Public Sub RemoveExpiredSongs()
+            Dim songs = MyBase.ToArray
+            MyBase.Clear()
+            For Each s As PandoraSong In songs
+                If s.IsStillValid Then
+                    MyBase.Enqueue(s)
+                End If
+            Next
+            songs = Nothing
         End Sub
     End Class
 End Namespace

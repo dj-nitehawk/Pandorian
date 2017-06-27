@@ -395,11 +395,16 @@ Public Class frmMain
             If IsNothing(Pandora.CurrentStation.CurrentSong) Then
                 Throw New Exception("no next song")
             End If
+            If Not Pandora.CurrentStation.CurrentSong.IsStillValid Then
+                Pandora.CurrentStation.PlayList.RemoveExpiredSongs()
+                tbLog.AppendText("Playlist expired. Fetching new songs..." + vbCrLf)
+                Throw New Exception("no valid next songs")
+            End If
         Catch ex As Exception
             If Pandora.OkToFetchSongs Then
                 Try
                     Pandora.CurrentStation.FetchSongs()
-                    tbLog.AppendText(">>>GOT NEW SONGS FROM PANDORA<<<" + vbCrLf)
+                    tbLog.AppendText(">>>GOT 4 NEW SONGS FROM PANDORA<<<" + vbCrLf)
                 Catch x As PandoraException
                     If x.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
                         Bass.BASS_ChannelSetPosition(Stream, 0)
