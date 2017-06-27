@@ -331,7 +331,7 @@ Namespace Data
                 Return True
             End If
 
-            If Now.Subtract(FetchedAt).Seconds <= 3600 Then
+            If Now.Subtract(FetchedAt).TotalSeconds <= 3600 Then
                 Return True
             End If
 
