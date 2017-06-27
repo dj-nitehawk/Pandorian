@@ -326,7 +326,16 @@ Namespace Data
         Public Property FetchedAt As DateTime
 
         Public Function IsStillValid() As Boolean
-            Return Now.Subtract(FetchedAt).Seconds <= 3600 Or FinishedDownloading = True
+
+            If FinishedDownloading Then
+                Return True
+            End If
+
+            If Now.Subtract(FetchedAt).Seconds <= 3600 Then
+                Return True
+            End If
+
+            Return False
         End Function
 
     End Class
