@@ -370,9 +370,9 @@ Public Class frmMain
         End If
 
         If Not IsNothing(Pandora.CurrentStation.CurrentSong.PreviousSong) Then
+            prgBar.Value = 0
             Spinner.Visible = True
             Application.DoEvents()
-            prgBar.Value = 0
             ResumePlaying = True
             Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.PreviousSong
             Execute(Sub() PlayCurrentSong(), "PlayPreviousSong") 'don't ever change this string [handling-of-expired-url]
@@ -386,9 +386,9 @@ Public Class frmMain
 
     Sub PlayNextSong()
 
+        prgBar.Value = 0
         Spinner.Visible = True
         Application.DoEvents()
-        prgBar.Value = 0
         ResumePlaying = True
 
         Try
