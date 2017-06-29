@@ -919,7 +919,7 @@ Public Class frmMain
 
                 Pandora.SkipLimitReached = False
 
-                If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+                If IsNothing(Pandora.CurrentStation.CurrentSong) Then '[after-session-exp]
                     Execute(Sub() PlayNextSong(), "RunNow.PlayNextSong")
                 Else
                     Execute(Sub() PlayCurrentSong(), "RunNow.PlayCurrentSong")
@@ -1008,9 +1008,9 @@ Public Class frmMain
     End Sub
 
     Private Sub DebugExpireSessionNow()
-        Pandora.CurrentStation.CurrentSong.NextSong.FetchedAt = DateAdd(DateInterval.Minute, -65, Now)
-        'Pandora.Session.DebugCorruptAuthToken()
-        'Pandora.Session.User.DebugCorruptAuthToken()
+        'Pandora.CurrentStation.CurrentSong.NextSong.FetchedAt = DateAdd(DateInterval.Minute, -65, Now)
+        Pandora.Session.DebugCorruptAuthToken()
+        Pandora.Session.User.DebugCorruptAuthToken()
         'Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(Settings.audioQuality)
         'For Each s In Pandora.CurrentStation.PlayList
         '    s.DebugCorruptAudioUrl(Settings.audioQuality)
@@ -1033,6 +1033,7 @@ Public Class frmMain
                 Case ErrorCodeEnum.AUTH_INVALID_TOKEN
                     Try
                         tbLog.AppendText("Session expired. Loggin in again..." + vbCrLf)
+                        Pandora.CurrentStation.CurrentSong = Nothing 'don't ever change this line [after-session-exp]
                         ReLoginToPandora()
                     Catch ex As Exception
                         MsgBox("Pandora session has expired." + vbCrLf + vbCrLf +
