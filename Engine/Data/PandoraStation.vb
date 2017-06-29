@@ -141,6 +141,7 @@ Namespace Data
                 Dim s As PandoraSong = Dequeue()
                 s.NextSong.PreviousSong = Nothing
                 IO.File.Delete(s.AudioFileName)
+                IO.File.Delete(s.CoverFileName)
             End While
 
             MyBase.Enqueue(song)
