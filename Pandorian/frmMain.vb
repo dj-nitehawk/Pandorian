@@ -392,14 +392,15 @@ Public Class frmMain
         ResumePlaying = True
 
         Try
-            Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.NextSong
-            If IsNothing(Pandora.CurrentStation.CurrentSong) Then
+            If IsNothing(Pandora.CurrentStation.CurrentSong.NextSong) Then
                 Throw New Exception("no next song")
             End If
-            If Not Pandora.CurrentStation.CurrentSong.IsStillValid Then
+            If Not Pandora.CurrentStation.CurrentSong.NextSong.IsStillValid Then
                 Pandora.CurrentStation.PlayList.RemoveExpiredSongs()
                 tbLog.AppendText("Playlist expired. Fetching new songs..." + vbCrLf)
                 Throw New Exception("no valid next songs")
+            Else
+                Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.CurrentSong.NextSong
             End If
         Catch ex As Exception
             If Pandora.OkToFetchSongs Then
@@ -422,7 +423,6 @@ Public Class frmMain
                     End If
                     Throw x
                 End Try
-                Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.PlayList.ToArray(Pandora.CurrentStation.PlayList.Count - 4)
             Else
                 tbLog.AppendText("Waiting few mins before fetching new songs..." + vbCrLf)
                 Bass.BASS_ChannelSetPosition(Stream, 0)
@@ -524,7 +524,7 @@ Public Class frmMain
         End If
 
         If Not Stream = 0 Then
-            tbLog.AppendText("Playing the song now..." + vbCrLf)
+            tbLog.AppendText("Playing: " + song.Title + vbCrLf)
             Bass.BASS_ChannelSetSync(Stream, BASSSync.BASS_SYNC_END, 0, Sync, IntPtr.Zero)
             Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, volSlider.Value / 100)
 
@@ -1008,12 +1008,12 @@ Public Class frmMain
     End Sub
 
     Private Sub DebugExpireSessionNow()
-        Pandora.Session.DebugCorruptAuthToken()
-        Pandora.Session.User.DebugCorruptAuthToken()
-        'Dim quality = Settings.audioQuality
-        'Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(quality)
+        Pandora.CurrentStation.CurrentSong.NextSong.FetchedAt = DateAdd(DateInterval.Minute, -65, Now)
+        'Pandora.Session.DebugCorruptAuthToken()
+        'Pandora.Session.User.DebugCorruptAuthToken()
+        'Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(Settings.audioQuality)
         'For Each s In Pandora.CurrentStation.PlayList
-        '    s.DebugCorruptAudioUrl(quality)
+        '    s.DebugCorruptAudioUrl(Settings.audioQuality)
         'Next
     End Sub
 

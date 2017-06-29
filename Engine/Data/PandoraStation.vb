@@ -107,6 +107,7 @@ Namespace Data
                 s.FetchedAt = Now
                 PlayList.Add(s)
             Next
+            CurrentSong = PlayList.ToArray(PlayList.Count - newSongs.Count)
         End Sub
 
         Private Sub CheckForStationTags(song As PandoraSong)
@@ -149,12 +150,19 @@ Namespace Data
         Public Sub RemoveExpiredSongs()
             Dim songs = MyBase.ToArray
             MyBase.Clear()
+            LastAddedSong = Nothing
             For Each s As PandoraSong In songs
                 If s.IsStillValid Then
+                    s.PreviousSong = LastAddedSong
+                    If Not IsNothing(s.PreviousSong) Then
+                        s.PreviousSong.NextSong = s
+                    End If
                     MyBase.Enqueue(s)
+                    LastAddedSong = s
                 End If
             Next
             songs = Nothing
+
         End Sub
     End Class
 End Namespace
