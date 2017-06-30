@@ -32,14 +32,14 @@ Partial Class frmBrowser
         Me.wBrowser.Location = New System.Drawing.Point(0, 0)
         Me.wBrowser.MinimumSize = New System.Drawing.Size(20, 20)
         Me.wBrowser.Name = "wBrowser"
-        Me.wBrowser.Size = New System.Drawing.Size(884, 661)
+        Me.wBrowser.Size = New System.Drawing.Size(1064, 641)
         Me.wBrowser.TabIndex = 0
         '
         'frmBrowser
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(884, 661)
+        Me.ClientSize = New System.Drawing.Size(1064, 641)
         Me.Controls.Add(Me.wBrowser)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False

@@ -3,6 +3,7 @@
 Public Class frmBrowser
 
     Private Sub frmBrowser_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
+        frmMain.btnPlayPause_Click(Nothing, Nothing)
         frmMain.Show()
         wBrowser = Nothing
         GC.Collect()

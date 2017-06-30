@@ -967,7 +967,7 @@ Public Class frmMain
         Return Bass.BASS_ChannelIsActive(Stream)
     End Function
 
-    Private Sub btnPlayPause_Click(sender As Object, e As EventArgs) Handles btnPlayPause.Click
+    Public Sub btnPlayPause_Click(sender As Object, e As EventArgs) Handles btnPlayPause.Click
 
         If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
             Bass.BASS_ChannelPause(Stream)
@@ -1253,6 +1253,7 @@ Public Class frmMain
         Me.Hide()
         frmSettings.Show()
     End Sub
+
     Private Sub miManageStation_Click(sender As Object, e As EventArgs) Handles miManageStation.Click
         btnPlayPause_Click(Nothing, Nothing)
         Me.Hide()
