@@ -107,6 +107,7 @@ Partial Class frmMain
         Me.btnDislike = New System.Windows.Forms.Button()
         Me.btnLike = New System.Windows.Forms.Button()
         Me.SongCoverImage = New System.Windows.Forms.PictureBox()
+        Me.btnCancelHotKeys = New System.Windows.Forms.Button()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
         Me.TrayMenu.SuspendLayout()
@@ -434,6 +435,7 @@ Partial Class frmMain
         'pnlHotKeys
         '
         Me.pnlHotKeys.BackColor = System.Drawing.Color.SlateGray
+        Me.pnlHotKeys.Controls.Add(Me.btnCancelHotKeys)
         Me.pnlHotKeys.Controls.Add(Me.tbHKVolUp)
         Me.pnlHotKeys.Controls.Add(Me.tbHKVolDown)
         Me.pnlHotKeys.Controls.Add(Me.Label13)
@@ -575,7 +577,7 @@ Partial Class frmMain
         '
         Me.btnSaveHotkeys.BackColor = System.Drawing.SystemColors.Control
         Me.btnSaveHotkeys.ForeColor = System.Drawing.Color.Black
-        Me.btnSaveHotkeys.Location = New System.Drawing.Point(113, 269)
+        Me.btnSaveHotkeys.Location = New System.Drawing.Point(76, 269)
         Me.btnSaveHotkeys.Name = "btnSaveHotkeys"
         Me.btnSaveHotkeys.Size = New System.Drawing.Size(75, 23)
         Me.btnSaveHotkeys.TabIndex = 18
@@ -847,6 +849,17 @@ Partial Class frmMain
         Me.SongCoverImage.TabIndex = 2
         Me.SongCoverImage.TabStop = False
         '
+        'btnCancelHotKeys
+        '
+        Me.btnCancelHotKeys.BackColor = System.Drawing.SystemColors.Control
+        Me.btnCancelHotKeys.ForeColor = System.Drawing.Color.Black
+        Me.btnCancelHotKeys.Location = New System.Drawing.Point(157, 269)
+        Me.btnCancelHotKeys.Name = "btnCancelHotKeys"
+        Me.btnCancelHotKeys.Size = New System.Drawing.Size(75, 23)
+        Me.btnCancelHotKeys.TabIndex = 32
+        Me.btnCancelHotKeys.Text = "Cancel"
+        Me.btnCancelHotKeys.UseVisualStyleBackColor = False
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -977,4 +990,5 @@ Partial Class frmMain
     Friend WithEvents bpmTimer As System.Windows.Forms.Timer
     Friend WithEvents lblBPM As System.Windows.Forms.Label
     Friend WithEvents btnPrev As Button
+    Friend WithEvents btnCancelHotKeys As Button
 End Class

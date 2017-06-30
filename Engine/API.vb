@@ -80,7 +80,23 @@ Public Class API
         If Session.User IsNot Nothing Then
             If Session.User.CanListen Then
 
+                Dim OldStations As PandoraStation()
+                If Not IsNothing(AvailableStations) Then
+                    OldStations = AvailableStations.ToArray()
+                Else
+                    OldStations = New PandoraStation() {}
+                End If
+
                 AvailableStations = pandoraIO.GetStations()
+
+                For Each stn As PandoraStation In OldStations
+                    Dim s = AvailableStations.Find(Function(x) x.Id = stn.Id)
+                    If Not IsNothing(s) Then
+                        s.CurrentSong = stn.CurrentSong
+                        s.PlayList = stn.PlayList
+                    End If
+                Next
+
                 Dim qMixStation As New PandoraStation
                 For Each s As PandoraStation In AvailableStations
                     If s.IsQuickMix Then

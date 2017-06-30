@@ -322,5 +322,21 @@ Namespace Data
 
         Public Property DownloadedQuality As String
         Public Property FinishedDownloading As Boolean = False
+
+        Public Property FetchedAt As DateTime
+
+        Public Function IsStillValid() As Boolean
+
+            If FinishedDownloading Then
+                Return True
+            End If
+
+            If Now.Subtract(FetchedAt).TotalSeconds <= 3600 Then
+                Return True
+            End If
+
+            Return False
+        End Function
+
     End Class
 End Namespace
