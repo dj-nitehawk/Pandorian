@@ -91,14 +91,17 @@ Namespace Data
             Dim newSongs As New List(Of PandoraSong)()
             newSongs = PandoraIO.GetSongs(Me.m_Token)
 
+            For Each s As PandoraSong In newSongs.ToArray
+                If String.IsNullOrEmpty(s.Token) Then
+                    newSongs.Remove(s)
+                End If
+            Next
+
             If newSongs.Count = 0 Then
                 Throw New PandoraException(ErrorCodeEnum.PLAYLIST_EMPTY_FOR_STATION, "Pandora didn't return any songs for this station.")
             End If
 
             For Each s As PandoraSong In newSongs
-                If String.IsNullOrEmpty(s.Token) Then
-                    Continue For
-                End If
                 CheckForStationTags(s)
                 If Not IsNothing(PlayList.LastAddedSong) Then
                     PlayList.LastAddedSong.NextSong = s
