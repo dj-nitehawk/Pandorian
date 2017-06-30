@@ -29,7 +29,7 @@ Public Class frmMain
     Dim BPMCounter As New Misc.BPMCounter(20, 44100)
     Dim SongInfo As New frmSongInfo()
     Dim HideSongInfo As Boolean = False
-    Dim APIFile As String = Path.GetTempPath + "pandorian.v3.api"
+    Dim APIFile As String = Path.GetTempPath + "pandorian.v." + Application.ProductVersion
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(FileName As String)
