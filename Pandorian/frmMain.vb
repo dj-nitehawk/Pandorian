@@ -213,6 +213,7 @@ Public Class frmMain
         Hotkeys.registerHotkey(Me, 10, Settings.hkVolDown, Settings.hkModifier) 'vol down
         Hotkeys.registerHotkey(Me, 11, Settings.hkVolUp, Settings.hkModifier) 'vol up
     End Sub
+
     Private Sub unRegisterHotkeys()
         Dim i As Integer = 1
         Do While i <= 11
@@ -1586,10 +1587,10 @@ Public Class frmMain
         Settings.hkVolUp = tbHKVolUp.Tag
         Settings.SaveToRegistry()
 
+        unRegisterHotkeys()
+        registerHotkeys()
 
         pnlHotKeys.Visible = False
-
-        MsgBox("HotKeys saved. Restart app to use new configuration.", MsgBoxStyle.Information)
 
 
     End Sub
@@ -1673,5 +1674,11 @@ Public Class frmMain
         Bass.BASS_ChannelSetPosition(Stream,
                                          Bass.BASS_ChannelSeconds2Bytes(Stream, prgBar.Value / 100 * SongDurationSecs()),
                                          BASSMode.BASS_POS_BYTES)
+    End Sub
+
+    Private Sub btnCancelHotKeys_Click(sender As Object, e As EventArgs) Handles btnCancelHotKeys.Click
+        unRegisterHotkeys()
+        registerHotkeys()
+        pnlHotKeys.Visible = False
     End Sub
 End Class
