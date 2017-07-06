@@ -1069,7 +1069,13 @@ Public Class frmMain
         End If
         If Not File.Exists(nextSong.AudioFileName) Then
             tbLog.AppendText(">> Prefetching next song..." + vbCrLf)
-            AddHandler fetcherWebClient.DownloadFileCompleted, Sub()
+            AddHandler fetcherWebClient.DownloadFileCompleted, Sub(s As Object, ev As AsyncCompletedEventArgs)
+                                                                   If Not IsNothing(ev.Error) Then
+                                                                       File.Delete(nextSong.AudioFileName)
+                                                                       tbLog.AppendText(">> Prefetching song failed!" + vbCrLf)
+                                                                       Exit Sub
+                                                                   End If
+
                                                                    If Not IsNothing(Pandora.CurrentStation.CurrentSong.NextSong) Then
                                                                        If Not Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading Then
                                                                            Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
@@ -1092,9 +1098,9 @@ Public Class frmMain
 
     Private Sub DebugExpireSessionNow()
         'Pandora.CurrentStation.CurrentSong.NextSong.FetchedAt = DateAdd(DateInterval.Minute, -65, Now)
-        Pandora.Session.DebugCorruptAuthToken()
-        Pandora.Session.User.DebugCorruptAuthToken()
-        'Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(Settings.audioQuality)
+        'Pandora.Session.DebugCorruptAuthToken()
+        'Pandora.Session.User.DebugCorruptAuthToken()
+        'Pandora.CurrentStation.CurrentSong.NextSong.DebugCorruptAudioUrl(Settings.audioQuality)
         'For Each s In Pandora.CurrentStation.PlayList
         '    s.DebugCorruptAudioUrl(Settings.audioQuality)
         'Next
