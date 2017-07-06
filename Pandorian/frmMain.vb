@@ -408,8 +408,8 @@ Public Class frmMain
             If Pandora.OkToFetchSongs Then
                 Try
                     Pandora.CurrentStation.FetchSongs()
-                    Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.PlayList.ToArray(Pandora.CurrentStation.PlayList.Count - 4)
-                    tbLog.AppendText(">>>GOT 4 NEW SONGS FROM PANDORA<<<" + vbCrLf)
+                    Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.PlayList.ToArray(Pandora.CurrentStation.PlayList.Count - Pandora.CurrentStation.FetchedCount)
+                    tbLog.AppendText(">>>GOT " + Pandora.CurrentStation.FetchedCount.ToString + " NEW SONGS FROM PANDORA<<<" + vbCrLf)
                 Catch x As PandoraException
                     If x.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
                         Bass.BASS_ChannelSetPosition(Stream, 0)
@@ -1052,6 +1052,7 @@ Public Class frmMain
             Try
                 tbLog.AppendText(">> Prefetching playlist..." + vbCrLf)
                 Pandora.CurrentStation.FetchSongs()
+                tbLog.AppendText(">>>GOT " + Pandora.CurrentStation.FetchedCount.ToString + " NEW SONGS FROM PANDORA<<<" + vbCrLf)
                 fetchInitiated = False
             Catch ex As Exception
                 tbLog.AppendText(">> Prefetch error: " + ex.Message + vbCrLf)

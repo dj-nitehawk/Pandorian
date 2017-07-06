@@ -87,6 +87,8 @@ Namespace Data
 
         Public Property PlayList As New LimitedSizePlaylist(12)
 
+        Public Property FetchedCount As Integer
+
         Public Sub FetchSongs()
             Dim newSongs As New List(Of PandoraSong)()
             newSongs = PandoraIO.GetSongs(Me.m_Token)
@@ -110,7 +112,7 @@ Namespace Data
                 s.FetchedAt = Now
                 PlayList.Add(s)
             Next
-            'CurrentSong = PlayList.ToArray(PlayList.Count - newSongs.Count)
+            FetchedCount = newSongs.Count
         End Sub
 
         Private Sub CheckForStationTags(song As PandoraSong)
