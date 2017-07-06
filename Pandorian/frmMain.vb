@@ -510,14 +510,10 @@ Public Class frmMain
 
         Dim song = Pandora.CurrentStation.CurrentSong
 
-        If File.Exists(song.AudioFileName) And song.FinishedDownloading = False Then
-            Dim sw = New Stopwatch()
-            sw.Start()
-            Do Until song.FinishedDownloading Or sw.Elapsed.Seconds >= 3
-                Threading.Thread.Sleep(1000)
-            Loop
-            sw.Stop()
-            sw = Nothing
+        If File.Exists(song.AudioFileName) And song.FinishedDownloading = False And fetcherWebClient.IsBusy Then
+            fetcherWebClient.CancelAsync()
+            File.Delete(song.AudioFileName)
+            tbLog.AppendText(">> Cancelling prefetching of song due to taking too long..." + vbCrLf)
         End If
 
         If File.Exists(song.AudioFileName) And song.FinishedDownloading Then
@@ -1055,20 +1051,18 @@ Public Class frmMain
         End If
     End Sub
 
+    Dim fetcherWebClient As WebClient = New WebClient()
     Private Sub SongPreFetcher(sender As Object, e As DoWorkEventArgs)
         Dim nextSong = Pandora.CurrentStation.CurrentSong.NextSong
-        Dim client = New WebClient
         If Not Settings.noProxy Then
-            client.Proxy = Me.Proxy
+            fetcherWebClient.Proxy = Me.Proxy
         End If
         If Not File.Exists(nextSong.AudioFileName) Then
             tbLog.AppendText(">> Prefetching next song..." + vbCrLf)
-            Try
-                client.DownloadFile(New Uri(nextSong.AudioUrlMap(Settings.audioQuality).Url), nextSong.AudioFileName)
-                Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
-            Catch ex As Exception
-                tbLog.AppendText(">> Prefetch error: " + ex.Message + vbCrLf)
-            End Try
+            AddHandler fetcherWebClient.DownloadFileCompleted, Sub()
+                                                                   Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
+                                                               End Sub
+            fetcherWebClient.DownloadFileAsync(New Uri(nextSong.AudioUrlMap(Settings.audioQuality).Url), nextSong.AudioFileName)
         End If
         If Not File.Exists(nextSong.CoverFileName) Then
             tbLog.AppendText(">> Prefetching next cover art..." + vbCrLf)
