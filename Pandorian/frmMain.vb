@@ -408,6 +408,7 @@ Public Class frmMain
             If Pandora.OkToFetchSongs Then
                 Try
                     Pandora.CurrentStation.FetchSongs()
+                    Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.PlayList.ToArray(Pandora.CurrentStation.PlayList.Count - 4)
                     tbLog.AppendText(">>>GOT 4 NEW SONGS FROM PANDORA<<<" + vbCrLf)
                 Catch x As PandoraException
                     If x.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
@@ -1069,9 +1070,11 @@ Public Class frmMain
         If Not File.Exists(nextSong.AudioFileName) Then
             tbLog.AppendText(">> Prefetching next song..." + vbCrLf)
             AddHandler fetcherWebClient.DownloadFileCompleted, Sub()
-                                                                   If Not Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading Then
-                                                                       Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
-                                                                       tbLog.AppendText(">> Prefetching song completed!" + vbCrLf)
+                                                                   If Not IsNothing(Pandora.CurrentStation.CurrentSong.NextSong) Then
+                                                                       If Not Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading Then
+                                                                           Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
+                                                                           tbLog.AppendText(">> Prefetching song completed!" + vbCrLf)
+                                                                       End If
                                                                    End If
                                                                End Sub
             fetcherWebClient.DownloadFileAsync(New Uri(nextSong.AudioUrlMap(Settings.audioQuality).Url), nextSong.AudioFileName)

@@ -110,7 +110,7 @@ Namespace Data
                 s.FetchedAt = Now
                 PlayList.Add(s)
             Next
-            CurrentSong = PlayList.ToArray(PlayList.Count - newSongs.Count)
+            'CurrentSong = PlayList.ToArray(PlayList.Count - newSongs.Count)
         End Sub
 
         Private Sub CheckForStationTags(song As PandoraSong)
