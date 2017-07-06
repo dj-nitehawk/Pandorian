@@ -511,9 +511,18 @@ Public Class frmMain
         Dim song = Pandora.CurrentStation.CurrentSong
 
         If File.Exists(song.AudioFileName) And song.FinishedDownloading = False And fetcherWebClient.IsBusy Then
-            fetcherWebClient.CancelAsync()
-            File.Delete(song.AudioFileName)
-            tbLog.AppendText(">> Cancelling prefetching of song due to taking too long..." + vbCrLf)
+            Dim sw = New Stopwatch
+            sw.Start()
+            Do Until sw.ElapsedMilliseconds >= 3000
+                Application.DoEvents()
+            Loop
+            sw.Stop()
+            sw = Nothing
+            If fetcherWebClient.IsBusy Then
+                fetcherWebClient.CancelAsync()
+                tbLog.AppendText(">> Cancelling prefetching prematurely due to taking too long..." + vbCrLf)
+            End If
+            song.FinishedDownloading = True
         End If
 
         If File.Exists(song.AudioFileName) And song.FinishedDownloading Then
@@ -1060,7 +1069,10 @@ Public Class frmMain
         If Not File.Exists(nextSong.AudioFileName) Then
             tbLog.AppendText(">> Prefetching next song..." + vbCrLf)
             AddHandler fetcherWebClient.DownloadFileCompleted, Sub()
-                                                                   Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
+                                                                   If Not Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading Then
+                                                                       Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
+                                                                       tbLog.AppendText(">> Prefetching song completed!" + vbCrLf)
+                                                                   End If
                                                                End Sub
             fetcherWebClient.DownloadFileAsync(New Uri(nextSong.AudioUrlMap(Settings.audioQuality).Url), nextSong.AudioFileName)
         End If
