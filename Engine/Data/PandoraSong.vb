@@ -320,6 +320,8 @@ Namespace Data
 
         Public Property NextSong As PandoraSong = Nothing
 
+        Public Property PlaylistFetchInitiated As Boolean = False
+
         Public Property DownloadedQuality As String
         Public Property FinishedDownloading As Boolean = False
 

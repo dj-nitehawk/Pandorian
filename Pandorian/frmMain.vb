@@ -388,6 +388,7 @@ Public Class frmMain
     Sub PlayNextSong()
 
         prgBar.Value = 0
+        Application.DoEvents()
         Spinner.Visible = True
         Application.DoEvents()
         ResumePlaying = True
@@ -508,6 +509,16 @@ Public Class frmMain
         End If
 
         Dim song = Pandora.CurrentStation.CurrentSong
+
+        If File.Exists(song.AudioFileName) And song.FinishedDownloading = False Then
+            Dim sw = New Stopwatch()
+            sw.Start()
+            Do Until song.FinishedDownloading Or sw.Elapsed.Seconds >= 3
+                Threading.Thread.Sleep(1000)
+            Loop
+            sw.Stop()
+            sw = Nothing
+        End If
 
         If File.Exists(song.AudioFileName) And song.FinishedDownloading Then
             tbLog.AppendText("Loaded song from local cache." + vbCrLf)
@@ -692,8 +703,7 @@ Public Class frmMain
                         Downloader = New WebClient
                         AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
                         AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
-                        Dim noProxy As Boolean = Settings.noProxy
-                        If Not noProxy Then
+                        If Not Settings.noProxy Then
                             Downloader.Proxy = Me.Proxy
                         End If
                         prgDownload.Value = 0
@@ -997,11 +1007,74 @@ Public Class frmMain
         UpdatePlayPosition()
         UpdateDownloadProgress()
         SleepCheck()
+        PreFetchNext()
         If volSlider.Visible Then
             If VolLastChangedOn.AddSeconds(4) <= Now Then
                 volSlider.Hide()
             End If
         End If
+    End Sub
+
+    Dim fetchInitiated As Boolean = False
+    Sub PreFetchNext()
+
+        If prgBar.Value > 90 And prgBar.Value < 100 Then
+            If Not fetchInitiated Then
+                fetchInitiated = True
+                Dim bgwFetchSongs, bgwFetchPlaylist As New BackgroundWorker
+                AddHandler bgwFetchSongs.DoWork, AddressOf SongPreFetcher
+                AddHandler bgwFetchPlaylist.DoWork, AddressOf PlaylistFetcher
+                Dim song = Pandora.CurrentStation.CurrentSong
+                If Not IsNothing(song) Then
+                    If Not IsNothing(song.NextSong) Then
+                        If song.NextSong.IsStillValid Then
+                            bgwFetchSongs.RunWorkerAsync()
+                            Exit Sub
+                        End If
+                    End If
+                    bgwFetchPlaylist.RunWorkerAsync()
+                End If
+            End If
+        Else
+            fetchInitiated = False
+        End If
+    End Sub
+
+    Private Sub PlaylistFetcher(sender As Object, e As DoWorkEventArgs)
+        If Pandora.OkToFetchSongs Then
+            Pandora.CurrentStation.PlayList.RemoveExpiredSongs()
+            Try
+                tbLog.AppendText(">> Prefetching playlist..." + vbCrLf)
+                Pandora.CurrentStation.FetchSongs()
+                fetchInitiated = False
+            Catch ex As Exception
+                tbLog.AppendText(">> Prefetch error: " + ex.Message + vbCrLf)
+            End Try
+        Else
+            tbLog.AppendText(">> Cannot prefetch. Skip limit reached..." + vbCrLf)
+        End If
+    End Sub
+
+    Private Sub SongPreFetcher(sender As Object, e As DoWorkEventArgs)
+        Dim nextSong = Pandora.CurrentStation.CurrentSong.NextSong
+        Dim client = New WebClient
+        If Not Settings.noProxy Then
+            client.Proxy = Me.Proxy
+        End If
+        If Not File.Exists(nextSong.AudioFileName) Then
+            tbLog.AppendText(">> Prefetching next song..." + vbCrLf)
+            Try
+                client.DownloadFile(New Uri(nextSong.AudioUrlMap(Settings.audioQuality).Url), nextSong.AudioFileName)
+                Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
+            Catch ex As Exception
+                tbLog.AppendText(">> Prefetch error: " + ex.Message + vbCrLf)
+            End Try
+        End If
+        If Not File.Exists(nextSong.CoverFileName) Then
+            tbLog.AppendText(">> Prefetching next cover art..." + vbCrLf)
+            DownloadImage(nextSong.AlbumArtLargeURL, nextSong.CoverFileName)
+        End If
+
     End Sub
 
     Sub SongEnded(ByVal handle As Integer, ByVal channel As Integer, ByVal data As Integer, ByVal user As IntPtr)
@@ -1212,12 +1285,6 @@ Public Class frmMain
         SongCoverImage.Visible = True
         RaiseEvent CoverImageUpdated(song.CoverFileName)
 
-        If Not IsNothing(song.NextSong) Then
-            If Not File.Exists(song.NextSong.CoverFileName) Then
-                tbLog.AppendText("Pre-fetching next song's album cover art..." + vbCrLf)
-                DownloadImage(song.NextSong.AlbumArtLargeURL, song.NextSong.CoverFileName)
-            End If
-        End If
     End Sub
 
     Private Sub DownloadImage(ImageURL As String, FileName As String)
@@ -1228,8 +1295,7 @@ Public Class frmMain
         End If
 
         Dim web As New WebClient()
-        Dim noProxy As Boolean = Settings.noProxy
-        If Not noProxy Then
+        If Not Settings.noProxy Then
             web.Proxy = Me.Proxy
         End If
         Try
