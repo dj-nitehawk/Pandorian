@@ -1072,8 +1072,14 @@ Public Class frmMain
             tbLog.AppendText(">> Prefetching next song..." + vbCrLf)
             AddHandler fetcherWebClient.DownloadFileCompleted, Sub(s As Object, ev As AsyncCompletedEventArgs)
                                                                    If Not IsNothing(ev.Error) Then
-                                                                       File.Delete(nextSong.AudioFileName)
-                                                                       tbLog.AppendText(">> Prefetching song failed!" + vbCrLf)
+                                                                       If Not File.Exists(nextSong.AudioFileName) Then
+                                                                           Try
+                                                                               File.Delete(nextSong.AudioFileName)
+                                                                               tbLog.AppendText(">> Prefetching song failed!" + vbCrLf)
+                                                                           Catch ex As Exception
+                                                                               tbLog.AppendText(">> Prefetch error: couldnt delete incomplete file." + vbCrLf)
+                                                                           End Try
+                                                                       End If
                                                                        Exit Sub
                                                                    End If
 
