@@ -1024,7 +1024,7 @@ Public Class frmMain
     Dim fetchInitiated As Boolean = False
     Sub PreFetchNext()
 
-        If prgBar.Value > 90 And prgBar.Value < 100 Then
+        If prgBar.Value > 80 And prgBar.Value < 90 Then
             If Not fetchInitiated Then
                 fetchInitiated = True
                 Dim bgwFetchSongs, bgwFetchPlaylist As New BackgroundWorker
