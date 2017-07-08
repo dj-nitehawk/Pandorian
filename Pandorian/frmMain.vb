@@ -1086,11 +1086,13 @@ Public Class frmMain
                                                                    If Not IsNothing(Pandora.CurrentStation.CurrentSong.NextSong) Then
                                                                        If Not Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading Then
                                                                            Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
+                                                                           Pandora.CurrentStation.CurrentSong.NextSong.DownloadedQuality = Settings.audioQuality
                                                                            tbLog.AppendText(">> Prefetching song completed!" + vbCrLf)
                                                                        End If
                                                                    End If
                                                                End Sub
             fetcherWebClient.DownloadFileAsync(New Uri(nextSong.AudioUrlMap(Settings.audioQuality).Url), nextSong.AudioFileName)
+
         End If
         If Not File.Exists(nextSong.CoverFileName) Then
             tbLog.AppendText(">> Prefetching next cover art..." + vbCrLf)
