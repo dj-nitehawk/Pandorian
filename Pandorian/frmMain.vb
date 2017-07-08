@@ -1157,7 +1157,7 @@ Public Class frmMain
                     MsgBox("No songs were found for this station." + vbCrLf + vbCrLf +
                            "Please try adding a few seeds to this station using Pandora website...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
-                Case ErrorCodeEnum.NO_NET_FOR_BASS, ErrorCodeEnum.INSUFFICIENT_CONNECTIVITY
+                Case ErrorCodeEnum.NO_NET_FOR_BASS, ErrorCodeEnum.INSUFFICIENT_CONNECTIVITY, ErrorCodeEnum.APPLICATION_ERROR
                     tbLog.AppendText("Having internet connectivity issues. Replaying song..." + vbCrLf)
                     PlayPreviousSong(False)
                 Case Else
