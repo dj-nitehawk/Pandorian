@@ -29,7 +29,7 @@ Public Class frmMain
     Dim BPMCounter As New Misc.BPMCounter(20, 44100)
     Dim SongInfo As New frmSongInfo()
     Dim HideSongInfo As Boolean = False
-    Dim APIFile As String = Path.GetTempPath + "pandorian.v3.api"
+    Dim APIFile As String = Path.GetTempPath + "pandorian.v." + Application.ProductVersion
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(FileName As String)
@@ -388,6 +388,7 @@ Public Class frmMain
     Sub PlayNextSong()
 
         prgBar.Value = 0
+        Application.DoEvents()
         Spinner.Visible = True
         Application.DoEvents()
         ResumePlaying = True
@@ -407,7 +408,8 @@ Public Class frmMain
             If Pandora.OkToFetchSongs Then
                 Try
                     Pandora.CurrentStation.FetchSongs()
-                    tbLog.AppendText(">>>GOT 4 NEW SONGS FROM PANDORA<<<" + vbCrLf)
+                    Pandora.CurrentStation.CurrentSong = Pandora.CurrentStation.PlayList.ToArray(Pandora.CurrentStation.PlayList.Count - Pandora.CurrentStation.FetchedCount)
+                    tbLog.AppendText(">>>GOT " + Pandora.CurrentStation.FetchedCount.ToString + " NEW SONGS FROM PANDORA<<<" + vbCrLf)
                 Catch x As PandoraException
                     If x.ErrorCode = ErrorCodeEnum.PLAYLIST_EXCEEDED Then
                         Bass.BASS_ChannelSetPosition(Stream, 0)
@@ -508,6 +510,21 @@ Public Class frmMain
         End If
 
         Dim song = Pandora.CurrentStation.CurrentSong
+
+        If File.Exists(song.AudioFileName) And song.FinishedDownloading = False And fetcherWebClient.IsBusy Then
+            Dim sw = New Stopwatch
+            sw.Start()
+            Do Until sw.ElapsedMilliseconds >= 3000
+                Application.DoEvents()
+            Loop
+            sw.Stop()
+            sw = Nothing
+            If fetcherWebClient.IsBusy Then
+                fetcherWebClient.CancelAsync()
+                tbLog.AppendText(">> Cancelling prefetching prematurely due to taking too long..." + vbCrLf)
+            End If
+            song.FinishedDownloading = True
+        End If
 
         If File.Exists(song.AudioFileName) And song.FinishedDownloading Then
             tbLog.AppendText("Loaded song from local cache." + vbCrLf)
@@ -692,8 +709,7 @@ Public Class frmMain
                         Downloader = New WebClient
                         AddHandler Downloader.DownloadFileCompleted, AddressOf FileDownloadCompleted
                         AddHandler Downloader.DownloadProgressChanged, AddressOf FileDownloadProgressChanged
-                        Dim noProxy As Boolean = Settings.noProxy
-                        If Not noProxy Then
+                        If Not Settings.noProxy Then
                             Downloader.Proxy = Me.Proxy
                         End If
                         prgDownload.Value = 0
@@ -997,11 +1013,92 @@ Public Class frmMain
         UpdatePlayPosition()
         UpdateDownloadProgress()
         SleepCheck()
+        PreFetchNext()
         If volSlider.Visible Then
             If VolLastChangedOn.AddSeconds(4) <= Now Then
                 volSlider.Hide()
             End If
         End If
+    End Sub
+
+    Dim fetchInitiated As Boolean = False
+    Sub PreFetchNext()
+
+        If prgBar.Value > 80 And prgBar.Value < 90 Then
+            If Not fetchInitiated Then
+                fetchInitiated = True
+                Dim bgwFetchSongs, bgwFetchPlaylist As New BackgroundWorker
+                AddHandler bgwFetchSongs.DoWork, AddressOf SongPreFetcher
+                AddHandler bgwFetchPlaylist.DoWork, AddressOf PlaylistFetcher
+                Dim song = Pandora.CurrentStation.CurrentSong
+                If Not IsNothing(song) Then
+                    If Not IsNothing(song.NextSong) Then
+                        If song.NextSong.IsStillValid Then
+                            bgwFetchSongs.RunWorkerAsync()
+                            Exit Sub
+                        End If
+                    End If
+                    bgwFetchPlaylist.RunWorkerAsync()
+                End If
+            End If
+        Else
+            fetchInitiated = False
+        End If
+    End Sub
+
+    Private Sub PlaylistFetcher(sender As Object, e As DoWorkEventArgs)
+        If Pandora.OkToFetchSongs Then
+            Pandora.CurrentStation.PlayList.RemoveExpiredSongs()
+            Try
+                tbLog.AppendText(">> Prefetching playlist..." + vbCrLf)
+                Pandora.CurrentStation.FetchSongs()
+                tbLog.AppendText(">>>GOT " + Pandora.CurrentStation.FetchedCount.ToString + " NEW SONGS FROM PANDORA<<<" + vbCrLf)
+                fetchInitiated = False
+            Catch ex As Exception
+                tbLog.AppendText(">> Prefetch error: " + ex.Message + vbCrLf)
+            End Try
+        Else
+            tbLog.AppendText(">> Cannot prefetch. Skip limit reached..." + vbCrLf)
+        End If
+    End Sub
+
+    Dim fetcherWebClient As WebClient = New WebClient()
+    Private Sub SongPreFetcher(sender As Object, e As DoWorkEventArgs)
+        Dim nextSong = Pandora.CurrentStation.CurrentSong.NextSong
+        If Not Settings.noProxy Then
+            fetcherWebClient.Proxy = Me.Proxy
+        End If
+        If Not File.Exists(nextSong.AudioFileName) Then
+            tbLog.AppendText(">> Prefetching next song..." + vbCrLf)
+            AddHandler fetcherWebClient.DownloadFileCompleted, Sub(s As Object, ev As AsyncCompletedEventArgs)
+                                                                   If Not IsNothing(ev.Error) Then
+                                                                       If Not File.Exists(nextSong.AudioFileName) Then
+                                                                           Try
+                                                                               File.Delete(nextSong.AudioFileName)
+                                                                               tbLog.AppendText(">> Prefetching song failed!" + vbCrLf)
+                                                                           Catch ex As Exception
+                                                                               tbLog.AppendText(">> Prefetch error: couldnt delete incomplete file." + vbCrLf)
+                                                                           End Try
+                                                                       End If
+                                                                       Exit Sub
+                                                                   End If
+
+                                                                   If Not IsNothing(Pandora.CurrentStation.CurrentSong.NextSong) Then
+                                                                       If Not Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading Then
+                                                                           Pandora.CurrentStation.CurrentSong.NextSong.FinishedDownloading = True
+                                                                           Pandora.CurrentStation.CurrentSong.NextSong.DownloadedQuality = Settings.audioQuality
+                                                                           tbLog.AppendText(">> Prefetching song completed!" + vbCrLf)
+                                                                       End If
+                                                                   End If
+                                                               End Sub
+            fetcherWebClient.DownloadFileAsync(New Uri(nextSong.AudioUrlMap(Settings.audioQuality).Url), nextSong.AudioFileName)
+
+        End If
+        If Not File.Exists(nextSong.CoverFileName) Then
+            tbLog.AppendText(">> Prefetching next cover art..." + vbCrLf)
+            DownloadImage(nextSong.AlbumArtLargeURL, nextSong.CoverFileName)
+        End If
+
     End Sub
 
     Sub SongEnded(ByVal handle As Integer, ByVal channel As Integer, ByVal data As Integer, ByVal user As IntPtr)
@@ -1010,9 +1107,9 @@ Public Class frmMain
 
     Private Sub DebugExpireSessionNow()
         'Pandora.CurrentStation.CurrentSong.NextSong.FetchedAt = DateAdd(DateInterval.Minute, -65, Now)
-        Pandora.Session.DebugCorruptAuthToken()
-        Pandora.Session.User.DebugCorruptAuthToken()
-        'Pandora.CurrentStation.CurrentSong.DebugCorruptAudioUrl(Settings.audioQuality)
+        'Pandora.Session.DebugCorruptAuthToken()
+        'Pandora.Session.User.DebugCorruptAuthToken()
+        'Pandora.CurrentStation.CurrentSong.NextSong.DebugCorruptAudioUrl(Settings.audioQuality)
         'For Each s In Pandora.CurrentStation.PlayList
         '    s.DebugCorruptAudioUrl(Settings.audioQuality)
         'Next
@@ -1062,7 +1159,8 @@ Public Class frmMain
                     MsgBox("No songs were found for this station." + vbCrLf + vbCrLf +
                            "Please try adding a few seeds to this station using Pandora website...", MsgBoxStyle.Exclamation)
                     AfterErrorActions()
-                Case ErrorCodeEnum.NO_NET_FOR_BASS
+                Case ErrorCodeEnum.NO_NET_FOR_BASS, ErrorCodeEnum.INSUFFICIENT_CONNECTIVITY, ErrorCodeEnum.APPLICATION_ERROR
+                    tbLog.AppendText("Having internet connectivity issues. Replaying song..." + vbCrLf)
                     PlayPreviousSong(False)
                 Case Else
                     ReportError(pex, Caller)
@@ -1211,12 +1309,6 @@ Public Class frmMain
         SongCoverImage.Visible = True
         RaiseEvent CoverImageUpdated(song.CoverFileName)
 
-        If Not IsNothing(song.NextSong) Then
-            If Not File.Exists(song.NextSong.CoverFileName) Then
-                tbLog.AppendText("Pre-fetching next song's album cover art..." + vbCrLf)
-                DownloadImage(song.NextSong.AlbumArtLargeURL, song.NextSong.CoverFileName)
-            End If
-        End If
     End Sub
 
     Private Sub DownloadImage(ImageURL As String, FileName As String)
@@ -1227,8 +1319,7 @@ Public Class frmMain
         End If
 
         Dim web As New WebClient()
-        Dim noProxy As Boolean = Settings.noProxy
-        If Not noProxy Then
+        If Not Settings.noProxy Then
             web.Proxy = Me.Proxy
         End If
         Try
