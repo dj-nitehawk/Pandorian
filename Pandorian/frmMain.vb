@@ -1300,11 +1300,11 @@ Public Class frmMain
 
         If File.Exists(song.CoverFileName) Then
             tbLog.AppendText("Loading album cover from cache..." + vbCrLf)
-            SongCoverImage.ImageLocation = song.CoverFileName
+            SongCoverImage.Image = Image.FromFile(song.CoverFileName)
         Else
             tbLog.AppendText("Downloading album cover art..." + vbCrLf)
             DownloadImage(song.AlbumArtLargeURL, song.CoverFileName)
-            SongCoverImage.ImageLocation = song.CoverFileName
+            SongCoverImage.Image = Image.FromFile(song.CoverFileName)
         End If
         SongCoverImage.Visible = True
         RaiseEvent CoverImageUpdated(song.CoverFileName)

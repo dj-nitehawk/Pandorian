@@ -80,8 +80,7 @@ Public Class frmLockScreen
     End Sub
 
     Private Sub RefreshCover(FileName As String)
-        CoverImage.ImageLocation = FileName
-
+        CoverImage.Image = Image.FromFile(FileName)
     End Sub
 
 End Class
