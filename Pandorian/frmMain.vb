@@ -30,6 +30,7 @@ Public Class frmMain
     Dim SongInfo As New frmSongInfo()
     Dim HideSongInfo As Boolean = False
     Dim APIFile As String = Path.GetTempPath + "pandorian.v." + Application.ProductVersion
+    Dim SongPreFetchingDisabled As Boolean = False
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(FileName As String)
@@ -1024,7 +1025,11 @@ Public Class frmMain
     Dim fetchInitiated As Boolean = False
     Sub PreFetchNext()
 
-        If prgBar.Value > 80 And prgBar.Value < 90 Then
+        If SongPreFetchingDisabled Then
+            Exit Sub
+        End If
+
+        If prgBar.Value > 70 And prgBar.Value < 80 Then
             If Not fetchInitiated Then
                 fetchInitiated = True
                 Dim bgwFetchSongs, bgwFetchPlaylist As New BackgroundWorker
