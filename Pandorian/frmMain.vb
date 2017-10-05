@@ -30,7 +30,6 @@ Public Class frmMain
     Dim SongInfo As New frmSongInfo()
     Dim HideSongInfo As Boolean = False
     Dim APIFile As String = Path.GetTempPath + "pandorian.v." + Application.ProductVersion
-    Dim SongPreFetchingDisabled As Boolean = False
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
     Public Event CoverImageUpdated(FileName As String)
@@ -287,7 +286,7 @@ Public Class frmMain
 
         Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
 
-        SongCoverImage.Visible = False
+        SongCoverImage.Image = Nothing
         Dim bgwCoverLoader As New BackgroundWorker
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
         bgwCoverLoader.RunWorkerAsync()
@@ -622,6 +621,7 @@ Public Class frmMain
             Settings.noLiked = 0
             Settings.noProxy = 0
             Settings.noQmix = 0
+            Settings.noPrefetch = 0
             Settings.enableBPMCounter = 0
             Settings.pandoraOne = 0
             Settings.pandoraPassword = ""
@@ -1025,11 +1025,11 @@ Public Class frmMain
     Dim fetchInitiated As Boolean = False
     Sub PreFetchNext()
 
-        If SongPreFetchingDisabled Then
+        If Settings.noPrefetch Then
             Exit Sub
         End If
 
-        If prgBar.Value > 70 And prgBar.Value < 80 Then
+        If prgBar.Value > 70 And prgBar.Value < 75 Then
             If Not fetchInitiated Then
                 fetchInitiated = True
                 Dim bgwFetchSongs, bgwFetchPlaylist As New BackgroundWorker

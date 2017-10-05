@@ -26,6 +26,7 @@ Public Class frmSettings
             Settings.pandoraOne = chkPandoraOne.Checked
             Settings.noQmix = chkNoQMix.Checked
             Settings.noLiked = chkNoLiked.Checked
+            Settings.noPrefetch = chkNoPrefetch.Checked
             Settings.enableBPMCounter = chkBPMCounter.Checked
             Settings.audioQuality = ddQuality.SelectedValue
             If Not String.IsNullOrEmpty(unlockCode.Text) And Not unlockCode.Text = "secret" Then
@@ -65,6 +66,7 @@ Public Class frmSettings
         chkNoProxy.Checked = Settings.noProxy
         chkNoQMix.Checked = Settings.noQmix
         chkNoLiked.Checked = Settings.noLiked
+        chkNoPrefetch.Checked = Settings.noPrefetch
         chkBPMCounter.Checked = Settings.enableBPMCounter
         If Not String.IsNullOrEmpty(Settings.unlockPassword) Then
             unlockCode.Text = "secret"
@@ -143,4 +145,8 @@ Public Class frmSettings
         Settings.SaveToRegistry()
     End Sub
 
+    Private Sub noPrefetch_CheckedChanged(sender As Object, e As EventArgs) Handles chkNoPrefetch.CheckedChanged
+        Settings.noPrefetch = chkNoPrefetch.Checked
+        Settings.SaveToRegistry()
+    End Sub
 End Class

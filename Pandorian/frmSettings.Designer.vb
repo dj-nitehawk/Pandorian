@@ -45,6 +45,7 @@ Partial Class frmSettings
         Me.chkNoQMix = New System.Windows.Forms.CheckBox()
         Me.chkNoLiked = New System.Windows.Forms.CheckBox()
         Me.chkBPMCounter = New System.Windows.Forms.CheckBox()
+        Me.chkNoPrefetch = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'lblProxyAddre
@@ -138,7 +139,7 @@ Partial Class frmSettings
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(50, 359)
+        Me.Button1.Location = New System.Drawing.Point(50, 390)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(82, 26)
         Me.Button1.TabIndex = 13
@@ -151,7 +152,7 @@ Partial Class frmSettings
         Me.btnPayPal.FlatAppearance.BorderSize = 0
         Me.btnPayPal.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPayPal.Image = Global.Pandorian.My.Resources.Resources.paypal
-        Me.btnPayPal.Location = New System.Drawing.Point(59, 297)
+        Me.btnPayPal.Location = New System.Drawing.Point(59, 326)
         Me.btnPayPal.Name = "btnPayPal"
         Me.btnPayPal.Size = New System.Drawing.Size(155, 56)
         Me.btnPayPal.TabIndex = 12
@@ -217,7 +218,7 @@ Partial Class frmSettings
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(144, 359)
+        Me.Button2.Location = New System.Drawing.Point(144, 390)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(82, 26)
         Me.Button2.TabIndex = 14
@@ -247,19 +248,30 @@ Partial Class frmSettings
         'chkBPMCounter
         '
         Me.chkBPMCounter.AutoSize = True
-        Me.chkBPMCounter.Location = New System.Drawing.Point(25, 277)
+        Me.chkBPMCounter.Location = New System.Drawing.Point(25, 302)
         Me.chkBPMCounter.Name = "chkBPMCounter"
         Me.chkBPMCounter.Size = New System.Drawing.Size(239, 17)
         Me.chkBPMCounter.TabIndex = 17
         Me.chkBPMCounter.Text = "Show BPM of song when album art is clicked"
         Me.chkBPMCounter.UseVisualStyleBackColor = True
         '
+        'chkNoPrefetch
+        '
+        Me.chkNoPrefetch.AutoSize = True
+        Me.chkNoPrefetch.Location = New System.Drawing.Point(25, 278)
+        Me.chkNoPrefetch.Name = "chkNoPrefetch"
+        Me.chkNoPrefetch.Size = New System.Drawing.Size(145, 17)
+        Me.chkNoPrefetch.TabIndex = 18
+        Me.chkNoPrefetch.Text = "Don't pre-fetch next song"
+        Me.chkNoPrefetch.UseVisualStyleBackColor = True
+        '
         'frmSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 391)
+        Me.ClientSize = New System.Drawing.Size(284, 427)
         Me.ControlBox = False
+        Me.Controls.Add(Me.chkNoPrefetch)
         Me.Controls.Add(Me.chkBPMCounter)
         Me.Controls.Add(Me.chkNoLiked)
         Me.Controls.Add(Me.chkNoQMix)
@@ -314,4 +326,5 @@ Partial Class frmSettings
     Friend WithEvents chkNoQMix As CheckBox
     Friend WithEvents chkNoLiked As CheckBox
     Friend WithEvents chkBPMCounter As CheckBox
+    Friend WithEvents chkNoPrefetch As CheckBox
 End Class
