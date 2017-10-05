@@ -10,6 +10,7 @@ Public Class Settings
     Shared Property noLiked As Boolean
     Shared Property noProxy As Boolean
     Shared Property noQmix As Boolean
+    Shared Property noPrefetch As Boolean
     Shared Property pandoraOne As Boolean
     Shared Property enableBPMCounter As Boolean
     Shared Property pandoraPassword As String

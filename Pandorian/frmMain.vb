@@ -286,7 +286,7 @@ Public Class frmMain
 
         Dim Song As PandoraSong = Pandora.CurrentStation.CurrentSong
 
-        SongCoverImage.Visible = False
+        SongCoverImage.Image = Nothing
         Dim bgwCoverLoader As New BackgroundWorker
         AddHandler bgwCoverLoader.DoWork, AddressOf DownloadCoverImage
         bgwCoverLoader.RunWorkerAsync()
@@ -621,6 +621,7 @@ Public Class frmMain
             Settings.noLiked = 0
             Settings.noProxy = 0
             Settings.noQmix = 0
+            Settings.noPrefetch = 0
             Settings.enableBPMCounter = 0
             Settings.pandoraOne = 0
             Settings.pandoraPassword = ""
@@ -1024,7 +1025,11 @@ Public Class frmMain
     Dim fetchInitiated As Boolean = False
     Sub PreFetchNext()
 
-        If prgBar.Value > 80 And prgBar.Value < 90 Then
+        If Settings.noPrefetch Then
+            Exit Sub
+        End If
+
+        If prgBar.Value > 70 And prgBar.Value < 75 Then
             If Not fetchInitiated Then
                 fetchInitiated = True
                 Dim bgwFetchSongs, bgwFetchPlaylist As New BackgroundWorker
@@ -1300,11 +1305,11 @@ Public Class frmMain
 
         If File.Exists(song.CoverFileName) Then
             tbLog.AppendText("Loading album cover from cache..." + vbCrLf)
-            SongCoverImage.ImageLocation = song.CoverFileName
+            SongCoverImage.Image = Image.FromFile(song.CoverFileName)
         Else
             tbLog.AppendText("Downloading album cover art..." + vbCrLf)
             DownloadImage(song.AlbumArtLargeURL, song.CoverFileName)
-            SongCoverImage.ImageLocation = song.CoverFileName
+            SongCoverImage.Image = Image.FromFile(song.CoverFileName)
         End If
         SongCoverImage.Visible = True
         RaiseEvent CoverImageUpdated(song.CoverFileName)

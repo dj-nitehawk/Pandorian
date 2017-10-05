@@ -80,7 +80,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>53FD2D2AF2BB7FAFC56CCB3FFB3B5FEC986A1945</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>985653E50755AD21E46AA1D0E89C7FA0F798FCFA</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>Pandorian_TemporaryKey.pfx</ManifestKeyFile>
@@ -248,6 +248,7 @@
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </None>
     <Content Include="Pandorian.ico" />
+    <None Include="Pandorian_TemporaryKey.pfx" />
     <None Include="Resources\back.png" />
     <None Include="Resources\skip.png" />
     <None Include="Resources\play.png" />
