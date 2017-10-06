@@ -79,8 +79,8 @@ Public Class frmLockScreen
         lblAlbum.Text = Album
     End Sub
 
-    Private Sub RefreshCover(FileName As String)
-        CoverImage.Image = Image.FromFile(FileName)
+    Private Sub RefreshCover(CoverImage As Image)
+        Me.CoverImage.Image = CoverImage
     End Sub
 
 End Class
