@@ -32,7 +32,7 @@ Public Class frmMain
     Dim APIFile As String = Path.GetTempPath + "pandorian.v." + Application.ProductVersion
 
     Public Event SongInfoUpdated(Title As String, Artist As String, Album As String)
-    Public Event CoverImageUpdated(FileName As String)
+    Public Event CoverImageUpdated(Image As Image)
 
     Dim FS As FileStream
     Dim DownloadProc As DOWNLOADPROC = New DOWNLOADPROC(AddressOf DownloadSong)
@@ -615,6 +615,7 @@ Public Class frmMain
         If Settings.KeyCount = 0 Then
             File.Delete(APIFile)
             Settings.audioQuality = "mediumQuality"
+            Settings.audioVolume = 100
             Settings.downloadLocation = ""
             Settings.lastStationID = ""
             Settings.launchCount = 0
@@ -815,6 +816,7 @@ Public Class frmMain
             LogAppStartEvent()
         End If
         Settings.launchCount = Settings.launchCount + 1
+        RestoreVolume()
         Settings.SaveToRegistry()
         CheckForUpdate()
         registerHotkeys()
@@ -1305,14 +1307,18 @@ Public Class frmMain
 
         If File.Exists(song.CoverFileName) Then
             tbLog.AppendText("Loading album cover from cache..." + vbCrLf)
-            SongCoverImage.Image = Image.FromFile(song.CoverFileName)
         Else
             tbLog.AppendText("Downloading album cover art..." + vbCrLf)
             DownloadImage(song.AlbumArtLargeURL, song.CoverFileName)
-            SongCoverImage.Image = Image.FromFile(song.CoverFileName)
         End If
+
+        'fix for file locking by GDI+
+        Using tmp As New Bitmap(song.CoverFileName)
+            SongCoverImage.Image = New Bitmap(tmp)
+        End Using
+
         SongCoverImage.Visible = True
-        RaiseEvent CoverImageUpdated(song.CoverFileName)
+        RaiseEvent CoverImageUpdated(SongCoverImage.Image)
 
     End Sub
 
@@ -1691,10 +1697,18 @@ Public Class frmMain
 
     End Sub
 
+    Private Sub RestoreVolume()
+        If Settings.audioVolume > 0 Then
+            volSlider.Value = Settings.audioVolume
+        End If
+    End Sub
+
     Private Sub volSlider_ValueChanged(sender As Object, e As EventArgs) Handles volSlider.ValueChanged
         If volSlider.Value >= 0 <= 100 Then
             If BASSReady Then
                 Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, volSlider.Value / 100)
+                Settings.audioVolume = volSlider.Value
+                Settings.SaveToRegistry()
             End If
         End If
         VolLastChangedOn = Now

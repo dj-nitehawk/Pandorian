@@ -7,6 +7,7 @@ Public Class Settings
     Shared Property downloadLocation As String
     Shared Property lastStationID As String
     Shared Property launchCount As Integer
+    Shared Property audioVolume As Integer
     Shared Property noLiked As Boolean
     Shared Property noProxy As Boolean
     Shared Property noQmix As Boolean
