@@ -800,6 +800,12 @@ Public Class frmMain
         Next
     End Sub
 
+    Private Sub RestoreWindowPosition()
+        If Not Settings.PositionX = 0 And Not Settings.PositionY = 0 Then
+            Me.DesktopLocation = New Point(Settings.PositionX, Settings.PositionY)
+        End If
+    End Sub
+
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
         Control.CheckForIllegalCrossThreadCalls = False
         If Not HasSettings() Then
@@ -807,6 +813,7 @@ Public Class frmMain
             Me.Hide()
             Exit Sub
         End If
+        RestoreWindowPosition()
         frmLockScreen.Show()
         frmLockScreen.Visible = False
         lblAlbumName.UseMnemonic = False
@@ -1790,5 +1797,11 @@ Public Class frmMain
         unRegisterHotkeys()
         registerHotkeys()
         pnlHotKeys.Visible = False
+    End Sub
+
+    Private Sub frmMain_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
+        Settings.PositionX = Me.DesktopLocation.X
+        Settings.PositionY = Me.DesktopLocation.Y
+        Settings.SaveToRegistry()
     End Sub
 End Class

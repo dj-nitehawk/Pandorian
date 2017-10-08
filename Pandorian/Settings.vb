@@ -3,6 +3,8 @@ Public Class Settings
 
     Private Shared Reg As RegistryStore = New RegistryStore()
 
+    Shared Property PositionX As Integer
+    Shared Property PositionY As Integer
     Shared Property audioQuality As String
     Shared Property downloadLocation As String
     Shared Property lastStationID As String
