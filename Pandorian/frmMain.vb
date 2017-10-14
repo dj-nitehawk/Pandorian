@@ -802,7 +802,13 @@ Public Class frmMain
 
     Private Sub RestoreWindowPosition()
         If Not Settings.PositionX = 0 And Not Settings.PositionY = 0 Then
-            Me.DesktopLocation = New Point(Settings.PositionX, Settings.PositionY)
+            Dim point = New Point(Settings.PositionX, Settings.PositionY)
+            For Each s In Screen.AllScreens
+                If s.Bounds.Contains(point) Then
+                    Me.Location = point
+                    Exit Sub
+                End If
+            Next
         End If
     End Sub
 
