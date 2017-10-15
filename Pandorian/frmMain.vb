@@ -577,10 +577,10 @@ Public Class frmMain
 
     Private Sub bpmTimer_Tick(sender As Object, e As EventArgs) Handles bpmTimer.Tick
 
-        If BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
+        If Settings.enableBPMCounter And BASSChannelState() = BASSActive.BASS_ACTIVE_PLAYING Then
             Dim beat As Boolean = BPMCounter.ProcessAudio(Stream, True)
             If beat Then
-                lblBPM.Text = BPMCounter.BPM.ToString("#00.0")
+                lblBPM.Text = BPMCounter.BPM.ToString("#000") + " BPM"
             End If
         End If
 
@@ -1023,6 +1023,12 @@ Public Class frmMain
         If pos >= 1 And pos <= 100 Then
             prgBar.Value = Convert.ToInt32(pos)
         End If
+
+        If Not Settings.enableBPMCounter Then
+            Dim elapsed = New Date(TimeSpan.FromSeconds(CurrentPositionSecs).Ticks)
+            Dim total = New Date(TimeSpan.FromSeconds(SongDurationSecs).Ticks)
+            lblBPM.Text = elapsed.ToString("mm:ss") + " / " + total.ToString("mm:ss")
+        End If
     End Sub
 
     Private Sub Timer_Tick(sender As Object, e As EventArgs) Handles Timer.Tick
@@ -1254,18 +1260,6 @@ Public Class frmMain
     Private Sub btnBack_Click(sender As Object, e As EventArgs) Handles btnPrev.Click
         PlayPreviousSong(False)
     End Sub
-
-    'Private Sub btnLeft_Click(sender As Object, e As EventArgs)
-    '    Bass.BASS_StreamFree(Stream)
-    '    Pandora.CurrentStation.LoadPrevSong()
-    '    PlayCurrentSong()
-    'End Sub
-
-    'Private Sub btnRight_Click(sender As Object, e As EventArgs)
-    '    Bass.BASS_StreamFree(Stream)
-    '    Pandora.CurrentStation.LoadNextSong()
-    '    PlayCurrentSong()
-    'End Sub
 
     Private Sub btnBlock_Click(sender As Object, e As EventArgs) Handles btnBlock.Click
         If btnBlock.Enabled Then
@@ -1754,17 +1748,32 @@ Public Class frmMain
     End Sub
 
     Private Sub SongCoverImage_Click(sender As Object, e As EventArgs) Handles SongCoverImage.Click
-        If Settings.enableBPMCounter Then
-            If lblBPM.Visible Then
-                lblBPM.Visible = False
+        If lblBPM.Visible Then
+            lblBPM.Visible = False
+            If Settings.enableBPMCounter Then
                 bpmTimer.Stop()
                 BPMCounter.Reset(44100)
-                lblBPM.Text = "000"
-            Else
-                lblBPM.Visible = True
+                lblBPM.Text = "000 BPM"
+            End If
+        Else
+            lblBPM.Visible = True
+            If Settings.enableBPMCounter Then
                 bpmTimer.Start()
             End If
         End If
+
+
+        'If Settings.enableBPMCounter Then
+        '    If lblBPM.Visible Then
+        '        lblBPM.Visible = False
+        '        bpmTimer.Stop()
+        '        BPMCounter.Reset(44100)
+        '        lblBPM.Text = "000"
+        '    Else
+        '        lblBPM.Visible = True
+        '        bpmTimer.Start()
+        '    End If
+        'End If
     End Sub
 
     Private Sub TrayIcon_MouseMove(sender As Object, e As MouseEventArgs) Handles TrayIcon.MouseMove
@@ -1810,4 +1819,5 @@ Public Class frmMain
         Settings.PositionY = Me.DesktopLocation.Y
         Settings.SaveToRegistry()
     End Sub
+
 End Class
