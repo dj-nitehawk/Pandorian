@@ -1024,7 +1024,7 @@ Public Class frmMain
             prgBar.Value = Convert.ToInt32(pos)
         End If
 
-        If Not Settings.enableBPMCounter Then
+        If Not Settings.enableBPMCounter And CurrentPositionSecs() > 0 And SongDurationSecs() > 0 Then
             Dim elapsed = New Date(TimeSpan.FromSeconds(CurrentPositionSecs).Ticks)
             Dim total = New Date(TimeSpan.FromSeconds(SongDurationSecs).Ticks)
             lblBPM.Text = elapsed.ToString("mm:ss") + " / " + total.ToString("mm:ss")
