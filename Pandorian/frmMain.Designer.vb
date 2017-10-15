@@ -69,6 +69,7 @@ Partial Class frmMain
         Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.tmiExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlHotKeys = New System.Windows.Forms.Panel()
+        Me.btnCancelHotKeys = New System.Windows.Forms.Button()
         Me.tbHKVolUp = New System.Windows.Forms.TextBox()
         Me.tbHKVolDown = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -107,7 +108,6 @@ Partial Class frmMain
         Me.btnDislike = New System.Windows.Forms.Button()
         Me.btnLike = New System.Windows.Forms.Button()
         Me.SongCoverImage = New System.Windows.Forms.PictureBox()
-        Me.btnCancelHotKeys = New System.Windows.Forms.Button()
         Me.MenuStrip.SuspendLayout()
         Me.pnlSleepTimer.SuspendLayout()
         Me.TrayMenu.SuspendLayout()
@@ -467,6 +467,17 @@ Partial Class frmMain
         Me.pnlHotKeys.TabIndex = 16
         Me.pnlHotKeys.Visible = False
         '
+        'btnCancelHotKeys
+        '
+        Me.btnCancelHotKeys.BackColor = System.Drawing.SystemColors.Control
+        Me.btnCancelHotKeys.ForeColor = System.Drawing.Color.Black
+        Me.btnCancelHotKeys.Location = New System.Drawing.Point(157, 269)
+        Me.btnCancelHotKeys.Name = "btnCancelHotKeys"
+        Me.btnCancelHotKeys.Size = New System.Drawing.Size(75, 23)
+        Me.btnCancelHotKeys.TabIndex = 32
+        Me.btnCancelHotKeys.Text = "Cancel"
+        Me.btnCancelHotKeys.UseVisualStyleBackColor = False
+        '
         'tbHKVolUp
         '
         Me.tbHKVolUp.Location = New System.Drawing.Point(199, 158)
@@ -701,7 +712,7 @@ Partial Class frmMain
         '
         'tbLog
         '
-        Me.tbLog.Location = New System.Drawing.Point(7, 8)
+        Me.tbLog.Location = New System.Drawing.Point(7, 7)
         Me.tbLog.Multiline = True
         Me.tbLog.Name = "tbLog"
         Me.tbLog.ReadOnly = True
@@ -745,7 +756,7 @@ Partial Class frmMain
         Me.lblBPM.Name = "lblBPM"
         Me.lblBPM.Size = New System.Drawing.Size(317, 49)
         Me.lblBPM.TabIndex = 20
-        Me.lblBPM.Text = "000"
+        Me.lblBPM.Text = "000 BPM"
         Me.lblBPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.lblBPM.Visible = False
         '
@@ -754,7 +765,7 @@ Partial Class frmMain
         Me.Spinner.BackColor = System.Drawing.Color.Black
         Me.Spinner.BackgroundImage = Global.Pandorian.My.Resources.Resources.wait
         Me.Spinner.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.Spinner.Location = New System.Drawing.Point(0, 0)
+        Me.Spinner.Location = New System.Drawing.Point(0, -1)
         Me.Spinner.Name = "Spinner"
         Me.Spinner.Size = New System.Drawing.Size(317, 463)
         Me.Spinner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -848,17 +859,6 @@ Partial Class frmMain
         Me.SongCoverImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.SongCoverImage.TabIndex = 2
         Me.SongCoverImage.TabStop = False
-        '
-        'btnCancelHotKeys
-        '
-        Me.btnCancelHotKeys.BackColor = System.Drawing.SystemColors.Control
-        Me.btnCancelHotKeys.ForeColor = System.Drawing.Color.Black
-        Me.btnCancelHotKeys.Location = New System.Drawing.Point(157, 269)
-        Me.btnCancelHotKeys.Name = "btnCancelHotKeys"
-        Me.btnCancelHotKeys.Size = New System.Drawing.Size(75, 23)
-        Me.btnCancelHotKeys.TabIndex = 32
-        Me.btnCancelHotKeys.Text = "Cancel"
-        Me.btnCancelHotKeys.UseVisualStyleBackColor = False
         '
         'frmMain
         '
